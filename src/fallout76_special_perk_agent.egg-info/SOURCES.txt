@@ -1,0 +1,12 @@
+README.md
+pyproject.toml
+src/fallout76_build_metadata/__init__.py
+src/fallout76_build_metadata/models.py
+src/fallout76_special_perk_agent.egg-info/PKG-INFO
+src/fallout76_special_perk_agent.egg-info/SOURCES.txt
+src/fallout76_special_perk_agent.egg-info/dependency_links.txt
+src/fallout76_special_perk_agent.egg-info/requires.txt
+src/fallout76_special_perk_agent.egg-info/top_level.txt
+tests/test_api.py
+tests/test_engine.py
+tests/test_models.py

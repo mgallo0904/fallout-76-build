@@ -72,6 +72,18 @@ class BuildInput(BaseModel):
     current_gear: str = ""
     avoid_list: str = ""
 
+
+class WebSearchRequest(BaseModel):
+    query: str = Field(min_length=2)
+    max_results: int = Field(default=5, ge=1, le=10)
+
+
+class WebSearchResult(BaseModel):
+    title: str
+    url: str
+    content: str = ""
+
+
 class PerkChoice(BaseModel):
     card_id: str
     rank: int
@@ -94,6 +106,9 @@ class GeneratedBuild(BaseModel):
     validation_status: str
     source_verification_notes: List[str]
     created_at: datetime
+    logic_engine: str = "deterministic"
+    brain_notes: List[str] = Field(default_factory=list)
+    web_search_results: List[WebSearchResult] = Field(default_factory=list)
 
 class CompareRequest(BaseModel):
     build_ids: List[str] = Field(min_length=2, max_length=4)

@@ -3,7 +3,8 @@ import sqlite3
 from pathlib import Path
 from contextlib import contextmanager
 
-DB_PATH = Path('app/db/build_agent.db')
+BASE_DIR = Path(__file__).resolve().parents[1]
+DB_PATH = BASE_DIR / 'db' / 'build_agent.db'
 
 SCHEMA = '''
 CREATE TABLE IF NOT EXISTS source_records (

@@ -1,26 +1,190 @@
-<!doctype html><html><head><meta charset='utf-8'><title>Fallout 76 Build Agent</title>
-<style>body{font-family:Arial;max-width:1100px;margin:20px auto}label{display:block;margin:8px 0 2px}textarea,select,input{width:100%;padding:8px}button{margin-top:12px;padding:10px 16px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}</style></head>
-<body><h1>Fallout 76 SPECIAL + Perk Card Build Agent</h1>
-<p>Generate validated Fallout 76 builds with source-aware recommendations.</p>
-<a href='/compare'>Compare Builds</a>
-<div class='grid'>
-<div><label>Character level</label><select id='character_level'><option>50+</option><option>Under 50</option><option>100+</option><option>300+</option><option>I do not know</option></select></div>
-<div><label>Primary playstyle</label><select id='primary_playstyle'><option>Power Armor Heavy</option><option>Commando</option></select></div>
-<div><label>Primary weapon type</label><select id='primary_weapon_type'><option>Heavy energy</option><option>Heavy ballistic</option></select></div>
-<div><label>Armor type</label><select id='armor_type'><option>Power Armor</option><option>Regular armor</option></select></div>
-<div><label>Health model</label><select id='health_model'><option>Full health</option><option>Bloodied / low health</option></select></div>
-<div><label>Combat style</label><select id='combat_style'><option>Balanced</option><option>VATS</option><option>Non-VATS</option></select></div>
-<div><label>Team preference</label><select id='team_preference'><option>Public team</option><option>Solo</option></select></div>
-<div><label>Mutation preference</label><select id='mutation_preference'><option>Use mutations</option><option>No mutations</option></select></div>
-<div><label>Quality-of-life preference</label><select id='qol_preference'><option>Balanced</option><option>Carry weight</option></select></div>
-<div><label>Legendary perk availability</label><select id='legendary_perk_availability'><option>Some</option><option>None</option><option>Fully unlocked</option></select></div>
-</div>
-<label>Specific preferred weapons</label><input id='preferred_weapons' value='Gatling Plasma, Gatling Laser'>
-<label>Current gear</label><textarea id='current_gear'></textarea>
-<label>Avoid list</label><textarea id='avoid_list'>No stealth</textarea>
-<button onclick='gen()'>Create Build</button><button onclick='upd()'>Update Perk Database</button>
-<pre id='out'></pre>
-<script>
-async function gen(){const body={};['character_level','primary_playstyle','primary_weapon_type','preferred_weapons','armor_type','health_model','combat_style','team_preference','mutation_preference','qol_preference','legendary_perk_availability','current_gear','avoid_list'].forEach(k=>body[k]=document.getElementById(k).value);const r=await fetch('/api/build/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});document.getElementById('out').textContent=JSON.stringify(await r.json(),null,2)}
-async function upd(){const r=await fetch('/api/research/update',{method:'POST'});alert((await r.json()).message)}
-</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fallout 76 Build Agent</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">
+      <span class="brand-mark">76</span>
+      <span>
+        <strong>Fallout 76 Build Agent</strong>
+        <small>SPECIAL, perk cards, gear, mutations</small>
+      </span>
+    </a>
+    <nav class="nav-actions" aria-label="Primary">
+      <a href="/compare">Compare</a>
+      <span id="brainBadge" class="status-pill">Brain offline</span>
+    </nav>
+  </header>
+
+  <main class="workspace">
+    <section class="builder-shell" aria-labelledby="builderTitle">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Build bench</p>
+          <h1 id="builderTitle">Power Armor Heavy planner</h1>
+        </div>
+        <button id="generateBtn" class="primary-action" type="button">Create Build</button>
+      </div>
+
+      <form id="buildForm" class="control-grid">
+        <label>
+          Character level
+          <select id="character_level" name="character_level">
+            <option>50+</option>
+            <option>Under 50</option>
+            <option>100+</option>
+            <option>300+</option>
+            <option>I do not know</option>
+          </select>
+        </label>
+
+        <label>
+          Primary playstyle
+          <select id="primary_playstyle" name="primary_playstyle">
+            <option>Power Armor Heavy</option>
+            <option>Full-health Heavy Gunner</option>
+            <option>Bloodied Heavy Gunner</option>
+            <option>Power Armor Heavy Event Farmer</option>
+          </select>
+        </label>
+
+        <label>
+          Primary weapon type
+          <select id="primary_weapon_type" name="primary_weapon_type">
+            <option>Heavy energy</option>
+            <option>Heavy ballistic</option>
+            <option>Plasma Caster</option>
+            <option>Explosive heavy</option>
+          </select>
+        </label>
+
+        <label>
+          Armor type
+          <select id="armor_type" name="armor_type">
+            <option>Power Armor</option>
+            <option>Regular armor</option>
+          </select>
+        </label>
+
+        <label>
+          Health model
+          <select id="health_model" name="health_model">
+            <option>Full health</option>
+            <option>Bloodied / low health</option>
+          </select>
+        </label>
+
+        <label>
+          Combat style
+          <select id="combat_style" name="combat_style">
+            <option>Balanced</option>
+            <option>VATS</option>
+            <option>Non-VATS</option>
+          </select>
+        </label>
+
+        <label>
+          Team preference
+          <select id="team_preference" name="team_preference">
+            <option>Public team</option>
+            <option>Solo</option>
+          </select>
+        </label>
+
+        <label>
+          Mutation preference
+          <select id="mutation_preference" name="mutation_preference">
+            <option>Use mutations</option>
+            <option>No mutations</option>
+          </select>
+        </label>
+
+        <label>
+          Quality-of-life preference
+          <select id="qol_preference" name="qol_preference">
+            <option>Balanced</option>
+            <option>Carry weight</option>
+            <option>Ammo economy</option>
+            <option>Repair stability</option>
+          </select>
+        </label>
+
+        <label>
+          Legendary perk availability
+          <select id="legendary_perk_availability" name="legendary_perk_availability">
+            <option>Some</option>
+            <option>None</option>
+            <option>Fully unlocked</option>
+          </select>
+        </label>
+
+        <label class="wide">
+          Specific preferred weapons
+          <input id="preferred_weapons" name="preferred_weapons" value="Gatling Plasma, Gatling Laser">
+        </label>
+
+        <label class="wide">
+          Current gear
+          <textarea id="current_gear" name="current_gear" rows="4" placeholder="Union PA, Vampire Gatling Plasma, fusion cores"></textarea>
+        </label>
+
+        <label class="wide">
+          Avoid list
+          <textarea id="avoid_list" name="avoid_list" rows="3">No stealth</textarea>
+        </label>
+      </form>
+    </section>
+
+    <aside class="intel-rail" aria-label="Fallout 76 build intelligence">
+      <img class="appalachia-visual" src="/static/appalachia-grid.svg" alt="">
+
+      <section class="intel-block">
+        <div class="block-title">Core Stack</div>
+        <dl class="compact-list">
+          <div><dt>Damage</dt><dd>Heavy Gunner, Expert Heavy Gunner, Master Heavy Gunner</dd></div>
+          <div><dt>Power Armor</dt><dd>Stabilized for armor penetration and accuracy</dd></div>
+          <div><dt>Sustain</dt><dd>Electric Absorption, fusion cores, Vampire's variant</dd></div>
+          <div><dt>Armor effects</dt><dd>Overeater's baseline, enemy-specific swaps</dd></div>
+        </dl>
+      </section>
+
+      <section class="intel-block">
+        <div class="block-title">Weapon Targets</div>
+        <div class="tag-cloud">
+          <span>Gatling Plasma</span>
+          <span>Gatling Laser</span>
+          <span>Ultracite Gatling Laser</span>
+          <span>Gauss Minigun</span>
+          <span>Plasma Caster</span>
+        </div>
+      </section>
+
+      <section class="intel-block">
+        <div class="block-title">Mutations</div>
+        <div class="tag-cloud mixed">
+          <span>Speed Demon</span>
+          <span>Marsupial</span>
+          <span>Herd Mentality</span>
+          <span>Adrenal Reaction</span>
+          <span>Class Freak</span>
+          <span>Starched Genes</span>
+        </div>
+      </section>
+
+      <section class="intel-block">
+        <div class="block-title">Source Registry</div>
+        <div id="sourceList" class="source-list"></div>
+      </section>
+    </aside>
+  </main>
+
+  <section id="resultPanel" class="results-shell hidden" aria-live="polite"></section>
+
+  <script src="/static/index.js"></script>
+</body>
+</html>

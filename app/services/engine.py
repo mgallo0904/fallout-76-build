@@ -1,7 +1,7 @@
 from __future__ import annotations
 from datetime import datetime
 from uuid import uuid4
-from app.models import BuildInput, CompareResult, GeneratedBuild, PerkChoice
+from app.models import BuildInput, CompareResult, GeneratedBuild, PerkChoice, Status
 from app.services.repository import load_perks, list_sources
 
 SPECIALS = ["Strength","Perception","Endurance","Charisma","Intelligence","Agility","Luck"]
@@ -11,6 +11,10 @@ def classify(inp: BuildInput) -> str:
     text = f"{inp.primary_playstyle} {inp.primary_weapon_type} {inp.preferred_weapons}".lower()
     if "power armor" in text and "heavy" in text and "energy" in text:
         return "power_armor_heavy_energy"
+    if "power armor" in text and "heavy" in text:
+        return "power_armor_heavy"
+    if "bloodied" in text:
+        return "bloodied_general"
     return "power_armor_heavy_energy"
 
 
@@ -74,7 +78,7 @@ def _build_power_armor_heavy_energy(user: BuildInput) -> GeneratedBuild:
 
 def generate_build(user: BuildInput) -> GeneratedBuild:
     archetype = classify(user)
-    if archetype == "power_armor_heavy_energy":
+    if archetype in {"power_armor_heavy_energy", "power_armor_heavy", "bloodied_general"}:
         return _build_power_armor_heavy_energy(user)
     return _build_power_armor_heavy_energy(user)
 
@@ -105,7 +109,7 @@ def validate_build(build: GeneratedBuild) -> list[str]:
                 issues.append(f"Bloodied perk {card.name} used in full-health build")
             if card.vats_synergy and build.user_inputs.combat_style == "Non-VATS":
                 issues.append(f"VATS perk {card.name} prioritized in non-VATS build")
-            if card.status != "verified":
+            if card.status != Status.verified:
                 issues.append(f"Unverified perk flagged: {card.name}")
         if spent > build.special_allocation.get(special, 0):
             issues.append(f"{special} overspent ({spent} > {build.special_allocation.get(special, 0)})")

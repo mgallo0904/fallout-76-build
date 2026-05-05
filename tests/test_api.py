@@ -21,3 +21,23 @@ def test_sources_and_update_endpoints():
     resp = client.post('/api/research/update')
     assert resp.status_code == 200
     assert 'checked' in resp.json()
+
+
+def test_import_sources_rejects_invalid_payload_type():
+    resp = client.post(
+        '/api/admin/import/sources',
+        files={'file': ('sources.json', '{"bad": true}', 'application/json')},
+    )
+    assert resp.status_code == 400
+    assert 'Payload must be a JSON list' in resp.text
+
+
+def test_brain_status_endpoint_hides_api_key(monkeypatch):
+    monkeypatch.setenv('OLLAMA_API_KEY', 'secret-value')
+    monkeypatch.setenv('USE_OLLAMA_BRAIN', '1')
+
+    resp = client.get('/api/brain/status')
+
+    assert resp.status_code == 200
+    assert resp.json()['has_api_key'] is True
+    assert 'secret-value' not in resp.text
