@@ -14,16 +14,3 @@ Production-oriented FastAPI web backend + browser UI for validated Fallout 76 bu
 ```bash
 pip install -e .[dev]
 uvicorn app.main:app --reload
-```
-
-## Endpoints
-- `GET /api/perks`
-- `GET /api/perks/{id}`
-- `POST /api/build/generate`
-- `GET /api/build/{id}`
-- `POST /api/build/validate`
-- `POST /api/build/compare`
-- `POST /api/research/update`
-- `GET /api/sources`
-- `GET /api/admin/export/sources`
-- `POST /api/admin/import/sources`
