@@ -1,16 +1,29 @@
-# Fallout 76 Build Metadata Schema
+# Fallout 76 SPECIAL + Perk Card Build Agent
 
-This repository provides a fully runnable, dependency-light metadata schema layer for a Fallout 76 build generator.
+Production-oriented FastAPI web backend + browser UI for validated Fallout 76 build generation.
 
-## What is included
+## Features
+- Build generation for **Power Armor Heavy Energy Gunner** archetype.
+- Server-side validation (perk existence, rank legality, SPECIAL budget, PA restrictions, synergy mismatches).
+- SQLite persistence for generated builds and source records.
+- Build retrieval and side-by-side compare endpoint.
+- Source registry with reliability/conflict surfacing.
+- Admin JSON import/export for source records.
 
-- Complete metadata domain models for all required object types.
-- Built-in runtime validation for rank structure, confidence bounds, allowed tags, and categorical constraints.
-- Auditable source + patch linkage fields.
-- Validation result primitives and uncertainty tracking primitives.
-
-## Run tests
-
+## Run
 ```bash
-pytest -q
+pip install -e .[dev]
+uvicorn app.main:app --reload
 ```
+
+## Endpoints
+- `GET /api/perks`
+- `GET /api/perks/{id}`
+- `POST /api/build/generate`
+- `GET /api/build/{id}`
+- `POST /api/build/validate`
+- `POST /api/build/compare`
+- `POST /api/research/update`
+- `GET /api/sources`
+- `GET /api/admin/export/sources`
+- `POST /api/admin/import/sources`

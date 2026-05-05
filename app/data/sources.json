@@ -1,0 +1,5 @@
+[
+  {"id":"beth-apr21-2026","source_name":"Bethesda Fallout 76 Update Notes – April 21, 2026","source_url":"https://store.steampowered.com/news/app/1151340/view/623327006824596247","source_type":"official","date_accessed":"2026-05-05","relevant_patch":"2026-04-21","summary":"Official update notes for April 21, 2026.","reliability_score":0.99,"notes":"Primary source precedence."},
+  {"id":"nukesdragons-planner","source_name":"Nukes & Dragons Planner","source_url":"https://nukesdragons.com/fallout-76/character","source_type":"database","date_accessed":"2026-05-05","relevant_patch":null,"summary":"Current card planner and build validation reference.","reliability_score":0.9,"notes":"Used for cross-checking names and ranks."},
+  {"id":"falloutbuilds","source_name":"FalloutBuilds Perk Database","source_url":"https://www.falloutbuilds.com/fo76/perk-matrix/","source_type":"database","date_accessed":"2026-05-05","relevant_patch":null,"summary":"Secondary planner database cross-check.","reliability_score":0.85,"notes":"Used for corroboration only."}
+]
