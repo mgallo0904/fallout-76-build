@@ -1,0 +1,723 @@
+[
+  {
+    "id": "legendary_strength",
+    "name": "Legendary Strength",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "+1 STR",
+      "2": "+2",
+      "3": "+3",
+      "4": "+5"
+    },
+    "level_required": 50,
+    "tags": [
+      "legendary",
+      "special"
+    ],
+    "build_families": [
+      "all"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "legendary_perception",
+    "name": "Legendary Perception",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "+1 PER",
+      "2": "+2",
+      "3": "+3",
+      "4": "+5"
+    },
+    "level_required": 75,
+    "tags": [
+      "legendary",
+      "special"
+    ],
+    "build_families": [
+      "all"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "legendary_endurance",
+    "name": "Legendary Endurance",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "+1 END",
+      "2": "+2",
+      "3": "+3",
+      "4": "+5"
+    },
+    "level_required": 100,
+    "tags": [
+      "legendary",
+      "special"
+    ],
+    "build_families": [
+      "all"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "legendary_charisma",
+    "name": "Legendary Charisma",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "+1 CHA",
+      "2": "+2",
+      "3": "+3",
+      "4": "+5"
+    },
+    "level_required": 125,
+    "tags": [
+      "legendary",
+      "special"
+    ],
+    "build_families": [
+      "all"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "legendary_intelligence",
+    "name": "Legendary Intelligence",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "+1 INT",
+      "2": "+2",
+      "3": "+3",
+      "4": "+5"
+    },
+    "level_required": 150,
+    "tags": [
+      "legendary",
+      "special"
+    ],
+    "build_families": [
+      "all"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "legendary_agility",
+    "name": "Legendary Agility",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "+1 AGI",
+      "2": "+2",
+      "3": "+3",
+      "4": "+5"
+    },
+    "level_required": 175,
+    "tags": [
+      "legendary",
+      "special"
+    ],
+    "build_families": [
+      "all"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "legendary_luck",
+    "name": "Legendary Luck",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "+1 LUK",
+      "2": "+2",
+      "3": "+3",
+      "4": "+5"
+    },
+    "level_required": 200,
+    "tags": [
+      "legendary",
+      "special"
+    ],
+    "build_families": [
+      "all"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "taking_one_for_the_team",
+    "name": "Taking One for the Team",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "Teammates +5% damage to enemies you've damaged",
+      "2": "+10%",
+      "3": "+15%",
+      "4": "+25%"
+    },
+    "level_required": 50,
+    "tags": [
+      "legendary",
+      "team",
+      "support"
+    ],
+    "build_families": [
+      "all"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "follow_through",
+    "name": "Follow Through",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "Sneak attack damage +10% lingers 10s",
+      "2": "+15%",
+      "3": "+20%",
+      "4": "+30%"
+    },
+    "level_required": 50,
+    "tags": [
+      "legendary",
+      "stealth"
+    ],
+    "build_families": [
+      "rifleman",
+      "commando",
+      "gunslinger",
+      "bow_stealth"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "electric_absorption",
+    "name": "Electric Absorption",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "10% energy hits restore Fusion Core",
+      "2": "20%",
+      "3": "30%",
+      "4": "50%"
+    },
+    "level_required": 75,
+    "tags": [
+      "legendary",
+      "power_armor"
+    ],
+    "build_families": [
+      "power_armor_heavy_energy"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "power_armor_reboot",
+    "name": "Power Armor Reboot",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "Auto-stand once per 30 min in PA on lethal",
+      "2": "20 min",
+      "3": "10 min",
+      "4": "5 min"
+    },
+    "level_required": 100,
+    "tags": [
+      "legendary",
+      "power_armor"
+    ],
+    "build_families": [
+      "power_armor_heavy_energy",
+      "shotgunner",
+      "melee",
+      "ghoul"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "ammo_factory",
+    "name": "Ammo Factory",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "Crafted ammo +50%",
+      "2": "+100%",
+      "3": "+200%",
+      "4": "+400%"
+    },
+    "level_required": 50,
+    "tags": [
+      "legendary",
+      "economy"
+    ],
+    "build_families": [
+      "all"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "master_infiltrator",
+    "name": "Master Infiltrator",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "Auto Advanced lock/terminal",
+      "2": "Expert",
+      "3": "Master",
+      "4": "Master + faster hacking"
+    },
+    "level_required": 75,
+    "tags": [
+      "legendary",
+      "utility"
+    ],
+    "build_families": [
+      "all"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "sneak_attacker",
+    "name": "Sneak Attacker",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "+10% sneak attack damage",
+      "2": "+20%",
+      "3": "+30%",
+      "4": "+40%"
+    },
+    "level_required": 100,
+    "tags": [
+      "legendary",
+      "stealth"
+    ],
+    "build_families": [
+      "rifleman",
+      "gunslinger",
+      "bow_stealth"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "what_rads",
+    "name": "What Rads?",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "Rad Resist +50",
+      "2": "+100",
+      "3": "+150",
+      "4": "+250"
+    },
+    "level_required": 75,
+    "tags": [
+      "legendary",
+      "rad"
+    ],
+    "build_families": [
+      "all",
+      "ghoul"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "funky_duds",
+    "name": "Funky Duds",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "Poison Resist +50",
+      "2": "+100",
+      "3": "+150",
+      "4": "+250"
+    },
+    "level_required": 100,
+    "tags": [
+      "legendary",
+      "defense"
+    ],
+    "build_families": [
+      "all"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "far_flung_fireworks",
+    "name": "Far-Flung Fireworks",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "Kills launch missiles at others T1",
+      "2": "T2",
+      "3": "T3",
+      "4": "T4"
+    },
+    "level_required": 125,
+    "tags": [
+      "legendary",
+      "explosive"
+    ],
+    "build_families": [
+      "explosive",
+      "shotgunner"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "retribution",
+    "name": "Retribution",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "10% damage taken returned as fire",
+      "2": "20%",
+      "3": "30%",
+      "4": "50%"
+    },
+    "level_required": 100,
+    "tags": [
+      "legendary",
+      "defense"
+    ],
+    "build_families": [
+      "melee",
+      "ghoul"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "hack_and_slash",
+    "name": "Hack and Slash",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "Melee hits emit 25% damage shockwave",
+      "2": "50%",
+      "3": "75%",
+      "4": "100%"
+    },
+    "level_required": 50,
+    "tags": [
+      "legendary",
+      "melee"
+    ],
+    "build_families": [
+      "melee",
+      "ghoul"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "blocker_legendary",
+    "name": "Blocker (Legendary)",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "Melee damage taken -10%",
+      "2": "-20%",
+      "3": "-30%",
+      "4": "-45%"
+    },
+    "level_required": 50,
+    "tags": [
+      "legendary",
+      "defense"
+    ],
+    "build_families": [
+      "melee",
+      "tank"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "glowing_one",
+    "name": "Glowing One",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "Grant nearby ghoul allies glow T1",
+      "2": "T2",
+      "3": "T3",
+      "4": "T4"
+    },
+    "level_required": 50,
+    "tags": [
+      "legendary",
+      "ghoul",
+      "glow",
+      "team"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "rad_reborn",
+    "name": "Rad Reborn",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "Lethal damage converts to glow once per 5 min",
+      "2": "4 min",
+      "3": "3 min",
+      "4": "2 min"
+    },
+    "level_required": 100,
+    "tags": [
+      "legendary",
+      "ghoul",
+      "glow"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  }
+]

@@ -1,43 +1,140 @@
+import json
+import tempfile
+from pathlib import Path
+
 from fastapi.testclient import TestClient
+
 from app.main import app
 
 client = TestClient(app)
 
 
-def test_generate_and_get_build():
-    generated = client.post('/api/build/generate', json={})
-    assert generated.status_code == 200
-    payload = generated.json()
-    assert payload['build']['build_name'] == 'Power Armor Heavy Energy Gunner'
-    build_id = payload['build']['id']
+def test_archetypes_endpoint_lists_2026_meta():
+    response = client.get("/api/archetypes")
+    assert response.status_code == 200
+    ids = {a["id"] for a in response.json()}
+    assert ids >= {
+        "power_armor_heavy_energy",
+        "bullet_storm_heavy",
+        "onslaught_commando",
+        "rifleman",
+        "shotgunner",
+        "gunslinger",
+        "melee",
+        "playable_ghoul",
+        "bow_stealth",
+        "cremator_pyro",
+        "pepper_shaker_stealth",
+        "ghoul_commando",
+        "ghoul_melee",
+    }
 
-    fetched = client.get(f'/api/build/{build_id}')
+
+def test_archetype_preview_endpoint():
+    response = client.get("/api/archetypes/bow_stealth")
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["id"] == "bow_stealth"
+    assert payload["name"] == "Bow Stealth Sniper"
+    assert sum(payload["special_allocation"].values()) <= 56
+    assert any(p["card_id"] == "rifleman" for p in payload["perk_picks"])
+
+
+def test_archetype_preview_404():
+    response = client.get("/api/archetypes/does_not_exist")
+    assert response.status_code == 404
+
+
+def test_legendary_perk_detail_endpoint():
+    response = client.get("/api/legendary-perks/taking_one_for_the_team")
+    assert response.status_code == 200
+    assert response.json()["name"] == "Taking One for the Team"
+
+
+def test_brain_research_without_brain_returns_empty_or_503():
+    response = client.post("/api/brain/research", json={"query": "fallout 76 april 2026 patch", "max_results": 3})
+    assert response.status_code in {200, 503}
+    if response.status_code == 200:
+        body = response.json()
+        assert body["enabled"] is False
+        assert body["search_results"] == []
+
+
+def test_perks_endpoint_filters_deprecated_by_default():
+    active = client.get("/api/perks").json()
+    full = client.get("/api/perks?include_deprecated=true").json()
+    assert all(p["status"] == "verified" for p in active)
+    assert len(full) > len(active)
+
+
+def test_legendary_perks_endpoint():
+    payload = client.get("/api/legendary-perks").json()
+    assert any(p["id"] == "taking_one_for_the_team" for p in payload)
+
+
+def test_generate_and_get_build_default_is_pa_heavy_energy():
+    response = client.post("/api/build/generate", json={})
+    assert response.status_code == 200
+    build = response.json()
+    assert build["build_name"] == "Power Armor Heavy Energy Gunner"
+    fetched = client.get(f"/api/build/{build['id']}")
     assert fetched.status_code == 200
-    assert fetched.json()['id'] == build_id
+    assert fetched.json()["id"] == build["id"]
 
 
-def test_sources_and_update_endpoints():
-    assert client.get('/api/sources').status_code == 200
-    resp = client.post('/api/research/update')
-    assert resp.status_code == 200
-    assert 'checked' in resp.json()
+def test_compare_endpoint_accepts_build_ids_object():
+    a = client.post("/api/build/generate", json={"primary_playstyle": "Commando", "primary_weapon_type": "Auto rifle", "armor_type": "Regular armor", "combat_style": "VATS"}).json()
+    b = client.post("/api/build/generate", json={"primary_playstyle": "Power Armor Heavy", "primary_weapon_type": "Heavy energy"}).json()
+    response = client.post("/api/build/compare", json={"build_ids": [a["id"], b["id"]]})
+    assert response.status_code == 200
+    payload = response.json()
+    assert set(payload["build_ids"]) == {a["id"], b["id"]}
 
 
-def test_import_sources_rejects_invalid_payload_type():
-    resp = client.post(
-        '/api/admin/import/sources',
-        files={'file': ('sources.json', '{"bad": true}', 'application/json')},
+def test_validate_endpoint_returns_list():
+    build = client.post("/api/build/generate", json={}).json()
+    response = client.post("/api/build/validate", json=build)
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)
+
+
+def test_admin_export_then_import_round_trip():
+    exported = client.get("/api/admin/export/sources").json()
+    assert isinstance(exported, list)
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as fh:
+        json.dump(exported, fh)
+        tmp_path = Path(fh.name)
+    with tmp_path.open("rb") as binary:
+        response = client.post(
+            "/api/admin/import/sources",
+            files={"file": ("sources.json", binary, "application/json")},
+        )
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["imported"] == len(exported)
+
+
+def test_admin_import_rejects_invalid_payload_type():
+    response = client.post(
+        "/api/admin/import/sources",
+        files={"file": ("sources.json", b'{"bad": true}', "application/json")},
     )
-    assert resp.status_code == 400
-    assert 'Payload must be a JSON list' in resp.text
+    assert response.status_code == 400
+    assert "Payload must be a JSON list" in response.text
 
 
-def test_brain_status_endpoint_hides_api_key(monkeypatch):
-    monkeypatch.setenv('OLLAMA_API_KEY', 'secret-value')
-    monkeypatch.setenv('USE_OLLAMA_BRAIN', '1')
+def test_brain_status_hides_api_key(monkeypatch):
+    monkeypatch.setenv("OLLAMA_API_KEY", "secret-value")
+    monkeypatch.setenv("USE_OLLAMA_BRAIN", "1")
+    response = client.get("/api/brain/status")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["has_api_key"] is True
+    assert "secret-value" not in response.text
 
-    resp = client.get('/api/brain/status')
 
-    assert resp.status_code == 200
-    assert resp.json()['has_api_key'] is True
-    assert 'secret-value' not in resp.text
+def test_brain_search_without_brain_returns_empty_or_503():
+    response = client.post("/api/brain/search", json={"query": "fallout 76 patch", "max_results": 3})
+    assert response.status_code in {200, 503}
+    if response.status_code == 200:
+        assert response.json() == []

@@ -16,6 +16,7 @@
       </span>
     </a>
     <nav class="nav-actions" aria-label="Primary">
+      <a href="/planner">Planner</a>
       <a href="/compare">Compare</a>
       <span id="brainBadge" class="status-pill">Brain offline</span>
     </nav>
@@ -44,22 +45,72 @@
         </label>
 
         <label>
+          Character type
+          <select id="character_type" name="character_type">
+            <option>Human</option>
+            <option>Playable Ghoul</option>
+          </select>
+        </label>
+
+        <label>
           Primary playstyle
           <select id="primary_playstyle" name="primary_playstyle">
             <option>Power Armor Heavy</option>
-            <option>Full-health Heavy Gunner</option>
-            <option>Bloodied Heavy Gunner</option>
-            <option>Power Armor Heavy Event Farmer</option>
+            <option>Bullet Storm Heavy</option>
+            <option>Pyromaniac</option>
+            <option>Commando</option>
+            <option>Rifleman</option>
+            <option>Bow Stealth</option>
+            <option>Shotgunner</option>
+            <option>Stealth Shotgun</option>
+            <option>Gunslinger</option>
+            <option>Melee</option>
+            <option>Ghoul Heavy</option>
+            <option>Ghoul Commando</option>
+            <option>Ghoul Melee</option>
           </select>
         </label>
 
         <label>
           Primary weapon type
           <select id="primary_weapon_type" name="primary_weapon_type">
-            <option>Heavy energy</option>
-            <option>Heavy ballistic</option>
-            <option>Plasma Caster</option>
-            <option>Explosive heavy</option>
+            <optgroup label="Heavy">
+              <option>Heavy energy</option>
+              <option>Heavy ballistic</option>
+              <option>Plasma Caster</option>
+              <option>Explosive heavy</option>
+              <option>Cremator</option>
+              <option>Flamer</option>
+            </optgroup>
+            <optgroup label="Rifle">
+              <option>Auto rifle</option>
+              <option>Non-automatic rifle</option>
+              <option>Lever action</option>
+              <option>Sniper</option>
+            </optgroup>
+            <optgroup label="Bow">
+              <option>Bow</option>
+              <option>Crossbow</option>
+              <option>Compound Bow</option>
+            </optgroup>
+            <optgroup label="Shotgun">
+              <option>Shotgun</option>
+              <option>Pepper Shaker</option>
+              <option>Fancy Pump-Action</option>
+              <option>Gauss Shotgun</option>
+            </optgroup>
+            <optgroup label="Pistol">
+              <option>Pistol</option>
+              <option>Revolver</option>
+              <option>Auto pistol</option>
+            </optgroup>
+            <optgroup label="Melee">
+              <option>Melee</option>
+              <option>Unarmed</option>
+              <option>Two-handed</option>
+              <option>Auto Axe</option>
+              <option>Chainsaw</option>
+            </optgroup>
           </select>
         </label>
 
@@ -101,6 +152,25 @@
           <select id="mutation_preference" name="mutation_preference">
             <option>Use mutations</option>
             <option>No mutations</option>
+            <optgroup label="Specific mutation focus">
+              <option>Speed Demon</option>
+              <option>Adrenal Reaction</option>
+              <option>Marsupial</option>
+              <option>Eagle Eyes</option>
+              <option>Talons</option>
+              <option>Bird Bones</option>
+              <option>Egg Head</option>
+              <option>Empath</option>
+              <option>Healing Factor</option>
+              <option>Carnivore</option>
+              <option>Herbivore</option>
+              <option>Twisted Muscles</option>
+              <option>Plague Walker</option>
+              <option>Grounded</option>
+              <option>Scaly Skin</option>
+              <option>Electrically Charged</option>
+              <option>Chameleon</option>
+            </optgroup>
           </select>
         </label>
 

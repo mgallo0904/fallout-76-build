@@ -1,5 +1,123 @@
 [
-  {"id":"beth-apr21-2026","source_name":"Bethesda Fallout 76 Update Notes – April 21, 2026","source_url":"https://store.steampowered.com/news/app/1151340/view/623327006824596247","source_type":"official","date_accessed":"2026-05-05","relevant_patch":"2026-04-21","summary":"Official update notes for April 21, 2026.","reliability_score":0.99,"notes":"Primary source precedence."},
-  {"id":"nukesdragons-planner","source_name":"Nukes & Dragons Planner","source_url":"https://nukesdragons.com/fallout-76/character","source_type":"database","date_accessed":"2026-05-05","relevant_patch":null,"summary":"Current card planner and build validation reference.","reliability_score":0.9,"notes":"Used for cross-checking names and ranks."},
-  {"id":"falloutbuilds","source_name":"FalloutBuilds Perk Database","source_url":"https://www.falloutbuilds.com/fo76/perk-matrix/","source_type":"database","date_accessed":"2026-05-05","relevant_patch":null,"summary":"Secondary planner database cross-check.","reliability_score":0.85,"notes":"Used for corroboration only."}
+  {
+    "id": "beth-apr21-2026",
+    "source_name": "Bethesda Fallout 76 Update Notes - April 21, 2026",
+    "source_url": "https://www.reddit.com/r/fo76/comments/1srp4gu/fallout_76_update_notes_april_21_2026/",
+    "source_type": "official",
+    "date_accessed": "2026-05-04",
+    "relevant_patch": "April 21 2026",
+    "summary": "Mirror of the official April 21 2026 update notes. Primary ground truth for current live behavior.",
+    "reliability_score": 0.99,
+    "notes": "Primary source precedence."
+  },
+  {
+    "id": "nukaknights-patch62",
+    "source_name": "Nuka Knights - Patch 62 (Season 22) Perk Changes",
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_type": "guide",
+    "date_accessed": "2026-05-04",
+    "relevant_patch": "62",
+    "summary": "Definitive change log for Patch 62 perk renames and reworks: Bullet Storm trio, Tank Killer 2-rank, Stabilized accuracy, Lock and Load retention, Rad Sponge END move, melee rework.",
+    "reliability_score": 0.92,
+    "notes": "Cross-checked against PTS datamines."
+  },
+  {
+    "id": "falloutbuilds-heavy-2026",
+    "source_name": "FalloutBuilds Heavy Gunner Build 2026",
+    "source_url": "https://www.falloutbuilds.com/fo76/builds/heavy-gunner/",
+    "source_type": "database",
+    "date_accessed": "2026-05-04",
+    "relevant_patch": "April 21 2026",
+    "summary": "Current Heavy Gunner core 8-card lane and PA recommendations for 2026.",
+    "reliability_score": 0.90,
+    "notes": "Used for archetype defaults."
+  },
+  {
+    "id": "falloutbuilds-commando-2026",
+    "source_name": "FalloutBuilds Commando Build 2026",
+    "source_url": "https://www.falloutbuilds.com/fo76/builds/commando/",
+    "source_type": "database",
+    "date_accessed": "2026-05-04",
+    "relevant_patch": "April 21 2026",
+    "summary": "Current Commando build with Fixer / Elder's Mark and prefix guidance for 2026.",
+    "reliability_score": 0.90,
+    "notes": "Used for archetype defaults."
+  },
+  {
+    "id": "nukesdragons-planner",
+    "source_name": "Nukes & Dragons Planner",
+    "source_url": "https://nukesdragons.com/fallout-76/character",
+    "source_type": "database",
+    "date_accessed": "2026-05-04",
+    "relevant_patch": "April 21 2026",
+    "summary": "Current card planner and rank/level cross-check reference.",
+    "reliability_score": 0.88,
+    "notes": "Used for cross-checking names, ranks, and level requirements."
+  },
+  {
+    "id": "falloutbuilds-apr21-2026",
+    "source_name": "FalloutBuilds Update Notes - April 21 2026",
+    "source_url": "https://www.falloutbuilds.com/fallout-76-update-notes-april-21-2026/",
+    "source_type": "guide",
+    "date_accessed": "2026-05-04",
+    "relevant_patch": "April 21 2026",
+    "summary": "Detailed mirror of April 21 2026 patch: armor durability buff, explosion math fix, Fancy Pump-Action / Fancy Single-Action Revolver stealth pivot, Fierce cost normalize, locked-mod consumption exploit fix, Center Masochist + Glowing One Pip-Boy fixes.",
+    "reliability_score": 0.95,
+    "notes": "Cross-checked with gamer.org breakdown."
+  },
+  {
+    "id": "gamer-apr21-2026",
+    "source_name": "gamer.org April 21 2026 Patch Breakdown",
+    "source_url": "https://www.gamer.org/fallout-76-april-21-2026-patch-full-armor-explosive-and-daily-ops-breakdown/",
+    "source_type": "guide",
+    "date_accessed": "2026-05-04",
+    "relevant_patch": "April 21 2026",
+    "summary": "Editorial deep-dive on the April 21 2026 patch: explosion vs high-resist enemies, multi-projectile damage retention, Demolition Expert + bobblehead self-damage math, Fancy Pump-Action stealth re-tuning.",
+    "reliability_score": 0.82,
+    "notes": "Used for explosion/multi-projectile interpretation."
+  },
+  {
+    "id": "u4gm-ghoul-perks-2026",
+    "source_name": "u4gm - All 30 New Ghoul Perk Cards Explained",
+    "source_url": "https://www.u4gm.com/fallout-76/blog-fallout-76-all-30-new-ghoul-perk-cards-explained-in-detail",
+    "source_type": "guide",
+    "date_accessed": "2026-05-04",
+    "relevant_patch": "Ghoul Within (Season 20) + 2026 patches",
+    "summary": "Catalog of the 30 ghoul-only perk cards including 2 legendary cards (Glowing One, Rad Reborn) plus regular cards covering glow, feral, mutation, explosive crafting and team support.",
+    "reliability_score": 0.78,
+    "notes": "Names cross-checked against Fallout Wiki."
+  },
+  {
+    "id": "fandom-playable-ghoul",
+    "source_name": "Fallout Wiki - Fallout 76 playable ghoul",
+    "source_url": "https://fallout.fandom.com/wiki/Fallout_76_playable_ghoul",
+    "source_type": "wiki",
+    "date_accessed": "2026-05-04",
+    "relevant_patch": "Ghoul Within (Mar 18 2025) + 2026",
+    "summary": "Authoritative reference for playable ghoul mechanics: feral state, glow resource, radiation as healing, restrictions on Unyielding armor, ghoul-only perk family.",
+    "reliability_score": 0.86,
+    "notes": "Authoritative for ghoul mechanics."
+  },
+  {
+    "id": "falloutbuilds-archetypes-2026",
+    "source_name": "FalloutBuilds Archetype Index 2026",
+    "source_url": "https://www.falloutbuilds.com/fo76/builds/",
+    "source_type": "database",
+    "date_accessed": "2026-05-04",
+    "relevant_patch": "April 21 2026",
+    "summary": "Canonical six-archetype taxonomy (Melee, Heavy Gunner, Commando, Shotgunner, Rifleman, Pistol) with bow/crossbow and pyromaniac sub-meta references.",
+    "reliability_score": 0.88,
+    "notes": "Used for archetype taxonomy."
+  },
+  {
+    "id": "mrwesttek-raid-2026",
+    "source_name": "MrWestTek Ultimate Raid Build 2026",
+    "source_url": "https://www.falloutbuilds.com/builds/raidbuild2026/",
+    "source_type": "community",
+    "date_accessed": "2026-05-04",
+    "relevant_patch": "April 21 2026",
+    "summary": "Gleaming Depths-tuned PA build with Psychobuff + Blight Soup and Tesla Science 8.",
+    "reliability_score": 0.75,
+    "notes": "Community raid context."
+  }
 ]

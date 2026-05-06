@@ -40,6 +40,15 @@ function buildRequestBody() {
   inputIds.forEach((id) => {
     body[id] = $(id).value;
   });
+  // Character type: prepend "Ghoul " to playstyle so the engine classifier routes
+  // to ghoul_commando / ghoul_melee / playable_ghoul as appropriate.
+  const characterType = $('character_type')?.value;
+  if (characterType === 'Playable Ghoul') {
+    const playstyle = body.primary_playstyle || '';
+    if (!/ghoul/i.test(playstyle)) {
+      body.primary_playstyle = `Ghoul ${playstyle}`.trim();
+    }
+  }
   return body;
 }
 
@@ -137,27 +146,28 @@ function renderSpecial(allocation) {
 }
 
 function renderPerks(perksBySpecial) {
-  const entries = Object.entries(perksBySpecial || {}).filter(([, cards]) => cards.length);
-  if (!entries.length) {
-    return '<p class="empty-state">No perk cards returned.</p>';
-  }
+  const order = ['Strength', 'Perception', 'Endurance', 'Charisma', 'Intelligence', 'Agility', 'Luck'];
+  const data = perksBySpecial || {};
   return `
     <div class="perk-grid">
-      ${entries.map(([special, cards]) => `
-        <div class="perk-special">
-          <strong>${escapeHtml(special)}</strong>
-          ${cards.map((card) => {
-            const perk = state.perksById[card.card_id];
-            const effect = perk?.effect_by_rank?.[card.rank] || perk?.effect_by_rank?.[String(card.rank)] || card.why;
-            return `
-              <div class="perk-card">
-                <strong>${escapeHtml(perk?.name || card.card_id)} rank ${escapeHtml(card.rank)}</strong>
-                <small>${escapeHtml(card.role)} - ${escapeHtml(effect)}</small>
-              </div>
-            `;
-          }).join('')}
-        </div>
-      `).join('')}
+      ${order.map((special) => {
+        const cards = data[special] || [];
+        return `
+          <div class="perk-special">
+            <strong>${escapeHtml(special)} <span style="opacity:.6;font-weight:400">(${cards.length})</span></strong>
+            ${cards.length ? cards.map((card) => {
+              const perk = state.perksById[card.card_id];
+              const effect = perk?.effect_by_rank?.[card.rank] || perk?.effect_by_rank?.[String(card.rank)] || card.why;
+              return `
+                <div class="perk-card">
+                  <strong>${escapeHtml(perk?.name || card.card_id)} rank ${escapeHtml(card.rank)}</strong>
+                  <small>${escapeHtml(card.role)} - ${escapeHtml(effect)}</small>
+                </div>
+              `;
+            }).join('') : '<small style="opacity:.55">No required cards in this stat - free for swap-ins.</small>'}
+          </div>
+        `;
+      }).join('')}
     </div>
   `;
 }
@@ -231,7 +241,7 @@ function renderSearchResults(results) {
 }
 
 function renderBuild(payload) {
-  const build = payload.build;
+  const build = payload.build || payload;
   const panel = $('resultPanel');
   const brainNotes = [
     ...(build.brain_notes || []),

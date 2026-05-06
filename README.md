@@ -3,12 +3,21 @@
 Production-oriented FastAPI web backend + browser UI for validated Fallout 76 build generation.
 
 ## Features
-- Build generation for **Power Armor Heavy Energy Gunner** archetype.
-- Server-side validation (perk existence, rank legality, SPECIAL budget, PA restrictions, synergy mismatches).
-- SQLite persistence for generated builds and source records.
+- Build generation for **13 archetypes** across all current Fallout 76 weapon families and playstyles:
+  - **Power Armor Heavy Energy Gunner**, **Bullet Storm Heavy Gunner**, **Cremator Pyromaniac**
+  - **Onslaught Commando**, **Stealth Rifleman**, **Bow Stealth Sniper**
+  - **Power Armor Shotgunner**, **Pepper Shaker Stealth Shotgunner** (April 21 2026 Fancy Pump-Action niche)
+  - **VATS Gunslinger**, **Bloodied Melee Bruiser**
+  - **Playable Ghoul Heavy**, **Playable Ghoul Commando**, **Playable Ghoul Melee Bruiser**
+- Aligned with **Patch 62 (CAMP Revamp / Season 22)** and the **April 21 2026** update: armor durability buff, explosion retention vs high-resist enemies, Demolition Expert + bobblehead self-damage math, Fancy Pump-Action / Fancy Single-Action Revolver stealth pivot, Fierce cost normalize, locked-mod exploit fix.
+- Comprehensive perk database: 100+ regular perk cards plus 18 ghoul-only cards and 22 legendary perks (including Glowing One, Rad Reborn, Far-Flung Fireworks, Hack and Slash, Retribution, all 7 Legendary SPECIAL stat perks).
+- Interactive `/planner` UI with patch banner, SPECIAL sliders, perk picker by SPECIAL column, live validation.
+- Server-side validation: perk existence + status, rank legality, SPECIAL budget incl. legendary stat perks, PA / VATS / bloodied / stealth synergy mismatches, **Ghoul Unyielding restriction**.
+- SQLite persistence for generated builds and source records (auto-seeded at startup).
 - Build retrieval and side-by-side compare endpoint.
-- Source registry with reliability/conflict surfacing.
+- Source registry with reliability ordering and 2026 patch sources.
 - Admin JSON import/export for source records.
+- **Ollama brain (`kimi-k2.6:cloud`) by default** with strengthened patch-aware system prompt and Ollama Web Search grounding. Brain may refine narrative fields (assumptions, gear, mutations, weaknesses, notes, variants, swap cards, legendary perks, build name) but never mutates SPECIAL or core perk picks.
 
 ## Run
 ```bash
@@ -40,15 +49,25 @@ curl http://localhost:8000/api/brain/status
 ```
 
 ## Endpoints
-- `GET /api/perks`
+- `GET /api/archetypes`
+- `GET /api/archetypes/{id}` — full archetype preview (SPECIAL allocation, perk picks, legendary perks, gear, weaknesses)
+- `GET /api/perks` (default: verified only; `?include_deprecated=true` to include retired cards)
 - `GET /api/perks/{id}`
+- `GET /api/legendary-perks`
+- `GET /api/legendary-perks/{id}`
 - `POST /api/build/generate`
 - `GET /api/build/{id}`
 - `POST /api/build/validate`
-- `POST /api/build/compare`
+- `POST /api/build/compare` (body: `{"build_ids": ["...", "..."]}`)
 - `POST /api/research/update`
+- `POST /api/brain/research` — kimi-k2.6:cloud + web-search grounded patch/meta digest (body: `{"query": "...", "max_results": 5}`)
 - `GET /api/sources`
-- `GET /api/brain/status`
-- `POST /api/brain/search`
 - `GET /api/admin/export/sources`
-- `POST /api/admin/import/sources`
+- `POST /api/admin/import/sources` (multipart, `file=sources.json`)
+- `GET /api/brain/status`
+- `POST /api/brain/search` (body: `{"query": "...", "max_results": 5}`)
+
+## UI routes
+- `/` Builder home (deterministic generator + brain enhancement)
+- `/planner` Interactive perk planner with SPECIAL sliders, live validation, and archetype baselines
+- `/compare` Compare 2-4 saved builds side by side

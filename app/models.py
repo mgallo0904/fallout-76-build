@@ -110,6 +110,24 @@ class GeneratedBuild(BaseModel):
     brain_notes: List[str] = Field(default_factory=list)
     web_search_results: List[WebSearchResult] = Field(default_factory=list)
 
+class ArchetypeSummary(BaseModel):
+    id: str
+    name: str
+
+
+class ArchetypePreview(BaseModel):
+    id: str
+    name: str
+    aliases: List[str]
+    special_allocation: Dict[str, int]
+    perk_picks: List[Dict[str, str]]
+    optional_perk_picks: List[Dict[str, str]] = Field(default_factory=list)
+    legendary_perks: List[Dict[str, str]] = Field(default_factory=list)
+    gear: Dict[str, List[str]] = Field(default_factory=dict)
+    weaknesses: List[str] = Field(default_factory=list)
+    extra_assumptions: List[str] = Field(default_factory=list)
+
+
 class CompareRequest(BaseModel):
     build_ids: List[str] = Field(min_length=2, max_length=4)
 

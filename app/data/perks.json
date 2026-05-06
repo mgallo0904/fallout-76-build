@@ -1,6 +1,3088 @@
 [
-  {"id":"heavy_gunner","name":"Heavy Gunner","special":"Strength","max_rank":3,"rank_costs":{"1":1,"2":2,"3":3},"effect_by_rank":{"1":"Non-explosive heavy guns gain +10% damage.","2":"Non-explosive heavy guns gain +15% damage.","3":"Non-explosive heavy guns gain +20% damage."},"level_required":30,"tags":["heavy_weapon","damage"],"build_families":["heavy","power_armor_heavy_energy"],"heavy_weapon_synergy":true,"energy_weapon_synergy":true,"source_url":"https://nukesdragons.com/fallout-76/perks","source_name":"Nukes & Dragons","source_type":"database","last_verified_date":"2026-05-05","patch_version":"2026-04-21","status":"verified"},
-  {"id":"expert_heavy_gunner","name":"Expert Heavy Gunner","special":"Strength","max_rank":3,"rank_costs":{"1":1,"2":2,"3":3},"effect_by_rank":{"1":"Non-explosive heavy guns gain +10% damage.","2":"Non-explosive heavy guns gain +15% damage.","3":"Non-explosive heavy guns gain +20% damage."},"level_required":40,"tags":["heavy_weapon","damage"],"build_families":["heavy","power_armor_heavy_energy"],"heavy_weapon_synergy":true,"energy_weapon_synergy":true,"source_url":"https://nukesdragons.com/fallout-76/perks","source_name":"Nukes & Dragons","source_type":"database","last_verified_date":"2026-05-05","patch_version":"2026-04-21","status":"verified"},
-  {"id":"master_heavy_gunner","name":"Master Heavy Gunner","special":"Strength","max_rank":3,"rank_costs":{"1":1,"2":2,"3":3},"effect_by_rank":{"1":"Non-explosive heavy guns gain +10% damage.","2":"Non-explosive heavy guns gain +15% damage.","3":"Non-explosive heavy guns gain +20% damage."},"level_required":50,"tags":["heavy_weapon","damage"],"build_families":["heavy","power_armor_heavy_energy"],"heavy_weapon_synergy":true,"energy_weapon_synergy":true,"source_url":"https://nukesdragons.com/fallout-76/perks","source_name":"Nukes & Dragons","source_type":"database","last_verified_date":"2026-05-05","patch_version":"2026-04-21","status":"verified"},
-  {"id":"stabilized","name":"Stabilized","special":"Intelligence","max_rank":3,"rank_costs":{"1":1,"2":2,"3":3},"effect_by_rank":{"1":"In Power Armor, heavy guns gain improved accuracy and armor penetration.","2":"In Power Armor, heavy guns gain improved accuracy and armor penetration.","3":"In Power Armor, heavy guns gain improved accuracy and armor penetration."},"level_required":30,"tags":["power_armor","heavy_weapon"],"build_families":["heavy","power_armor_heavy_energy"],"power_armor_only":true,"heavy_weapon_synergy":true,"source_url":"https://nukesdragons.com/fallout-76/perks","source_name":"Nukes & Dragons","source_type":"database","last_verified_date":"2026-05-05","patch_version":"2026-04-21","status":"verified"}
+  {
+    "id": "bullet_storm",
+    "name": "Bullet Storm",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Gain 3% damage per 30 ammo spent. Max 10 stacks. All stacks lost on reload or weapon swap.",
+      "2": "Gain 6% damage per 30 ammo spent. Max 10 stacks.",
+      "3": "Gain 9% damage per 30 ammo spent. Max 10 stacks."
+    },
+    "level_required": 30,
+    "tags": [
+      "heavy_weapon",
+      "damage"
+    ],
+    "build_families": [
+      "heavy",
+      "power_armor_heavy_energy",
+      "bullet_storm"
+    ],
+    "heavy_weapon_synergy": true,
+    "energy_weapon_synergy": true,
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_name": "Nuka Knights - Patch 62 Perk Changes",
+    "source_type": "guide",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "62",
+    "status": "verified"
+  },
+  {
+    "id": "tightly_wound",
+    "name": "Tightly Wound",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Heavy weapons spin up 20% faster.",
+      "2": "Heavy weapons spin up 40% faster.",
+      "3": "Heavy weapons spin up 60% faster."
+    },
+    "level_required": 30,
+    "tags": [
+      "heavy_weapon",
+      "utility"
+    ],
+    "build_families": [
+      "heavy",
+      "power_armor_heavy_energy",
+      "bullet_storm"
+    ],
+    "heavy_weapon_synergy": true,
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_name": "Nuka Knights - Patch 62 Perk Changes",
+    "source_type": "guide",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "62",
+    "status": "verified"
+  },
+  {
+    "id": "bringing_the_big_guns",
+    "name": "Bringing the Big Guns",
+    "special": "Strength",
+    "max_rank": 1,
+    "rank_costs": {
+      "1": 3
+    },
+    "effect_by_rank": {
+      "1": "Your Bullet Storm stack limit is doubled."
+    },
+    "level_required": 40,
+    "tags": [
+      "heavy_weapon",
+      "damage"
+    ],
+    "build_families": [
+      "heavy",
+      "power_armor_heavy_energy",
+      "bullet_storm"
+    ],
+    "heavy_weapon_synergy": true,
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_name": "Nuka Knights - Patch 62 Perk Changes",
+    "source_type": "guide",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "62",
+    "status": "verified"
+  },
+  {
+    "id": "bear_arms",
+    "name": "Bear Arms",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Heavy weapons weigh 30% less. +5% bash damage per Bullet Storm stack.",
+      "2": "Heavy weapons weigh 60% less. +5% bash damage per Bullet Storm stack.",
+      "3": "Heavy weapons weigh 90% less. +5% bash damage per Bullet Storm stack."
+    },
+    "level_required": 25,
+    "tags": [
+      "heavy_weapon",
+      "carry_weight"
+    ],
+    "build_families": [
+      "heavy",
+      "power_armor_heavy_energy",
+      "bullet_storm"
+    ],
+    "heavy_weapon_synergy": true,
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_name": "Nuka Knights - Patch 62 Perk Changes",
+    "source_type": "guide",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "62",
+    "status": "verified"
+  },
+  {
+    "id": "lock_and_load",
+    "name": "Lock and Load",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Keep 50% of your Bullet Storm stacks when you reload. +1% reload speed per stack.",
+      "2": "Keep 50% of your Bullet Storm stacks when you reload. +2% reload speed per stack.",
+      "3": "Keep 50% of your Bullet Storm stacks when you reload. +3% reload speed per stack."
+    },
+    "level_required": 36,
+    "tags": [
+      "heavy_weapon",
+      "reload"
+    ],
+    "build_families": [
+      "heavy",
+      "power_armor_heavy_energy",
+      "bullet_storm"
+    ],
+    "heavy_weapon_synergy": true,
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_name": "Nuka Knights - Patch 62 Perk Changes",
+    "source_type": "guide",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "62",
+    "status": "verified"
+  },
+  {
+    "id": "stabilized",
+    "name": "Stabilized",
+    "special": "Intelligence",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Big guns gain 10% accuracy. Doubled while in Power Armor.",
+      "2": "Big guns gain 20% accuracy. Doubled while in Power Armor.",
+      "3": "Big guns gain 30% accuracy. Doubled while in Power Armor."
+    },
+    "level_required": 30,
+    "tags": [
+      "heavy_weapon",
+      "power_armor"
+    ],
+    "build_families": [
+      "heavy",
+      "power_armor_heavy_energy",
+      "bullet_storm"
+    ],
+    "heavy_weapon_synergy": true,
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_name": "Nuka Knights - Patch 62 Perk Changes",
+    "source_type": "guide",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "62",
+    "status": "verified"
+  },
+  {
+    "id": "commando",
+    "name": "Commando",
+    "special": "Perception",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Automatic rifles do +10% damage.",
+      "2": "Automatic rifles do +15% damage.",
+      "3": "Automatic rifles do +20% damage."
+    },
+    "level_required": 15,
+    "tags": [
+      "damage",
+      "rifle",
+      "ballistic_weapon"
+    ],
+    "build_families": [
+      "commando"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/builds/commando/",
+    "source_name": "FalloutBuilds Commando 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "expert_commando",
+    "name": "Expert Commando",
+    "special": "Perception",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Automatic rifles do +10% damage.",
+      "2": "Automatic rifles do +15% damage.",
+      "3": "Automatic rifles do +20% damage."
+    },
+    "level_required": 25,
+    "tags": [
+      "damage",
+      "rifle"
+    ],
+    "build_families": [
+      "commando"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/builds/commando/",
+    "source_name": "FalloutBuilds Commando 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "master_commando",
+    "name": "Master Commando",
+    "special": "Perception",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Automatic rifles do +10% damage.",
+      "2": "Automatic rifles do +15% damage.",
+      "3": "Automatic rifles do +20% damage."
+    },
+    "level_required": 35,
+    "tags": [
+      "damage",
+      "rifle"
+    ],
+    "build_families": [
+      "commando"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/builds/commando/",
+    "source_name": "FalloutBuilds Commando 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "rifleman",
+    "name": "Rifleman",
+    "special": "Perception",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Non-automatic rifles do +10% damage.",
+      "2": "Non-automatic rifles do +15% damage.",
+      "3": "Non-automatic rifles do +20% damage."
+    },
+    "level_required": 15,
+    "tags": [
+      "damage",
+      "rifle"
+    ],
+    "build_families": [
+      "rifleman"
+    ],
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "expert_rifleman",
+    "name": "Expert Rifleman",
+    "special": "Perception",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Non-automatic rifles do +10% damage.",
+      "2": "Non-automatic rifles do +15% damage.",
+      "3": "Non-automatic rifles do +20% damage."
+    },
+    "level_required": 25,
+    "tags": [
+      "damage",
+      "rifle"
+    ],
+    "build_families": [
+      "rifleman"
+    ],
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "master_rifleman",
+    "name": "Master Rifleman",
+    "special": "Perception",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Non-automatic rifles do +10% damage.",
+      "2": "Non-automatic rifles do +15% damage.",
+      "3": "Non-automatic rifles do +20% damage."
+    },
+    "level_required": 35,
+    "tags": [
+      "damage",
+      "rifle"
+    ],
+    "build_families": [
+      "rifleman"
+    ],
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "shotgunner",
+    "name": "Shotgunner",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Shotguns do +10% damage.",
+      "2": "Shotguns do +15% damage.",
+      "3": "Shotguns do +20% damage."
+    },
+    "level_required": 15,
+    "tags": [
+      "damage",
+      "shotgun"
+    ],
+    "build_families": [
+      "shotgunner"
+    ],
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "expert_shotgunner",
+    "name": "Expert Shotgunner",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Shotguns do +10% damage.",
+      "2": "Shotguns do +15% damage.",
+      "3": "Shotguns do +20% damage."
+    },
+    "level_required": 25,
+    "tags": [
+      "damage",
+      "shotgun"
+    ],
+    "build_families": [
+      "shotgunner"
+    ],
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "master_shotgunner",
+    "name": "Master Shotgunner",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Shotguns do +10% damage.",
+      "2": "Shotguns do +15% damage.",
+      "3": "Shotguns do +20% damage."
+    },
+    "level_required": 35,
+    "tags": [
+      "damage",
+      "shotgun"
+    ],
+    "build_families": [
+      "shotgunner"
+    ],
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "scattershot",
+    "name": "Scattershot",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Shotguns weigh 30% less and reload 10% faster.",
+      "2": "Shotguns weigh 60% less and reload 20% faster.",
+      "3": "Shotguns weigh 90% less and reload 30% faster."
+    },
+    "level_required": 21,
+    "tags": [
+      "shotgun",
+      "reload",
+      "carry_weight"
+    ],
+    "build_families": [
+      "shotgunner"
+    ],
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "skeet_shooter",
+    "name": "Skeet Shooter",
+    "special": "Perception",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Shotguns gain a 10% increase in hip-fire accuracy.",
+      "2": "Shotguns gain a 20% increase in hip-fire accuracy.",
+      "3": "Shotguns gain a 30% increase in hip-fire accuracy."
+    },
+    "level_required": 27,
+    "tags": [
+      "shotgun",
+      "accuracy"
+    ],
+    "build_families": [
+      "shotgunner"
+    ],
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "gunslinger",
+    "name": "Gunslinger",
+    "special": "Agility",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Non-automatic pistols do +10% damage.",
+      "2": "Non-automatic pistols do +15% damage.",
+      "3": "Non-automatic pistols do +20% damage."
+    },
+    "level_required": 15,
+    "tags": [
+      "damage",
+      "pistol"
+    ],
+    "build_families": [
+      "gunslinger"
+    ],
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "expert_gunslinger",
+    "name": "Expert Gunslinger",
+    "special": "Agility",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Non-automatic pistols do +10% damage.",
+      "2": "Non-automatic pistols do +15% damage.",
+      "3": "Non-automatic pistols do +20% damage."
+    },
+    "level_required": 25,
+    "tags": [
+      "damage",
+      "pistol"
+    ],
+    "build_families": [
+      "gunslinger"
+    ],
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "master_gunslinger",
+    "name": "Master Gunslinger",
+    "special": "Agility",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Non-automatic pistols do +10% damage.",
+      "2": "Non-automatic pistols do +15% damage.",
+      "3": "Non-automatic pistols do +20% damage."
+    },
+    "level_required": 35,
+    "tags": [
+      "damage",
+      "pistol"
+    ],
+    "build_families": [
+      "gunslinger"
+    ],
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "iron_fist",
+    "name": "Iron Fist",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Your fists deal more damage based on your Damage Resistance.",
+      "2": "Your fists deal more damage based on your Damage Resistance.",
+      "3": "Your fists deal more damage based on your Damage Resistance."
+    },
+    "level_required": 7,
+    "tags": [
+      "melee",
+      "damage"
+    ],
+    "build_families": [
+      "melee"
+    ],
+    "melee_synergy": true,
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_name": "Nuka Knights - Patch 62 Perk Changes",
+    "source_type": "guide",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "62",
+    "status": "verified"
+  },
+  {
+    "id": "slugger",
+    "name": "Slugger",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Your melee weapons do +10% damage to crippled targets.",
+      "2": "Your melee weapons do +20% damage to crippled targets.",
+      "3": "Your melee weapons do +30% damage to crippled targets."
+    },
+    "level_required": 8,
+    "tags": [
+      "melee",
+      "damage"
+    ],
+    "build_families": [
+      "melee"
+    ],
+    "melee_synergy": true,
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_name": "Nuka Knights - Patch 62 Perk Changes",
+    "source_type": "guide",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "62",
+    "status": "verified"
+  },
+  {
+    "id": "knee_capper",
+    "name": "Knee-Capper",
+    "special": "Strength",
+    "max_rank": 1,
+    "rank_costs": {
+      "1": 3
+    },
+    "effect_by_rank": {
+      "1": "Melee weapons deal +50% limb damage. (No Power Tools)"
+    },
+    "level_required": 25,
+    "tags": [
+      "melee",
+      "cripple"
+    ],
+    "build_families": [
+      "melee"
+    ],
+    "melee_synergy": true,
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_name": "Nuka Knights - Patch 62 Perk Changes",
+    "source_type": "guide",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "62",
+    "status": "verified"
+  },
+  {
+    "id": "heavy_hitter",
+    "name": "Heavy Hitter",
+    "special": "Strength",
+    "max_rank": 1,
+    "rank_costs": {
+      "1": 3
+    },
+    "effect_by_rank": {
+      "1": "Melee weapons deal +25% power attack damage. (No Power Tools)"
+    },
+    "level_required": 35,
+    "tags": [
+      "melee",
+      "damage"
+    ],
+    "build_families": [
+      "melee"
+    ],
+    "melee_synergy": true,
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_name": "Nuka Knights - Patch 62 Perk Changes",
+    "source_type": "guide",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "62",
+    "status": "verified"
+  },
+  {
+    "id": "wound_salter",
+    "name": "Wound Salter",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "+10% damage against bleeding targets.",
+      "2": "+20% damage against bleeding targets.",
+      "3": "+30% damage against bleeding targets."
+    },
+    "level_required": 17,
+    "tags": [
+      "melee",
+      "damage"
+    ],
+    "build_families": [
+      "melee"
+    ],
+    "melee_synergy": true,
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_name": "Nuka Knights - Patch 62 Perk Changes",
+    "source_type": "guide",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "62",
+    "status": "verified"
+  },
+  {
+    "id": "natural_stance",
+    "name": "Natural Stance",
+    "special": "Strength",
+    "max_rank": 1,
+    "rank_costs": {
+      "1": 1
+    },
+    "effect_by_rank": {
+      "1": "While equipping a melee weapon, reduce incoming stagger by 25%."
+    },
+    "level_required": 19,
+    "tags": [
+      "melee",
+      "defense"
+    ],
+    "build_families": [
+      "melee"
+    ],
+    "melee_synergy": true,
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_name": "Nuka Knights - Patch 62 Perk Changes",
+    "source_type": "guide",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "62",
+    "status": "verified"
+  },
+  {
+    "id": "blood_luster",
+    "name": "Blood Luster",
+    "special": "Strength",
+    "max_rank": 1,
+    "rank_costs": {
+      "1": 2
+    },
+    "effect_by_rank": {
+      "1": "Your bleed effects deal 35% more damage with 25% less duration."
+    },
+    "level_required": 30,
+    "tags": [
+      "melee",
+      "damage"
+    ],
+    "build_families": [
+      "melee"
+    ],
+    "melee_synergy": true,
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_name": "Nuka Knights - Patch 62 Perk Changes",
+    "source_type": "guide",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "62",
+    "status": "verified"
+  },
+  {
+    "id": "incisor",
+    "name": "Incisor",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Your melee weapons ignore 25% of your target's armor.",
+      "2": "Your melee weapons ignore 50% of your target's armor.",
+      "3": "Your melee weapons ignore 75% of your target's armor."
+    },
+    "level_required": 36,
+    "tags": [
+      "melee",
+      "armor_penetration"
+    ],
+    "build_families": [
+      "melee"
+    ],
+    "melee_synergy": true,
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "martial_artist",
+    "name": "Martial Artist",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Your melee weapons weigh 20% less and you can swing them 10% faster.",
+      "2": "Your melee weapons weigh 40% less and you can swing them 20% faster.",
+      "3": "Your melee weapons weigh 60% less and you can swing them 30% faster."
+    },
+    "level_required": 13,
+    "tags": [
+      "melee",
+      "carry_weight"
+    ],
+    "build_families": [
+      "melee"
+    ],
+    "melee_synergy": true,
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "tank_killer",
+    "name": "Tank Killer",
+    "special": "Perception",
+    "max_rank": 2,
+    "rank_costs": {
+      "1": 1,
+      "2": 2
+    },
+    "effect_by_rank": {
+      "1": "Your ranged weapons ignore 20% armor.",
+      "2": "Your ranged weapons ignore 40% armor."
+    },
+    "level_required": 30,
+    "tags": [
+      "armor_penetration",
+      "rifle",
+      "pistol",
+      "heavy_weapon",
+      "shotgun"
+    ],
+    "build_families": [
+      "commando",
+      "rifleman",
+      "gunslinger",
+      "heavy",
+      "shotgunner"
+    ],
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_name": "Nuka Knights - Patch 62 Perk Changes",
+    "source_type": "guide",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "62",
+    "status": "verified"
+  },
+  {
+    "id": "concentrated_fire",
+    "name": "Concentrated Fire",
+    "special": "Perception",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "VATS targets limbs. Focus fire to gain accuracy and damage per shot.",
+      "2": "VATS targets limbs. Focus fire to gain more accuracy and damage per shot.",
+      "3": "VATS targets limbs. Focus fire to gain high accuracy and damage per shot."
+    },
+    "level_required": 2,
+    "tags": [
+      "vats",
+      "accuracy"
+    ],
+    "build_families": [
+      "commando",
+      "rifleman",
+      "gunslinger"
+    ],
+    "vats_synergy": true,
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "gun_fu",
+    "name": "Gun Fu",
+    "special": "Agility",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "VATS swaps targets on kill with +10% damage to your next target.",
+      "2": "VATS swaps targets on kill with +10% and +20% damage to your next targets.",
+      "3": "VATS swaps targets on kill with +10%, +20%, and +30% damage to your next targets."
+    },
+    "level_required": 50,
+    "tags": [
+      "vats",
+      "damage"
+    ],
+    "build_families": [
+      "commando",
+      "rifleman",
+      "gunslinger"
+    ],
+    "vats_synergy": true,
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "adrenaline",
+    "name": "Adrenaline",
+    "special": "Agility",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Gain +6% damage per kill (60% max) for 30 seconds. Refreshes on kill.",
+      "2": "Gain +12% damage per kill (60% max) for 30 seconds. Refreshes on kill.",
+      "3": "Gain +18% damage per kill (60% max) for 30 seconds. Refreshes on kill."
+    },
+    "level_required": 49,
+    "tags": [
+      "damage"
+    ],
+    "build_families": [
+      "commando",
+      "rifleman",
+      "heavy",
+      "gunslinger",
+      "shotgunner"
+    ],
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "better_criticals",
+    "name": "Better Criticals",
+    "special": "Luck",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "VATS criticals do +50% damage.",
+      "2": "VATS criticals do +75% damage.",
+      "3": "VATS criticals do +100% damage."
+    },
+    "level_required": 47,
+    "tags": [
+      "vats",
+      "criticals",
+      "damage"
+    ],
+    "build_families": [
+      "commando",
+      "rifleman",
+      "gunslinger"
+    ],
+    "vats_synergy": true,
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "critical_savvy",
+    "name": "Critical Savvy",
+    "special": "Luck",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Critical hits consume 85% of your critical meter.",
+      "2": "Critical hits consume 70% of your critical meter.",
+      "3": "Critical hits consume 55% of your critical meter."
+    },
+    "level_required": 43,
+    "tags": [
+      "vats",
+      "criticals"
+    ],
+    "build_families": [
+      "commando",
+      "rifleman",
+      "gunslinger"
+    ],
+    "vats_synergy": true,
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "psychopath",
+    "name": "Psychopath",
+    "special": "Luck",
+    "max_rank": 1,
+    "rank_costs": {
+      "1": 2
+    },
+    "effect_by_rank": {
+      "1": "Hits outside V.A.T.S. refill your Critical Meter at 10% contribution."
+    },
+    "level_required": 22,
+    "tags": [
+      "criticals",
+      "damage"
+    ],
+    "build_families": [
+      "commando",
+      "heavy",
+      "rifleman",
+      "gunslinger",
+      "shotgunner"
+    ],
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_name": "Nuka Knights - Patch 62 Perk Changes",
+    "source_type": "guide",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "62",
+    "status": "verified"
+  },
+  {
+    "id": "grim_reapers_sprint",
+    "name": "Grim Reaper's Sprint",
+    "special": "Luck",
+    "max_rank": 1,
+    "rank_costs": {
+      "1": 3
+    },
+    "effect_by_rank": {
+      "1": "Any kill in V.A.T.S. restores Action Points based on your Luck."
+    },
+    "level_required": 41,
+    "tags": [
+      "vats",
+      "ap_regen"
+    ],
+    "build_families": [
+      "commando",
+      "rifleman",
+      "gunslinger"
+    ],
+    "vats_synergy": true,
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_name": "Nuka Knights - Patch 62 Perk Changes",
+    "source_type": "guide",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "62",
+    "status": "verified"
+  },
+  {
+    "id": "one_gun_army",
+    "name": "One Gun Army",
+    "special": "Luck",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Heavy guns gain a 4% stagger chance and a 4% chance to cripple a limb.",
+      "2": "Heavy guns gain an 8% stagger chance and an 8% chance to cripple a limb.",
+      "3": "Heavy guns gain a 12% stagger chance and a 12% chance to cripple a limb."
+    },
+    "level_required": 50,
+    "tags": [
+      "cripple",
+      "heavy_weapon"
+    ],
+    "build_families": [
+      "heavy",
+      "power_armor_heavy_energy",
+      "bullet_storm"
+    ],
+    "heavy_weapon_synergy": true,
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "ricochet",
+    "name": "Ricochet",
+    "special": "Luck",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Gain a 6% chance to deflect ranged enemy damage.",
+      "2": "Gain a 12% chance to deflect ranged enemy damage.",
+      "3": "Gain an 18% chance to deflect ranged enemy damage."
+    },
+    "level_required": 38,
+    "tags": [
+      "defense"
+    ],
+    "build_families": [
+      "heavy",
+      "power_armor_heavy_energy",
+      "commando",
+      "rifleman",
+      "shotgunner",
+      "gunslinger",
+      "ghoul"
+    ],
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "class_freak",
+    "name": "Class Freak",
+    "special": "Luck",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Negative effects of mutations are reduced by 25%.",
+      "2": "Negative effects of mutations are reduced by 50%.",
+      "3": "Negative effects of mutations are reduced by 75%."
+    },
+    "level_required": 30,
+    "tags": [
+      "mutation"
+    ],
+    "build_families": [
+      "mutated",
+      "ghoul",
+      "heavy",
+      "commando",
+      "rifleman",
+      "shotgunner",
+      "gunslinger",
+      "melee"
+    ],
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "starched_genes",
+    "name": "Starched Genes",
+    "special": "Luck",
+    "max_rank": 2,
+    "rank_costs": {
+      "1": 1,
+      "2": 2
+    },
+    "effect_by_rank": {
+      "1": "You have a 50% lower chance to gain or lose mutations from radiation.",
+      "2": "You will never gain or lose mutations from radiation."
+    },
+    "level_required": 30,
+    "tags": [
+      "mutation"
+    ],
+    "build_families": [
+      "mutated",
+      "ghoul",
+      "heavy",
+      "commando",
+      "rifleman",
+      "shotgunner",
+      "gunslinger",
+      "melee"
+    ],
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "nerd_rage",
+    "name": "Nerd Rage!",
+    "special": "Intelligence",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Below 20% Health, gain 20 Damage Resist, +10% damage and +15% AP regen.",
+      "2": "Below 20% Health, gain 30 Damage Resist, +15% damage and +15% AP regen.",
+      "3": "Below 20% Health, gain 40 Damage Resist, +20% damage and +15% AP regen."
+    },
+    "level_required": 46,
+    "tags": [
+      "damage",
+      "defense",
+      "bloodied"
+    ],
+    "build_families": [
+      "bloodied"
+    ],
+    "bloodied_synergy": true,
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "batteries_included",
+    "name": "Batteries Included",
+    "special": "Intelligence",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Energy weapon ammo weighs 30% less.",
+      "2": "Energy weapon ammo weighs 60% less.",
+      "3": "Energy weapon ammo weighs 90% less."
+    },
+    "level_required": 28,
+    "tags": [
+      "weight_reduction",
+      "energy_weapon"
+    ],
+    "build_families": [
+      "heavy",
+      "power_armor_heavy_energy",
+      "commando"
+    ],
+    "energy_weapon_synergy": true,
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "rad_sponge",
+    "name": "Rad Sponge",
+    "special": "Endurance",
+    "max_rank": 2,
+    "rank_costs": {
+      "1": 1,
+      "2": 2
+    },
+    "effect_by_rank": {
+      "1": "Absorb 10% of rads taken and restore Hunger and Thirst.",
+      "2": "Absorb 20% of rads taken and restore Hunger and Thirst."
+    },
+    "level_required": 30,
+    "tags": [
+      "radiation",
+      "ghoul"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_name": "Nuka Knights - Patch 62 Perk Changes",
+    "source_type": "guide",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "62",
+    "status": "verified"
+  },
+  {
+    "id": "ghoulish",
+    "name": "Ghoulish",
+    "special": "Endurance",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Radiation occasionally regenerates your health.",
+      "2": "Radiation regenerates more of your health.",
+      "3": "Radiation regenerates significantly more of your health."
+    },
+    "level_required": 30,
+    "tags": [
+      "radiation",
+      "ghoul",
+      "healing"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "lifegiver",
+    "name": "Lifegiver",
+    "special": "Endurance",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "+15 Maximum Health.",
+      "2": "+30 Maximum Health.",
+      "3": "+45 Maximum Health."
+    },
+    "level_required": 14,
+    "tags": [
+      "defense"
+    ],
+    "build_families": [
+      "heavy",
+      "commando",
+      "rifleman",
+      "shotgunner",
+      "gunslinger",
+      "melee",
+      "ghoul"
+    ],
+    "full_health_synergy": true,
+    "source_url": "https://nukesdragons.com/fallout-76/perks",
+    "source_name": "Nukes & Dragons",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "heavy_gunner",
+    "name": "Heavy Gunner (deprecated)",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Replaced by Bullet Storm in Patch 62.",
+      "2": "Replaced by Bullet Storm in Patch 62.",
+      "3": "Replaced by Bullet Storm in Patch 62."
+    },
+    "level_required": 30,
+    "tags": [
+      "heavy_weapon",
+      "damage"
+    ],
+    "build_families": [
+      "heavy"
+    ],
+    "heavy_weapon_synergy": true,
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_name": "Nuka Knights - Patch 62 Perk Changes",
+    "source_type": "guide",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "62",
+    "status": "deprecated"
+  },
+  {
+    "id": "expert_heavy_gunner",
+    "name": "Expert Heavy Gunner (deprecated)",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Replaced by Tightly Wound in Patch 62.",
+      "2": "Replaced by Tightly Wound in Patch 62.",
+      "3": "Replaced by Tightly Wound in Patch 62."
+    },
+    "level_required": 40,
+    "tags": [
+      "heavy_weapon",
+      "damage"
+    ],
+    "build_families": [
+      "heavy"
+    ],
+    "heavy_weapon_synergy": true,
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_name": "Nuka Knights - Patch 62 Perk Changes",
+    "source_type": "guide",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "62",
+    "status": "deprecated"
+  },
+  {
+    "id": "master_heavy_gunner",
+    "name": "Master Heavy Gunner (deprecated)",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Replaced by Bringing the Big Guns in Patch 62.",
+      "2": "Replaced by Bringing the Big Guns in Patch 62.",
+      "3": "Replaced by Bringing the Big Guns in Patch 62."
+    },
+    "level_required": 50,
+    "tags": [
+      "heavy_weapon",
+      "damage"
+    ],
+    "build_families": [
+      "heavy"
+    ],
+    "heavy_weapon_synergy": true,
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_name": "Nuka Knights - Patch 62 Perk Changes",
+    "source_type": "guide",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "62",
+    "status": "deprecated"
+  },
+  {
+    "id": "rad_absorber",
+    "name": "Rad-Absorber (deprecated)",
+    "special": "Endurance",
+    "max_rank": 1,
+    "rank_costs": {
+      "1": 1
+    },
+    "effect_by_rank": {
+      "1": "Use rad_sponge instead. Renamed in Patch 62 (also moved CHA -> END)."
+    },
+    "level_required": 50,
+    "tags": [
+      "ghoul",
+      "radiation"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "source_url": "https://nukaknights.com/articles/changed-perk-cards-in-patch-62-season-22.html",
+    "source_name": "Nuka Knights - Patch 62 Perk Changes",
+    "source_type": "guide",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "62",
+    "status": "deprecated"
+  },
+  {
+    "id": "number_cruncher",
+    "name": "Number Cruncher (legendary mod, not perk)",
+    "special": "Perception",
+    "max_rank": 1,
+    "rank_costs": {
+      "1": 1
+    },
+    "effect_by_rank": {
+      "1": "Modeled as 4-star legendary weapon mod, not as a perk card."
+    },
+    "level_required": 50,
+    "tags": [
+      "damage"
+    ],
+    "build_families": [
+      "commando"
+    ],
+    "source_url": "https://ggchest.com/blog/best-fallout-76-builds",
+    "source_name": "ggchest 2026 builds",
+    "source_type": "community",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "deprecated"
+  },
+  {
+    "id": "onslaught_expert",
+    "name": "Onslaught Expert (legendary mod, not perk)",
+    "special": "Agility",
+    "max_rank": 1,
+    "rank_costs": {
+      "1": 1
+    },
+    "effect_by_rank": {
+      "1": "Modeled as 4-star legendary weapon mod, not as a perk card."
+    },
+    "level_required": 50,
+    "tags": [
+      "damage"
+    ],
+    "build_families": [
+      "commando"
+    ],
+    "source_url": "https://ggchest.com/blog/best-fallout-76-builds",
+    "source_name": "ggchest 2026 builds",
+    "source_type": "community",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "deprecated"
+  },
+  {
+    "id": "onslaught_master",
+    "name": "Onslaught Master (legendary mod, not perk)",
+    "special": "Agility",
+    "max_rank": 1,
+    "rank_costs": {
+      "1": 1
+    },
+    "effect_by_rank": {
+      "1": "Modeled as 4-star legendary weapon mod, not as a perk card."
+    },
+    "level_required": 50,
+    "tags": [
+      "damage"
+    ],
+    "build_families": [
+      "commando"
+    ],
+    "source_url": "https://ggchest.com/blog/best-fallout-76-builds",
+    "source_name": "ggchest 2026 builds",
+    "source_type": "community",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "deprecated"
+  },
+  {
+    "id": "limit_breaking",
+    "name": "Limit Breaking (legendary mod, not perk)",
+    "special": "Luck",
+    "max_rank": 1,
+    "rank_costs": {
+      "1": 1
+    },
+    "effect_by_rank": {
+      "1": "Modeled as 4-star legendary weapon mod, not as a perk card."
+    },
+    "level_required": 50,
+    "tags": [
+      "criticals"
+    ],
+    "build_families": [
+      "commando"
+    ],
+    "source_url": "https://ggchest.com/blog/best-fallout-76-builds",
+    "source_name": "ggchest 2026 builds",
+    "source_type": "community",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "deprecated"
+  },
+  {
+    "id": "demolition_expert",
+    "name": "Demolition Expert",
+    "special": "Perception",
+    "max_rank": 5,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4,
+      "5": 5
+    },
+    "effect_by_rank": {
+      "1": "+20% explosive damage",
+      "2": "+40%",
+      "3": "+60%",
+      "4": "+80%",
+      "5": "+100%"
+    },
+    "level_required": 5,
+    "tags": [
+      "explosive",
+      "damage"
+    ],
+    "build_families": [
+      "explosive",
+      "cremator",
+      "shotgunner"
+    ],
+    "explosive_synergy": true,
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "fire_in_the_hole",
+    "name": "Fire in the Hole",
+    "special": "Perception",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "See grenade trajectory; +15% throw distance",
+      "2": "+30%",
+      "3": "+45%"
+    },
+    "level_required": 17,
+    "tags": [
+      "explosive",
+      "utility"
+    ],
+    "build_families": [
+      "explosive"
+    ],
+    "explosive_synergy": true,
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "grenadier",
+    "name": "Grenadier",
+    "special": "Perception",
+    "max_rank": 2,
+    "rank_costs": {
+      "1": 1,
+      "2": 2
+    },
+    "effect_by_rank": {
+      "1": "Explosive AoE +50%",
+      "2": "Explosive AoE +100%"
+    },
+    "level_required": 25,
+    "tags": [
+      "explosive",
+      "aoe"
+    ],
+    "build_families": [
+      "explosive",
+      "cremator"
+    ],
+    "explosive_synergy": true,
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "long_shot",
+    "name": "Long Shot",
+    "special": "Perception",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "+20% range for rifles and bows",
+      "2": "+40%",
+      "3": "+60%"
+    },
+    "level_required": 4,
+    "tags": [
+      "rifle",
+      "bow",
+      "range"
+    ],
+    "build_families": [
+      "rifleman",
+      "bow_stealth"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "sneak",
+    "name": "Sneak",
+    "special": "Perception",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "+1 Sneak",
+      "2": "+2",
+      "3": "+3"
+    },
+    "level_required": 1,
+    "tags": [
+      "stealth"
+    ],
+    "build_families": [
+      "rifleman",
+      "gunslinger",
+      "bow_stealth"
+    ],
+    "stealth_synergy": true,
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "mister_sandman",
+    "name": "Mister Sandman",
+    "special": "Agility",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Silenced ranged sneak attacks +15% damage",
+      "2": "+30%",
+      "3": "+50%"
+    },
+    "level_required": 13,
+    "tags": [
+      "stealth"
+    ],
+    "build_families": [
+      "rifleman",
+      "gunslinger",
+      "bow_stealth"
+    ],
+    "stealth_synergy": true,
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "action_boy",
+    "name": "Action Boy/Girl",
+    "special": "Agility",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "AP regen +15%",
+      "2": "+30%",
+      "3": "+45%"
+    },
+    "level_required": 23,
+    "tags": [
+      "vats",
+      "ap"
+    ],
+    "build_families": [
+      "commando",
+      "rifleman",
+      "gunslinger"
+    ],
+    "vats_synergy": true,
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "dodgy",
+    "name": "Dodgy",
+    "special": "Agility",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Avoid 10% damage at AP cost",
+      "2": "20%",
+      "3": "30%"
+    },
+    "level_required": 25,
+    "tags": [
+      "defense"
+    ],
+    "build_families": [
+      "commando",
+      "rifleman",
+      "gunslinger"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "quick_hands",
+    "name": "Quick Hands",
+    "special": "Agility",
+    "max_rank": 2,
+    "rank_costs": {
+      "1": 1,
+      "2": 2
+    },
+    "effect_by_rank": {
+      "1": "+15% reload speed",
+      "2": "+30%"
+    },
+    "level_required": 16,
+    "tags": [
+      "utility"
+    ],
+    "build_families": [],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "born_survivor",
+    "name": "Born Survivor",
+    "special": "Endurance",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Auto-Stimpak when below 30% HP",
+      "2": "below 35%",
+      "3": "below 40%"
+    },
+    "level_required": 26,
+    "tags": [
+      "survival"
+    ],
+    "build_families": [
+      "bloodied"
+    ],
+    "bloodied_synergy": true,
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "marathoner",
+    "name": "Marathoner",
+    "special": "Endurance",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Sprint AP cost -20%",
+      "2": "-40%",
+      "3": "-60%"
+    },
+    "level_required": 11,
+    "tags": [
+      "mobility"
+    ],
+    "build_families": [],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "cola_nut",
+    "name": "Cola Nut",
+    "special": "Endurance",
+    "max_rank": 1,
+    "rank_costs": {
+      "1": 1
+    },
+    "effect_by_rank": {
+      "1": "Nuka-Cola effects +50%"
+    },
+    "level_required": 5,
+    "tags": [
+      "consumable"
+    ],
+    "build_families": [],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "adamantium_skeleton",
+    "name": "Adamantium Skeleton",
+    "special": "Endurance",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Limb damage -30%",
+      "2": "-50%",
+      "3": "-75%"
+    },
+    "level_required": 22,
+    "tags": [
+      "defense"
+    ],
+    "build_families": [],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "field_surgeon",
+    "name": "Field Surgeon",
+    "special": "Endurance",
+    "max_rank": 1,
+    "rank_costs": {
+      "1": 1
+    },
+    "effect_by_rank": {
+      "1": "Stimpaks heal teammates fully"
+    },
+    "level_required": 36,
+    "tags": [
+      "support"
+    ],
+    "build_families": [],
+    "support_synergy": true,
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "strange_in_numbers",
+    "name": "Strange in Numbers",
+    "special": "Charisma",
+    "max_rank": 1,
+    "rank_costs": {
+      "1": 1
+    },
+    "effect_by_rank": {
+      "1": "Mutations +25% positive effects when teammates also mutated"
+    },
+    "level_required": 11,
+    "tags": [
+      "mutation",
+      "team"
+    ],
+    "build_families": [],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "bodyguards",
+    "name": "Bodyguards",
+    "special": "Charisma",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "DR +6 per teammate",
+      "2": "+12",
+      "3": "+18",
+      "4": "+24"
+    },
+    "level_required": 21,
+    "tags": [
+      "defense",
+      "team"
+    ],
+    "build_families": [],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "hard_bargain",
+    "name": "Hard Bargain",
+    "special": "Charisma",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Better vendor prices Tier 1",
+      "2": "Tier 2",
+      "3": "Tier 3"
+    },
+    "level_required": 9,
+    "tags": [
+      "economy"
+    ],
+    "build_families": [],
+    "crafting_or_swap_only": true,
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "travelling_pharmacy",
+    "name": "Travelling Pharmacy",
+    "special": "Charisma",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Chem weight -30%",
+      "2": "-60%",
+      "3": "-90%"
+    },
+    "level_required": 18,
+    "tags": [
+      "utility"
+    ],
+    "build_families": [],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "friends_in_low_places",
+    "name": "Friends in Low Places",
+    "special": "Charisma",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Pacify ghouls below your level Tier 1",
+      "2": "Tier 2",
+      "3": "Tier 3"
+    },
+    "level_required": 31,
+    "tags": [
+      "utility"
+    ],
+    "build_families": [],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "strong_back",
+    "name": "Strong Back",
+    "special": "Strength",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "+10 Carry Weight",
+      "2": "+20",
+      "3": "+30",
+      "4": "+40 + slow sprint while encumbered"
+    },
+    "level_required": 7,
+    "tags": [
+      "carry"
+    ],
+    "build_families": [],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "pack_rat",
+    "name": "Pack Rat",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Junk weight -25%",
+      "2": "-50%",
+      "3": "-75%"
+    },
+    "level_required": 11,
+    "tags": [
+      "carry"
+    ],
+    "build_families": [],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "sturdy_frame",
+    "name": "Sturdy Frame",
+    "special": "Strength",
+    "max_rank": 2,
+    "rank_costs": {
+      "1": 1,
+      "2": 2
+    },
+    "effect_by_rank": {
+      "1": "Armor weight -25%",
+      "2": "-50%"
+    },
+    "level_required": 13,
+    "tags": [
+      "carry"
+    ],
+    "build_families": [],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "blocker",
+    "name": "Blocker",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Melee damage taken -15%",
+      "2": "-30%",
+      "3": "-45%"
+    },
+    "level_required": 27,
+    "tags": [
+      "defense",
+      "melee"
+    ],
+    "build_families": [],
+    "melee_synergy": true,
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "weapon_artisan",
+    "name": "Weapon Artisan",
+    "special": "Intelligence",
+    "max_rank": 1,
+    "rank_costs": {
+      "1": 1
+    },
+    "effect_by_rank": {
+      "1": "Repair weapons to 200%"
+    },
+    "level_required": 41,
+    "tags": [
+      "crafting"
+    ],
+    "build_families": [],
+    "crafting_or_swap_only": true,
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "fix_it_good",
+    "name": "Fix It Good",
+    "special": "Intelligence",
+    "max_rank": 2,
+    "rank_costs": {
+      "1": 1,
+      "2": 2
+    },
+    "effect_by_rank": {
+      "1": "Repair to 130%",
+      "2": "Repair to 200%"
+    },
+    "level_required": 24,
+    "tags": [
+      "crafting"
+    ],
+    "build_families": [],
+    "crafting_or_swap_only": true,
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "power_patcher",
+    "name": "Power Patcher",
+    "special": "Intelligence",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "PA repair tier 1",
+      "2": "tier 2",
+      "3": "tier 3"
+    },
+    "level_required": 35,
+    "tags": [
+      "crafting",
+      "power_armor"
+    ],
+    "build_families": [],
+    "crafting_or_swap_only": true,
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "first_aid",
+    "name": "First Aid",
+    "special": "Intelligence",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Stimpak heal +15%",
+      "2": "+30%",
+      "3": "+45%"
+    },
+    "level_required": 10,
+    "tags": [
+      "healing"
+    ],
+    "build_families": [],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "pharma_farma",
+    "name": "Pharma Farma",
+    "special": "Luck",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Container chem chance +1",
+      "2": "+2",
+      "3": "+3"
+    },
+    "level_required": 8,
+    "tags": [
+      "scavenging"
+    ],
+    "build_families": [],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "four_leaf_clover",
+    "name": "Four Leaf Clover",
+    "special": "Luck",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "VATS hits build crit chance T1",
+      "2": "T2",
+      "3": "T3",
+      "4": "T4"
+    },
+    "level_required": 30,
+    "tags": [
+      "vats",
+      "crit"
+    ],
+    "build_families": [],
+    "vats_synergy": true,
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "bloody_mess",
+    "name": "Bloody Mess",
+    "special": "Luck",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "+5% damage",
+      "2": "+10%",
+      "3": "+15%"
+    },
+    "level_required": 36,
+    "tags": [
+      "damage"
+    ],
+    "build_families": [],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "luck_of_the_draw",
+    "name": "Luck of the Draw",
+    "special": "Luck",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Weapon condition restored on hit T1",
+      "2": "T2",
+      "3": "T3"
+    },
+    "level_required": 41,
+    "tags": [
+      "sustain"
+    ],
+    "build_families": [],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "glowing_criticals",
+    "name": "Glowing Criticals",
+    "special": "Luck",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Glow boosts crit damage T1",
+      "2": "T2",
+      "3": "T3"
+    },
+    "level_required": 5,
+    "tags": [
+      "ghoul",
+      "glow",
+      "crit"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "glowing_hunter",
+    "name": "Glowing Hunter",
+    "special": "Perception",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Marked targets take +15% damage",
+      "2": "+30%",
+      "3": "+45%"
+    },
+    "level_required": 7,
+    "tags": [
+      "ghoul",
+      "glow"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "glowing_gut",
+    "name": "Glowing Gut",
+    "special": "Endurance",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Convert rads to glow T1",
+      "2": "T2",
+      "3": "T3"
+    },
+    "level_required": 9,
+    "tags": [
+      "ghoul",
+      "glow",
+      "rad"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "eye_of_the_hunter",
+    "name": "Eye of the Hunter",
+    "special": "Perception",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Mark targets while crouched",
+      "2": "Faster mark",
+      "3": "Mark on focus"
+    },
+    "level_required": 12,
+    "tags": [
+      "ghoul",
+      "stealth"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "stealth_synergy": true,
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "hyper_reflexes",
+    "name": "Hyper Reflexes",
+    "special": "Agility",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Action speed +5%",
+      "2": "+10%",
+      "3": "+15% while feral"
+    },
+    "level_required": 14,
+    "tags": [
+      "ghoul",
+      "feral"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "bone_shatterer",
+    "name": "Bone Shatterer",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Melee crippling chance T1",
+      "2": "T2",
+      "3": "T3"
+    },
+    "level_required": 16,
+    "tags": [
+      "ghoul",
+      "melee"
+    ],
+    "build_families": [
+      "ghoul",
+      "melee"
+    ],
+    "melee_synergy": true,
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "brick_wall",
+    "name": "Brick Wall",
+    "special": "Endurance",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "DR +10 while feral",
+      "2": "+20",
+      "3": "+30"
+    },
+    "level_required": 18,
+    "tags": [
+      "ghoul",
+      "feral",
+      "defense"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "chem_diet",
+    "name": "Chem Diet",
+    "special": "Endurance",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Chems give rads instead of addiction T1",
+      "2": "T2",
+      "3": "T3"
+    },
+    "level_required": 11,
+    "tags": [
+      "ghoul",
+      "chem"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "battle_genes",
+    "name": "Battle-Genes",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Mutation damage +10%",
+      "2": "+20%",
+      "3": "+30%"
+    },
+    "level_required": 24,
+    "tags": [
+      "ghoul",
+      "mutation"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "action_ghoul",
+    "name": "Action Ghoul",
+    "special": "Agility",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "AP regen +10% while feral",
+      "2": "+20%",
+      "3": "+30%"
+    },
+    "level_required": 19,
+    "tags": [
+      "ghoul",
+      "feral",
+      "ap"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "bomb_scientist",
+    "name": "Bomb Scientist",
+    "special": "Intelligence",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Explosive crafting cost -25%",
+      "2": "-50%",
+      "3": "-75%"
+    },
+    "level_required": 22,
+    "tags": [
+      "ghoul",
+      "explosive",
+      "crafting"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "crafting_or_swap_only": true,
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "breathe_it_in",
+    "name": "Breathe It In",
+    "special": "Endurance",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Toxic gas restores HP T1",
+      "2": "T2",
+      "3": "T3"
+    },
+    "level_required": 26,
+    "tags": [
+      "ghoul",
+      "rad"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "faulty_spots",
+    "name": "Faulty Spots",
+    "special": "Perception",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Mark armor weak points T1",
+      "2": "T2",
+      "3": "T3"
+    },
+    "level_required": 28,
+    "tags": [
+      "ghoul"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "feral_presence",
+    "name": "Feral Presence",
+    "special": "Charisma",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Nearby ghoul allies +5% damage",
+      "2": "+10%",
+      "3": "+15%"
+    },
+    "level_required": 31,
+    "tags": [
+      "ghoul",
+      "team"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "support_synergy": true,
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "gun_tricks",
+    "name": "Gun Tricks",
+    "special": "Agility",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Reload speed +10% while feral",
+      "2": "+20%",
+      "3": "+30%"
+    },
+    "level_required": 33,
+    "tags": [
+      "ghoul",
+      "feral"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "arms_of_steel",
+    "name": "Arms of Steel",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Heavy weapon weight -25%",
+      "2": "-50%",
+      "3": "-75%"
+    },
+    "level_required": 35,
+    "tags": [
+      "ghoul",
+      "heavy_weapon"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "heavy_weapon_synergy": true,
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "center_masochist",
+    "name": "Center Masochist",
+    "special": "Endurance",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Damage taken builds glow T1",
+      "2": "T2",
+      "3": "T3"
+    },
+    "level_required": 38,
+    "tags": [
+      "ghoul",
+      "glow"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  },
+  {
+    "id": "feral_rage",
+    "name": "Feral Rage",
+    "special": "Strength",
+    "max_rank": 3,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3
+    },
+    "effect_by_rank": {
+      "1": "Damage +10% while feral",
+      "2": "+20%",
+      "3": "+30%"
+    },
+    "level_required": 40,
+    "tags": [
+      "ghoul",
+      "feral",
+      "damage"
+    ],
+    "build_families": [
+      "ghoul"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/perks/",
+    "source_name": "FalloutBuilds Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-04",
+    "patch_version": "April 21 2026",
+    "status": "verified"
+  }
 ]

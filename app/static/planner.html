@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fallout 76 Build Planner</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="stylesheet" href="/static/planner.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">
+      <span class="brand-mark">76</span>
+      <span>
+        <strong>Fallout 76 Build Agent</strong>
+        <small>Interactive perk planner</small>
+      </span>
+    </a>
+    <nav class="nav-actions" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="/compare">Compare</a>
+      <span id="brainBadge" class="status-pill">Brain offline</span>
+    </nav>
+  </header>
+
+  <main class="planner">
+    <section class="patch-banner" aria-label="Patch context">
+      <strong>Live meta:</strong> Patch 62 (CAMP Revamp / Season 22) + April 21 2026 update.
+      Armor durability buffed; explosions retain more damage on indirect hits; Demolition Expert &amp;
+      explosive bobbleheads now factor self-damage; Fancy Pump-Action / Fancy Single-Action Revolver
+      pivoted to stealth. Brain: <code>kimi-k2.6:cloud</code>.
+    </section>
+    <section class="planner-controls">
+      <div class="planner-row">
+        <label>
+          Archetype
+          <select id="archetypeSelect"></select>
+        </label>
+        <label>
+          Health model
+          <select id="healthModel">
+            <option>Full health</option>
+            <option>Bloodied / low health</option>
+          </select>
+        </label>
+        <label>
+          Armor type
+          <select id="armorType">
+            <option>Power Armor</option>
+            <option>Regular armor</option>
+          </select>
+        </label>
+        <label>
+          Combat style
+          <select id="combatStyle">
+            <option>Balanced</option>
+            <option>VATS</option>
+            <option>Non-VATS</option>
+          </select>
+        </label>
+        <button id="loadBaselineBtn" class="primary-action" type="button">Load baseline</button>
+        <button id="saveBuildBtn" class="secondary-action" type="button">Save build</button>
+      </div>
+
+      <div class="planner-row planner-row-tight">
+        <span class="legend">Budget: <strong id="budgetTotal">0</strong> / <strong id="budgetMax">56</strong></span>
+        <span class="legend">Validation: <strong id="validationStatus">unknown</strong></span>
+      </div>
+    </section>
+
+    <section class="special-sliders" aria-label="SPECIAL allocation">
+      <div id="specialGrid" class="special-grid-large"></div>
+    </section>
+
+    <section class="perk-picker">
+      <div class="picker-header">
+        <h2>Perk picker</h2>
+        <label class="search">
+          <input id="perkSearch" type="search" placeholder="Search perks...">
+        </label>
+      </div>
+      <div id="perkColumns" class="perk-columns"></div>
+    </section>
+
+    <section class="validation-panel">
+      <h2>Live validation</h2>
+      <ul id="validationList" class="clean-list"></ul>
+    </section>
+
+    <section class="legendary-panel">
+      <h2>Legendary perks</h2>
+      <div id="legendaryList" class="legendary-grid"></div>
+    </section>
+  </main>
+
+  <script src="/static/planner.js"></script>
+</body>
+</html>

@@ -87,8 +87,9 @@ def get_brain_config() -> BrainConfig:
     api_key = os.getenv('OLLAMA_API_KEY') or None
     default_base_url = 'https://ollama.com' if api_key else 'http://localhost:11434'
     base_url = os.getenv('OLLAMA_BASE_URL') or os.getenv('OLLAMA_HOST') or default_base_url
+    enabled = _env_bool('USE_OLLAMA_BRAIN', bool(api_key))
     return BrainConfig(
-        enabled=_env_bool('USE_OLLAMA_BRAIN', bool(api_key)),
+        enabled=enabled,
         model=os.getenv('OLLAMA_MODEL', DEFAULT_MODEL).strip() or DEFAULT_MODEL,
         base_url=base_url.rstrip('/'),
         api_key=api_key,
@@ -216,7 +217,7 @@ def _build_search_query(user: BuildInput) -> str:
     return ' '.join(
         part
         for part in [
-            'Fallout 76 current perk card changes build advice',
+            'Fallout 76 April 21 2026 patch perk card build meta',
             user.primary_playstyle,
             user.primary_weapon_type,
             user.preferred_weapons,
@@ -240,11 +241,21 @@ def _build_prompt(
         {
             'role': 'system',
             'content': (
-                'You are the logic engine for a Fallout 76 SPECIAL and perk-card build generator. '
-                'Return only compact JSON. Preserve the deterministic core perk IDs and SPECIAL '
-                'allocation unless the prompt explicitly asks you to validate them. Do not invent '
-                'source claims. Treat web search snippets as unverified context unless they align '
-                'with trusted Fallout 76 sources.'
+                'You are kimi-k2.6:cloud acting as the logic engine for a Fallout 76 SPECIAL '
+                'and perk-card build generator. The current live game state is Patch 62 '
+                '(CAMP Revamp / Season 22) plus the April 21 2026 update. Key 2026 facts: '
+                'armor durability buffed; explosions retain more damage on indirect hits and '
+                'against high-resist enemies; Demolition Expert + explosive bobbleheads now '
+                'count in self-damage math; Fancy Pump-Action Shotgun and Fancy Single-Action '
+                'Revolver pivoted to a stealth niche (smaller cone while sneaking, +25% reload, '
+                '+10% fire rate, +10% AP cost, lower durability); Playable Ghouls cannot equip '
+                'Unyielding and use radiation/glow as resources; Bows scale with Rifleman perks. '
+                'Return only compact JSON matching the requested schema. Preserve the '
+                'deterministic core perk IDs and SPECIAL allocation; you may only refine '
+                'narrative fields (assumptions, gear, mutations, weaknesses, notes, variants, '
+                'swap_cards, legendary_perks, build_name). Never invent source claims; treat '
+                'web search snippets as unverified unless multiple trusted Fallout 76 sources '
+                'agree.'
             ),
         },
         {
@@ -395,6 +406,72 @@ def research_digest(sources: list[SourceRecord]) -> dict[str, Any]:
     return {
         'enabled': cfg.enabled,
         'model': cfg.model,
+        'web_search_enabled': cfg.web_search_enabled,
+        'search_results': [r.model_dump(mode='json') for r in search_results],
+        'summary': digest.summary,
+        'conflicts_or_uncertain': digest.conflicts_or_uncertain,
+        'recommended_followups': digest.recommended_followups,
+        'notes': notes,
+    }
+
+
+def research_patch_digest(query: str, max_results: int | None = None) -> dict[str, Any]:
+    """Run a grounded web pull + LLM summary for an arbitrary Fallout 76 query.
+
+    Used by the /api/brain/research endpoint to refresh patch / meta context on
+    demand using kimi-k2.6:cloud and Ollama Web Search.
+    """
+    cfg = get_brain_config()
+    notes: list[str] = []
+    search_results: list[WebSearchResult] = []
+
+    if cfg.web_search_enabled:
+        try:
+            search_results = web_search(query, max_results, cfg)
+            notes.append(f'Ollama web search returned {len(search_results)} result(s).')
+        except BrainError as exc:
+            notes.append(f'Ollama web search unavailable: {exc}')
+
+    digest = ResearchDigest()
+    if cfg.enabled:
+        try:
+            raw = _chat_json(
+                [
+                    {
+                        'role': 'system',
+                        'content': (
+                            'You are kimi-k2.6:cloud summarizing live Fallout 76 patch and meta '
+                            'information for a build generator. The current live game state is '
+                            'Patch 62 + the April 21 2026 update. Return only JSON matching: '
+                            'summary string, conflicts_or_uncertain array[string], '
+                            'recommended_followups array[string]. Cite only material that '
+                            'appears in the provided web search results.'
+                        ),
+                    },
+                    {
+                        'role': 'user',
+                        'content': json.dumps(
+                            {
+                                'query': query,
+                                'web_search_results': [
+                                    r.model_dump(mode='json') for r in search_results
+                                ],
+                            },
+                            default=str,
+                        ),
+                    },
+                ],
+                cfg,
+            )
+            digest = ResearchDigest.model_validate(raw)
+            notes.append('Patch digest refined by Ollama logic engine.')
+        except (BrainError, ValidationError) as exc:
+            notes.append(f'Ollama patch digest unavailable: {exc}')
+
+    return {
+        'enabled': cfg.enabled,
+        'model': cfg.model,
+        'query': query,
         'web_search_enabled': cfg.web_search_enabled,
         'search_results': [r.model_dump(mode='json') for r in search_results],
         'summary': digest.summary,
