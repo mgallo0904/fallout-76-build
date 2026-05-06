@@ -11,3 +11,12 @@ __pycache__/
 .env
 .env.local
 .env
+
+# Local agent/session state
+.omc/sessions/
+.omc/state/
+
+# Local database files
+*.db
+*.sqlite
+*.sqlite3
