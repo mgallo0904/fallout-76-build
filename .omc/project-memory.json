@@ -30,7 +30,7 @@
   },
   "build": {
     "buildCommand": null,
-    "testCommand": "pytest",
+    "testCommand": "python -m pytest tests/ -v --tb=short 2>&1 | tail -50",
     "lintCommand": "ruff check",
     "devCommand": null,
     "scripts": {}
@@ -125,6 +125,169 @@
       ]
     }
   },
-  "hotPaths": [],
+  "hotPaths": [
+    {
+      "path": "app/models.py",
+      "accessCount": 27,
+      "lastAccessed": 1778100216941,
+      "type": "file"
+    },
+    {
+      "path": "app/services/engine.py",
+      "accessCount": 19,
+      "lastAccessed": 1778100334561,
+      "type": "file"
+    },
+    {
+      "path": "app/main.py",
+      "accessCount": 16,
+      "lastAccessed": 1778100315505,
+      "type": "file"
+    },
+    {
+      "path": "app/services/brain.py",
+      "accessCount": 15,
+      "lastAccessed": 1778099604402,
+      "type": "file"
+    },
+    {
+      "path": "tests/test_api.py",
+      "accessCount": 13,
+      "lastAccessed": 1778099870354,
+      "type": "file"
+    },
+    {
+      "path": "tests/test_engine.py",
+      "accessCount": 9,
+      "lastAccessed": 1778099727282,
+      "type": "file"
+    },
+    {
+      "path": "tests/test_repair.py",
+      "accessCount": 8,
+      "lastAccessed": 1778099931138,
+      "type": "file"
+    },
+    {
+      "path": "app/static/styles.css",
+      "accessCount": 7,
+      "lastAccessed": 1778099238924,
+      "type": "file"
+    },
+    {
+      "path": "app/services/repository.py",
+      "accessCount": 6,
+      "lastAccessed": 1778099053442,
+      "type": "file"
+    },
+    {
+      "path": "app/static/index.js",
+      "accessCount": 6,
+      "lastAccessed": 1778099668778,
+      "type": "file"
+    },
+    {
+      "path": "app/static/index.html",
+      "accessCount": 5,
+      "lastAccessed": 1778099181372,
+      "type": "file"
+    },
+    {
+      "path": "pyproject.toml",
+      "accessCount": 3,
+      "lastAccessed": 1778097916047,
+      "type": "file"
+    },
+    {
+      "path": "tests/conftest.py",
+      "accessCount": 3,
+      "lastAccessed": 1778100029747,
+      "type": "file"
+    },
+    {
+      "path": "app/static/planner.html",
+      "accessCount": 2,
+      "lastAccessed": 1778091080578,
+      "type": "file"
+    },
+    {
+      "path": "app/services/db.py",
+      "accessCount": 2,
+      "lastAccessed": 1778097915993,
+      "type": "file"
+    },
+    {
+      "path": "tests/test_brain.py",
+      "accessCount": 2,
+      "lastAccessed": 1778098499037,
+      "type": "file"
+    },
+    {
+      "path": "app/data/perks.json",
+      "accessCount": 2,
+      "lastAccessed": 1778099053394,
+      "type": "file"
+    },
+    {
+      "path": "app/data/legendary_perks.json",
+      "accessCount": 2,
+      "lastAccessed": 1778099053472,
+      "type": "file"
+    },
+    {
+      "path": "app/services/repair.py",
+      "accessCount": 2,
+      "lastAccessed": 1778099570460,
+      "type": "file"
+    },
+    {
+      "path": "README.md",
+      "accessCount": 1,
+      "lastAccessed": 1778091057295,
+      "type": "file"
+    },
+    {
+      "path": "app/static/compare.html",
+      "accessCount": 1,
+      "lastAccessed": 1778091080517,
+      "type": "file"
+    },
+    {
+      "path": "app/static/planner.js",
+      "accessCount": 1,
+      "lastAccessed": 1778091090483,
+      "type": "file"
+    },
+    {
+      "path": "app/static/planner.css",
+      "accessCount": 1,
+      "lastAccessed": 1778091090495,
+      "type": "file"
+    },
+    {
+      "path": "app/static/compare.js",
+      "accessCount": 1,
+      "lastAccessed": 1778091090535,
+      "type": "file"
+    },
+    {
+      "path": "app/data/sources.json",
+      "accessCount": 1,
+      "lastAccessed": 1778091107430,
+      "type": "file"
+    },
+    {
+      "path": "tests/test_repository.py",
+      "accessCount": 1,
+      "lastAccessed": 1778097938535,
+      "type": "file"
+    },
+    {
+      "path": "app/services/prompting.py",
+      "accessCount": 1,
+      "lastAccessed": 1778099188407,
+      "type": "file"
+    }
+  ],
   "userDirectives": []
 }

@@ -1,40 +1,29 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 import json
 import os
-import urllib.error
-import urllib.request
 from typing import Any
 
 from pydantic import BaseModel, Field, ValidationError
 
 from app.models import BuildCandidate, BuildInput, GeneratedBuild, PerkCard, SourceRecord, WebSearchResult
+from app.services.ollama_client import (
+    BrainConfig,
+    BrainError,
+    DEFAULT_MODEL,
+    DEFAULT_WEB_SEARCH_URL,
+    api_url,
+    chat_json,
+    env_bool,
+    get_brain_config,
+    post_json,
+    extract_json_object,
+)
 from app.services.prompting import build_ollama_prompt
 from app.services.llm_builder import generate_llm_candidate
 
-
-DEFAULT_MODEL = 'kimi-k2.6:cloud'
-DEFAULT_WEB_SEARCH_URL = 'https://ollama.com/api/web_search'
-
-
-class BrainError(RuntimeError):
-    """Raised when the optional Ollama brain cannot complete a request."""
-
-
-@dataclass(frozen=True)
-class BrainConfig:
-    model: str
-    base_url: str
-    api_key: str
-    web_search_enabled: bool
-    web_search_url: str
-    timeout_seconds: float
-    max_search_results: int
-
-    @property
-    def has_api_key(self) -> bool:
-        return bool(self.api_key)
+# Re-export for compatibility
+_extract_json_object = extract_json_object
 
 
 class BuildEnhancement(BaseModel):
@@ -58,52 +47,6 @@ class ResearchDigest(BaseModel):
     summary: str = ''
     conflicts_or_uncertain: list[str] = Field(default_factory=list)
     recommended_followups: list[str] = Field(default_factory=list)
-
-
-def _env_bool(name: str, default: bool) -> bool:
-    raw = os.getenv(name)
-    if raw is None:
-        return default
-    return raw.strip().lower() in {'1', 'true', 'yes', 'on'}
-
-
-def _env_int(name: str, default: int, minimum: int, maximum: int) -> int:
-    raw = os.getenv(name)
-    if raw is None:
-        return default
-    try:
-        value = int(raw)
-    except ValueError:
-        return default
-    return max(minimum, min(maximum, value))
-
-
-def _env_float(name: str, default: float, minimum: float, maximum: float) -> float:
-    raw = os.getenv(name)
-    if raw is None:
-        return default
-    try:
-        value = float(raw)
-    except ValueError:
-        return default
-    return max(minimum, min(maximum, value))
-
-
-def get_brain_config() -> BrainConfig:
-    api_key = os.getenv('OLLAMA_API_KEY') or None
-    if not api_key:
-        raise BrainError('OLLAMA_API_KEY is required for mandatory brain mode')
-    default_base_url = 'https://ollama.com'
-    base_url = os.getenv('OLLAMA_BASE_URL') or os.getenv('OLLAMA_HOST') or default_base_url
-    return BrainConfig(
-        model=os.getenv('OLLAMA_MODEL', DEFAULT_MODEL).strip() or DEFAULT_MODEL,
-        base_url=base_url.rstrip('/'),
-        api_key=api_key,
-        web_search_enabled=_env_bool('OLLAMA_WEB_SEARCH', True),
-        web_search_url=os.getenv('OLLAMA_WEB_SEARCH_URL', DEFAULT_WEB_SEARCH_URL).rstrip('/'),
-        timeout_seconds=_env_float('OLLAMA_TIMEOUT_SECONDS', 120.0, 1.0, 300.0),
-        max_search_results=_env_int('OLLAMA_MAX_SEARCH_RESULTS', 5, 1, 10),
-    )
 
 
 def brain_status() -> dict[str, Any]:
@@ -130,65 +73,6 @@ def brain_status() -> dict[str, Any]:
         }
 
 
-def api_url(base_url: str, path: str) -> str:
-    root = base_url.rstrip('/')
-    if root.endswith('/api'):
-        return f'{root}{path}'
-    return f'{root}/api{path}'
-
-
-def post_json(url: str, payload: dict[str, Any], api_key: str | None, timeout_seconds: float) -> dict[str, Any]:
-    body = json.dumps(payload, default=str).encode('utf-8')
-    headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-    }
-    if api_key:
-        headers['Authorization'] = f'Bearer {api_key}'
-
-    request = urllib.request.Request(url, data=body, headers=headers, method='POST')
-    try:
-        with urllib.request.urlopen(request, timeout=timeout_seconds) as response:
-            raw = response.read().decode('utf-8')
-    except urllib.error.HTTPError as exc:
-        detail = exc.read().decode('utf-8', errors='replace')[:500]
-        raise BrainError(f'Ollama HTTP {exc.code}: {detail}') from exc
-    except urllib.error.URLError as exc:
-        raise BrainError(f'Ollama connection failed: {exc.reason}') from exc
-    except TimeoutError as exc:
-        raise BrainError('Ollama request timed out') from exc
-
-    if not raw:
-        return {}
-    try:
-        return json.loads(raw)
-    except json.JSONDecodeError as exc:
-        raise BrainError(f'Ollama returned invalid JSON: {exc}') from exc
-
-
-def extract_json_object(text: str) -> dict[str, Any]:
-    stripped = text.strip()
-    if stripped.startswith('```'):
-        lines = [line for line in stripped.splitlines() if not line.strip().startswith('```')]
-        stripped = '\n'.join(lines).strip()
-
-    try:
-        parsed = json.loads(stripped)
-    except json.JSONDecodeError:
-        start = stripped.find('{')
-        end = stripped.rfind('}')
-        if start < 0 or end <= start:
-            raise BrainError('Ollama response did not contain a JSON object')
-        try:
-            parsed = json.loads(stripped[start:end + 1])
-        except json.JSONDecodeError as exc:
-            raise BrainError(f'Ollama response JSON could not be parsed: {exc}') from exc
-
-    if not isinstance(parsed, dict):
-        raise BrainError('Ollama response JSON must be an object')
-    return parsed
-
-
 def web_search(query: str, max_results: int | None = None, cfg: BrainConfig | None = None) -> list[WebSearchResult]:
     cfg = cfg or get_brain_config()
     if not cfg.web_search_enabled:
@@ -207,27 +91,6 @@ def web_search(query: str, max_results: int | None = None, cfg: BrainConfig | No
     if not isinstance(results, list):
         raise BrainError('Ollama web search returned an unexpected response shape')
     return [WebSearchResult.model_validate(result) for result in results]
-
-
-def _chat_json(messages: list[dict[str, str]], cfg: BrainConfig) -> dict[str, Any]:
-    response = post_json(
-        api_url(cfg.base_url, '/chat'),
-        {
-            'model': cfg.model,
-            'messages': messages,
-            'stream': False,
-            'format': 'json',
-        },
-        cfg.api_key,
-        cfg.timeout_seconds,
-    )
-    message = response.get('message', {})
-    content = message.get('content') if isinstance(message, dict) else None
-    if not content:
-        content = response.get('response')
-    if not isinstance(content, str) or not content.strip():
-        raise BrainError('Ollama chat returned no message content')
-    return extract_json_object(content)
 
 
 def _build_search_query(user: BuildInput) -> str:
@@ -365,7 +228,7 @@ def enhance_build_with_brain(
             notes.append(f'Ollama web search unavailable: {exc}')
 
     try:
-        raw = _chat_json(_build_prompt(user, build, validation_issues, search_results), cfg)
+        raw = chat_json(_build_prompt(user, build, validation_issues, search_results), cfg)
         enhancement = BuildEnhancement.model_validate(raw)
     except (BrainError, ValidationError) as exc:
         raise BrainError(f'Brain enhancement failed: {exc}') from exc
@@ -400,7 +263,7 @@ def research_digest(sources: list[SourceRecord]) -> dict[str, Any]:
 
     digest = ResearchDigest()
     try:
-        raw = _chat_json(
+        raw = chat_json(
             [
                 {
                     'role': 'system',
@@ -459,7 +322,7 @@ def research_patch_digest(query: str, max_results: int | None = None) -> dict[st
 
     digest = ResearchDigest()
     try:
-        raw = _chat_json(
+        raw = chat_json(
             [
                 {
                     'role': 'system',

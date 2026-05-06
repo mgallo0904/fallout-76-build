@@ -108,5 +108,16 @@
     "summary": "PTS-only ghoul radiation and Glow adjustments. Tracked for awareness but excluded from live build defaults until released to live servers.",
     "reliability_score": 0.7,
     "notes": "PTS source only; do not apply to live May 6 2026 defaults."
+  },
+  {
+    "id": "bethesda-backwoods-2026-03-03",
+    "source_name": "Bethesda - Fallout 76: The Backwoods Release Notes",
+    "source_url": "https://bethesda.net/en/article/0sXOoFYwO5TxarqDKVzts/fallout-76-the-backwoods-release-notes",
+    "source_type": "official",
+    "date_accessed": "2026-05-06",
+    "relevant_patch": "The Backwoods / March 3 2026",
+    "summary": "Major March 2026 update: Legendary Perks no longer require Perk Coins to unequip; Overeater's reworked from percentage damage reduction to +40 max Health per piece; 4-star legendary mods introduced via Bigfoot boss; armor resistance standardization across all types; Power Armor weight changes; Pip-Boy performance improvements.",
+    "reliability_score": 0.98,
+    "notes": "Confirmed live build-impacting update; applies to legendary perks, Overeater's, armor, and 4-star mod systems."
   }
 ]

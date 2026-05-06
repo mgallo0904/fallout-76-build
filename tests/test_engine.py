@@ -50,6 +50,7 @@ def test_archetype_listing_covers_2026_meta():
         "ghoul_melee",
         "xp_leveling_fallback",
         "crafting_utility_fallback",
+        "enclave_flamer",
     }
 
 
@@ -122,7 +123,10 @@ def test_each_archetype_passes_validation():
         "cremator_pyro": _input(
             primary_playstyle="Pyromaniac",
             primary_weapon_type="Cremator",
-            preferred_weapons="Cremator, Enclave Flamer",
+            preferred_weapons="Cremator, Holy Fire",
+        ),
+        "enclave_flamer": _input(
+            primary_weapon_type="Enclave Plasma Flamer",
         ),
         "pepper_shaker_stealth": _input(
             primary_playstyle="Stealth Shotgun",

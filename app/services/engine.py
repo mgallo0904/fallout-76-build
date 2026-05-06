@@ -134,6 +134,43 @@ MUTATION_DETAILS: dict[str, dict[str, str]] = {
 }
 GHOUL_RESTRICTED_LEGENDARY_NAMES = frozenset({"what rads?"})
 
+OVEREATERS_NOTE = (
+    "As of The Backwoods update (March 2026), Overeater's increases maximum Health "
+    "by up to +40 per armor piece when well-fed and well-hydrated. "
+    "It no longer provides percentage-based damage reduction."
+)
+
+LEGENDARY_PERK_STRATEGY_NOTE = (
+    "Legendary Perks no longer require Perk Coins to unequip (March 2026 Backwoods update). "
+    "Optimized endgame builds often use several Legendary SPECIAL cards plus one combat "
+    "or utility flex slot. Utility perks such as Ammo Factory and Master Infiltrator "
+    "can be swapped in situationally at no cost. This is a recommended default for "
+    "endgame optimization, not a hard requirement."
+)
+
+# Expanded mutation recommendations grouped by role.
+# These are strongly recommended for optimized builds but not mandatory.
+# User mutation_preference always takes priority.
+UNIVERSAL_MUTATIONS: tuple[Dict[str, str], ...] = (
+    {"name": "Speed Demon", "use": "Recommended", "reason": "Reload speed and movement speed."},
+    {"name": "Marsupial", "use": "Recommended", "reason": "Jump height and +20 carry weight."},
+    {"name": "Herd Mentality", "use": "Recommended", "reason": "+2 all SPECIAL while on any team."},
+)
+VATS_MUTATIONS: tuple[Dict[str, str], ...] = (
+    {"name": "Eagle Eyes", "use": "Recommended", "reason": "Critical damage +25%, Perception +4."},
+    {"name": "Bird Bones", "use": "Recommended", "reason": "Agility +4 (AP pool), slower falling."},
+)
+BLOODIED_MUTATIONS: tuple[Dict[str, str], ...] = (
+    {"name": "Adrenal Reaction", "use": "Yes", "reason": "Up to +50% weapon damage at low health."},
+)
+MELEE_MUTATIONS: tuple[Dict[str, str], ...] = (
+    {"name": "Twisted Muscles", "use": "Recommended", "reason": "+25% melee damage."},
+    {"name": "Talons", "use": "Unarmed Only", "reason": "+25% unarmed damage, bleed."},
+)
+TANK_MUTATIONS: tuple[Dict[str, str], ...] = (
+    {"name": "Scaly Skin", "use": "Recommended", "reason": "+50 DR and ER."},
+)
+
 
 def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
     blueprints: List[ArchetypeBlueprint] = [
@@ -176,8 +213,10 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 "weapons": ["Gatling Plasma", "Gatling Laser", "Ultracite Gatling Laser", "Gauss Minigun", "Plasma Caster"],
                 "armor": ["Union Power Armor", "Hellcat", "T-65", "Excavator (carry variant)"],
                 "weapon_effects": ["Anti-Armor", "Aristocrat's", "Vampire's", "Bloodied (variant only)"],
-                "armor_effects": ["Overeater's", "Enemy-specific situational sets"],
-                "ammo_consumables": ["Fusion Cores", "Plasma Cores", "Ultracite ammo", "Overdrive", "Psychobuff"],
+                "armor_effects": ["Overeater's (+40 max HP/piece)", "Enemy-specific situational sets"],
+                "armor_mods": ["Buttressed (max DR/ER)", "Calibrated Shocks (PA carry weight)", "Emergency Protocols (PA low-health)"],
+                "underarmor": ["Shielded Raider (PER +3, AGI +3, LCK +1)", "Shielded Casual (INT +3, PER +1, LCK +3)"],
+                "ammo_consumables": ["Fusion Cores", "Plasma Cores", "Ultracite ammo", "Overdrive", "Psychobuff", "Ballistic Bock / High Voltage Hefe"],
                 "weapon_mods": ["Furious", "Vital", "V.A.T.S. optimized", "Conductors"],
             },
             variants={
@@ -242,8 +281,10 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 "weapons": ["Holy Fire", "Gauss Minigun", "Cremator", "Light Machine Gun", ".50 Cal"],
                 "armor": ["Union Power Armor", "Secret Service (if not PA)"],
                 "weapon_effects": ["Anti-Armor", "Bloodied", "Vampire's"],
-                "armor_effects": ["Overeater's", "Unyielding (if Bloodied non-PA)"],
-                "ammo_consumables": ["Psychobuff", "Overdrive"],
+                "armor_effects": ["Overeater's (+40 max HP/piece)", "Unyielding (if Bloodied non-PA)"],
+                "armor_mods": ["Buttressed (max DR/ER)", "Deep Pocketed (carry weight)"],
+                "underarmor": ["Shielded Raider (PER +3, AGI +3, LCK +1)"],
+                "ammo_consumables": ["Psychobuff", "Overdrive", "Ballistic Bock"],
                 "weapon_mods": ["Furious", "Vital", "Conductors"],
             },
             variants={
@@ -291,8 +332,10 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 "weapons": ["The Fixer", "Elder's Mark", "V63 Laser Carbine", "Handmade Rifle"],
                 "armor": ["Secret Service Armor", "Civil Engineer Armor"],
                 "weapon_effects": ["Anti-Armor", "Bloodied", "Quad", "Vampire's", "Furious"],
-                "armor_effects": ["Unyielding (if Bloodied)", "Overeater's"],
-                "ammo_consumables": ["Company Tea", "Blight Soup", "Overdrive"],
+                "armor_effects": ["Unyielding (if Bloodied)", "Overeater's (+40 max HP/piece)"],
+                "armor_mods": ["Ultra-Light (AP)", "Sleek (sneak speed)", "Muffled (sneak detection)"],
+                "underarmor": ["Shielded Casual (INT +3, PER +1, LCK +3)", "Shielded Enclave (STR +1, PER +2, INT +3)"],
+                "ammo_consumables": ["Company Tea", "Blight Soup", "Overdrive", "Bobblehead: Small Guns", "Live & Love 8 (team AP regen)"],
                 "weapon_mods": ["Limit Breaking (4-star)", "Rejuvenators (4-star)", "Number Cruncher (4-star)"],
             },
             variants={
@@ -339,8 +382,10 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 "weapons": ["Lever Action Rifle", "Gauss Rifle", "Hunting Rifle", "Crossbow"],
                 "armor": ["Secret Service Armor", "Chinese Stealth Armor"],
                 "weapon_effects": ["Instigating", "Anti-Armor", "Bloodied"],
-                "armor_effects": ["Unyielding (Bloodied)", "Overeater's"],
-                "ammo_consumables": ["Company Tea", "Bobblehead: Sneak"],
+                "armor_effects": ["Unyielding (Bloodied)", "Overeater's (+40 max HP/piece)"],
+                "armor_mods": ["Ultra-Light (AP)", "Muffled (sneak detection)", "Sleek (sneak speed)"],
+                "underarmor": ["Shielded Casual (INT +3, PER +1, LCK +3)"],
+                "ammo_consumables": ["Company Tea", "Bobblehead: Sneak", "Bobblehead: Small Guns"],
                 "weapon_mods": ["Limit Breaking (4-star)"],
             },
             variants={
@@ -431,11 +476,13 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 {"name": "Speed Demon", "use": "Yes", "reason": "Reload and mobility."},
             ),
             gear={
-                "weapons": ["Somerset Special", "Western Revolver", ".44 Pistol"],
+                "weapons": ["Somerset Special", "Western Revolver", "Crusader Pistol", ".44 Pistol", "10mm Auto Pistol"],
                 "armor": ["Secret Service Armor", "Chinese Stealth Armor"],
-                "weapon_effects": ["Anti-Armor", "Bloodied", "Instigating"],
-                "armor_effects": ["Overeater's", "Unyielding (Bloodied)"],
-                "ammo_consumables": ["Company Tea"],
+                "weapon_effects": ["Anti-Armor", "Bloodied", "Instigating", "Quad (10mm Auto)"],
+                "armor_effects": ["Overeater's (+40 max HP/piece)", "Unyielding (Bloodied)"],
+                "armor_mods": ["Ultra-Light (AP)", "Muffled (sneak detection)"],
+                "underarmor": ["Shielded Casual (INT +3, PER +1, LCK +3)", "Shielded Raider (PER +3, AGI +3, LCK +1)"],
+                "ammo_consumables": ["Company Tea", "Bobblehead: Small Guns", "Overdrive"],
                 "weapon_mods": ["Limit Breaking (4-star)"],
             },
             variants={
@@ -481,11 +528,13 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 {"name": "Speed Demon", "use": "Yes", "reason": "Mobility for closing gaps."},
             ),
             gear={
-                "weapons": ["Auto Axe", "Chainsaw", "Power Fist", "Super Sledge"],
+                "weapons": ["Auto Axe", "Chainsaw", "Power Fist", "Super Sledge", "Deathclaw Gauntlet"],
                 "armor": ["Solar Armor", "Union PA (PA variant)", "Secret Service"],
-                "weapon_effects": ["Bloodied", "Vampire's", "Furious"],
-                "armor_effects": ["Unyielding (Bloodied)", "Overeater's"],
-                "ammo_consumables": ["Adrenal Reaction food", "Psychobuff"],
+                "weapon_effects": ["Bloodied", "Vampire's", "Furious", "Anti-Armor"],
+                "armor_effects": ["Unyielding (Bloodied)", "Overeater's (+40 max HP/piece)"],
+                "armor_mods": ["Buttressed (max DR/ER)", "Dense (explosion resistance)", "Weighted (melee reflect)"],
+                "underarmor": ["Shielded Raider (PER +3, AGI +3, LCK +1)", "Shielded BOS (STR +2, END +3)"],
+                "ammo_consumables": ["Psychobuff", "Fury", "Glowing Meat Steak", "Deathclaw Steak"],
                 "weapon_mods": ["Furious"],
             },
             variants={
@@ -611,7 +660,7 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
         ArchetypeBlueprint(
             archetype_id="cremator_pyro",
             build_name="Cremator Pyromaniac",
-            aliases=("cremator", "flamer", "pyro", "pyromaniac", "enclave flamer"),
+            aliases=("cremator", "pyro", "pyromaniac", "holy fire"),
             special_allocation={
                 "Strength": 13,
                 "Perception": 11,
@@ -759,7 +808,7 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 ("class_freak", 3, "Mutations", "Reduce mutation downsides."),
             ),
             optional_perk_picks=(
-                ("glowing_hunter", 3, "Damage", "Marked target damage stack (ghoul; PER swap-in)."),
+                ("glowing_hunter", 1, "Damage", "Marked target damage stack (ghoul; PER swap-in)."),
             ),
             legendary_perks=(
                 {"name": "Follow Through", "priority": "Required", "reason": "Sneak amp + ghoul stealth synergy.", "rank": 4},
@@ -818,7 +867,7 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
             optional_perk_picks=(
                 ("brick_wall", 1, "Defense", "Stagger immunity while Glow is high."),
                 ("wound_salter", 3, "Damage", "+30% vs bleeding (STR swap-in)."),
-                ("battle_genes", 3, "Mutation", "Mutation damage stack (STR swap-in)."),
+                ("battle_genes", 2, "Mutation", "Mutation damage stack (STR swap-in)."),
                 ("blocker", 3, "Defense", "Melee damage taken reduction."),
                 ("hyper_reflexes", 3, "Speed", "Action speed while feral."),
             ),
@@ -863,11 +912,11 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
             special_allocation={
                 "Strength": 3,
                 "Perception": 15,
-                "Endurance": 5,
+                "Endurance": 3,
                 "Charisma": 3,
                 "Intelligence": 15,
-                "Agility": 10,
-                "Luck": 5,
+                "Agility": 8,
+                "Luck": 9,
             },
             perk_picks=(
                 ("commando", 3, "Damage", "Core automatic rifle damage."),
@@ -921,7 +970,6 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
             },
             perk_picks=(
                 ("commando", 3, "Damage", "Combat shell for playability."),
-                ("expert_commando", 3, "Damage", "Combat shell for playability."),
                 ("tank_killer", 2, "Armor Pen", "Basic ranged support."),
             ),
             optional_perk_picks=(
@@ -948,6 +996,72 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
             weaknesses=("Not optimized for boss DPS.",),
             extra_assumptions=(
                 "Crafting / Utility is a non-combat loadout; combat performance is secondary.",
+            ),
+        ),
+        ArchetypeBlueprint(
+            archetype_id="enclave_flamer",
+            build_name="Enclave Plasma Flamer",
+            aliases=("enclave flamer", "enclave plasma flamer", "enclave plasma"),
+            special_allocation={
+                "Strength": 3,
+                "Perception": 15,
+                "Endurance": 5,
+                "Charisma": 3,
+                "Intelligence": 5,
+                "Agility": 12,
+                "Luck": 13,
+            },
+            perk_picks=(
+                ("rifleman", 3, "Damage", "Enclave Flamer scales with Rifleman perks."),
+                ("expert_rifleman", 3, "Damage", "Stacks Rifleman damage for Enclave Flamer."),
+                ("master_rifleman", 3, "Damage", "Completes Rifleman stack."),
+                ("tank_killer", 2, "Armor Pen", "All ranged armor ignore."),
+                ("concentrated_fire", 3, "VATS", "Stacking VATS accuracy/damage."),
+                ("better_criticals", 3, "Criticals", "VATS crit damage."),
+                ("critical_savvy", 3, "Criticals", "Reduced crit meter consumption."),
+                ("grim_reapers_sprint", 1, "AP regen", "VATS kills restore AP."),
+            ),
+            optional_perk_picks=(
+                ("gun_fu", 3, "VATS", "Target swap with damage bonus (swap-in for mob clear)."),
+            ),
+            legendary_perks=(
+                {"name": "Follow Through", "priority": "Recommended", "reason": "Sneak-amplified damage for close-range burst.", "rank": 4},
+                {"name": "Taking One for the Team", "priority": "Recommended", "reason": "Team damage amp in boss fights.", "rank": 4},
+                {"name": "Legendary Luck", "priority": "Recommended", "reason": "Crit meter throughput.", "rank": 2},
+                {"name": "Legendary Perception", "priority": "Recommended", "reason": "Frees PER base points.", "rank": 2},
+            ),
+            mutations=(
+                {"name": "Speed Demon", "use": "Yes", "reason": "Reload and mobility."},
+                {"name": "Eagle Eyes", "use": "Yes", "reason": "Crit damage + Perception."},
+                {"name": "Marsupial", "use": "Yes", "reason": "Mobility + carry weight."},
+            ),
+            gear={
+                "weapons": ["Enclave Plasma Rifle (Aligned Flamer Barrel)", "Enclave Plasma Rifle (True Flamer Barrel)"],
+                "armor": ["Secret Service Armor", "Union Power Armor (PA variant)"],
+                "weapon_effects": ["Furious", "Bloodied", "Anti-Armor", "Vampire's"],
+                "second_star": ["Faster Fire Rate (Rapid)"],
+                "third_star": ["Breaks 50% Slower", "25% Less VATS AP Cost"],
+                "armor_effects": ["Unyielding (Bloodied)", "Overeater's (+40 max HP/piece)"],
+                "weapon_mods": ["Prime Capacitor", "Aligned Flamer Barrel (VATS)", "True Flamer Barrel (ADS)"],
+                "ammo_consumables": ["Ultracite Plasma Cartridges", "Overdrive", "Psychobuff", "Blight Soup"],
+                "underarmor": ["Shielded Casual (PER, INT, LCK)", "Shielded Raider (PER, AGI, LCK)"],
+            },
+            variants={
+                "Bloodied Flamer": ["Unyielding armor", "Nerd Rage", "Adrenal Reaction"],
+                "Full-health Flamer": ["Overeater's", "Vampire's for sustain"],
+                "PA Flamer": ["Union PA", "Stabilized for accuracy"],
+            },
+            swap_cards={"Bosses": ["Concentrated Fire"], "Events": ["Gun Fu"]},
+            weaknesses=(
+                "Very short range; must be in melee range of enemies.",
+                "High AP cost in VATS; consider ADS for sustained damage.",
+                "Weapon breaks quickly; Repair Kit stacking recommended.",
+                "Enclave Plasma Rifle and mods are difficult to acquire.",
+            ),
+            extra_assumptions=(
+                "Enclave Plasma Flamer scales with Rifleman perks, not Heavy Gunner.",
+                "Aligned Flamer Barrel preferred for VATS builds; True Flamer Barrel for ADS.",
+                "Prime Capacitor recommended for damage boost.",
             ),
         ),
     ]
@@ -993,7 +1107,14 @@ def classify(inp: BuildInput) -> str:
         return "playable_ghoul"
     if "bow" in text or "crossbow" in text or "archer" in text or "archery" in text:
         return "bow_stealth"
-    if "cremator" in text or "flamer" in text or "pyro" in text:
+    # Enclave flamer disambiguation: "enclave" + "flamer"/"plasma" routes to
+    # enclave_flamer; generic "cremator", "holy fire", "pyro", or bare "flamer"
+    # routes to cremator_pyro.
+    if "enclave" in text and ("flamer" in text or "plasma" in text):
+        return "enclave_flamer"
+    if "cremator" in text or "holy fire" in text or "pyro" in text or "pyromaniac" in text:
+        return "cremator_pyro"
+    if "flamer" in text:
         return "cremator_pyro"
     if "fancy pump" in text or "fancy shotgun" in text or ("stealth" in text and "shotgun" in text):
         return "pepper_shaker_stealth"
@@ -1065,12 +1186,19 @@ def _build_assumptions(extra: tuple[str, ...]) -> List[str]:
         "Live baseline as of May 6 2026: Patch 62 (CAMP Revamp) plus the April 21 2026 update.",
         "April 28 2026 maintenance is recorded as no build-impact (status-bar display fix only).",
         "Protect Appalachia / Patch 68 PTS notes are tracked as future-facing context only and excluded from live defaults.",
+        # Backwoods (March 2026) confirmed changes:
+        "March 2026 (Backwoods): Legendary Perks no longer require Perk Coins to unequip.",
+        f"March 2026 (Backwoods): {OVEREATERS_NOTE}",
+        "March 2026 (Backwoods): 4-star legendary mods available from Bigfoot boss encounters.",
+        "March 2026 (Backwoods): Armor resistance standardization; all armor types now provide energy, fire, cryo, poison, and radiation resistance.",
+        # April 2026 changes:
         "April 21 2026: armor durability buffed; explosions retain more damage on indirect hits and vs high-resist enemies.",
         "April 21 2026: Demolition Expert + explosive bobbleheads now correctly factored into self-damage math.",
         "April 21 2026: Fancy Pump-Action Shotgun + Fancy Single-Action Revolver pivoted to stealth (smaller cone while sneaking, +25% reload, +10% fire rate, +10% AP cost, lower durability).",
         "April 21 2026: Fierce 2-star legendary mod normalized in cost; locked-mod consumption exploit closed.",
+        # Build defaults:
         "Assumes default full-health unless the user selects bloodied.",
-        "Legendary SPECIAL slots not strictly required for base playability.",
+        LEGENDARY_PERK_STRATEGY_NOTE,
     ]
     base.extend(extra)
     return base
@@ -1089,8 +1217,9 @@ def _selected_mutation_names(blueprint: ArchetypeBlueprint, user: BuildInput) ->
     if preference.lower().startswith("no mutations"):
         return []
 
-    names: list[str] = []
+    # User-specified mutations take priority.
     if preference.lower().startswith("specific mutations:"):
+        names: list[str] = []
         raw_names = preference.split(":", 1)[1].split(",")
         for raw_name in raw_names:
             name = _normalize_mutation_name(raw_name)
@@ -1098,10 +1227,47 @@ def _selected_mutation_names(blueprint: ArchetypeBlueprint, user: BuildInput) ->
                 names.append(name)
         return names
 
+    # Default: merge archetype-defined mutations + universal core.
+    # Order: archetype-specific first (higher priority), then universal.
+    names = []
     for mutation in blueprint.mutations:
         name = str(mutation.get("name", "")).strip()
         if name and name not in names:
             names.append(name)
+    for mutation in UNIVERSAL_MUTATIONS:
+        name = str(mutation.get("name", "")).strip()
+        if name and name not in names:
+            names.append(name)
+
+    # Add VATS mutations for VATS-oriented archetypes.
+    is_vats = any(
+        kw in blueprint.archetype_id
+        for kw in ("commando", "rifleman", "gunslinger", "bow", "pepper_shaker", "enclave_flamer")
+    )
+    if is_vats:
+        for mutation in VATS_MUTATIONS:
+            name = str(mutation.get("name", "")).strip()
+            if name and name not in names:
+                names.append(name)
+
+    # Add melee mutations for melee archetypes.
+    if "melee" in blueprint.archetype_id:
+        for mutation in MELEE_MUTATIONS:
+            name = str(mutation.get("name", "")).strip()
+            if name and name not in names:
+                names.append(name)
+
+    # Add bloodied mutations if the build name or user input suggests bloodied.
+    if "bloodied" in blueprint.build_name.lower() or user.health_model == "Bloodied":
+        for mutation in BLOODIED_MUTATIONS:
+            name = str(mutation.get("name", "")).strip()
+            if name and name not in names:
+                names.append(name)
+
+    # Filter out conflicts: Grounded is harmful for energy weapon builds.
+    if "energy" in user.primary_weapon_type.lower():
+        names = [n for n in names if n != "Grounded"]
+
     return names
 
 
@@ -1110,24 +1276,41 @@ def _uses_mutations(blueprint: ArchetypeBlueprint, user: BuildInput) -> bool:
 
 
 def _mutation_recommendations(blueprint: ArchetypeBlueprint, user: BuildInput) -> List[Dict[str, str]]:
+    preference = (user.mutation_preference or "").strip()
+    is_no_mutations = preference.lower().startswith("no mutations")
+
+    if is_no_mutations:
+        return []
+
+    specific_request = preference.lower().startswith("specific mutations:")
     names = _selected_mutation_names(blueprint, user)
     if not names:
         return []
 
-    specific_request = (user.mutation_preference or "").strip().lower().startswith("specific mutations:")
     blueprint_by_name = {
         str(mutation.get("name", "")).strip().lower(): dict(mutation)
         for mutation in blueprint.mutations
     }
+    # Also index the expanded pools for default builds.
+    for pool in (UNIVERSAL_MUTATIONS, VATS_MUTATIONS, BLOODIED_MUTATIONS, MELEE_MUTATIONS, TANK_MUTATIONS):
+        for mutation in pool:
+            key = str(mutation.get("name", "")).strip().lower()
+            if key not in blueprint_by_name:
+                blueprint_by_name[key] = dict(mutation)
+
     recommendations: List[Dict[str, str]] = []
+    seen_names: set[str] = set()
     for name in names:
+        if name in seen_names:
+            continue
+        seen_names.add(name)
         recommendation = blueprint_by_name.get(name.lower(), {})
         details = MUTATION_DETAILS.get(name, {})
         if specific_request:
             recommendation["use"] = "Requested"
         recommendation["name"] = name
-        recommendation.setdefault("use", "Yes")
-        recommendation.setdefault("reason", details.get("reason", "Requested mutation preference."))
+        recommendation.setdefault("use", "Recommended")
+        recommendation.setdefault("reason", details.get("reason", "Recommended for optimized builds."))
         recommendation.setdefault("support", details.get("support", "Class Freak + Starched Genes"))
         if name == "Adrenal Reaction" and user.health_model == "Full health":
             recommendation["use"] = "Requested / bloodied variant" if specific_request else "Variant"
@@ -1671,6 +1854,39 @@ def validate_build(build: GeneratedBuild) -> list[str]:
 
 
 def compare_builds(builds: list[GeneratedBuild]) -> CompareResult:
+    legendary_perk_diff = {
+        b.id: [str(lp.get("name", "")) for lp in b.legendary_perks]
+        for b in builds
+    }
+    mutation_diff = {
+        b.id: [str(m.get("name", "")) for m in b.mutations]
+        for b in builds
+    }
+    gear_diff = {
+        b.id: {
+            k: v if isinstance(v, list) else [str(v)]
+            for k, v in b.gear.items()
+        }
+        for b in builds
+    }
+
+    # Generate concise tradeoff summary.
+    tradeoffs: list[str] = []
+    if len(builds) >= 2:
+        names = [b.build_name for b in builds]
+        tradeoffs.append(f"Comparing: {', '.join(names)}.")
+        # SPECIAL total comparison.
+        for b in builds:
+            total = sum(b.special_allocation.values())
+            tradeoffs.append(f"{b.build_name}: {total} SPECIAL points allocated.")
+        # Perk count comparison.
+        for b in builds:
+            perk_count = sum(len(picks) for picks in b.perk_cards_by_special.values())
+            tradeoffs.append(f"{b.build_name}: {perk_count} perk cards selected.")
+        # Mutation count comparison.
+        for b in builds:
+            tradeoffs.append(f"{b.build_name}: {len(b.mutations)} mutations recommended.")
+
     return CompareResult(
         build_ids=[b.id for b in builds],
         special_diff={b.id: b.special_allocation for b in builds},
@@ -1678,4 +1894,8 @@ def compare_builds(builds: list[GeneratedBuild]) -> CompareResult:
             b.id: [p.card_id for cards in b.perk_cards_by_special.values() for p in cards]
             for b in builds
         },
+        legendary_perk_diff=legendary_perk_diff,
+        mutation_diff=mutation_diff,
+        gear_diff=gear_diff,
+        tradeoff_summary=tradeoffs,
     )

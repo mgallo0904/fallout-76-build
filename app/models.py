@@ -166,3 +166,8 @@ class CompareResult(BaseModel):
     build_ids: List[str]
     special_diff: Dict[str, Dict[str, int]]
     core_perk_diff: Dict[str, List[str]]
+    # New optional fields for expanded comparison (backward compatible).
+    legendary_perk_diff: Dict[str, List[str]] = Field(default_factory=dict)
+    mutation_diff: Dict[str, List[str]] = Field(default_factory=dict)
+    gear_diff: Dict[str, Dict[str, List[str]]] = Field(default_factory=dict)
+    tradeoff_summary: List[str] = Field(default_factory=list)

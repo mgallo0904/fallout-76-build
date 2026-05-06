@@ -747,5 +747,39 @@
     "patch_version": "Live as of May 6 2026",
     "status": "verified",
     "character_restriction": "Ghoul"
+  },
+  {
+    "id": "survival_shortcut",
+    "name": "Survival Shortcut",
+    "special": "Legendary",
+    "max_rank": 4,
+    "rank_costs": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
+    },
+    "effect_by_rank": {
+      "1": "Periodically receive a random aid item every 60 min.",
+      "2": "Every 45 min.",
+      "3": "Every 30 min.",
+      "4": "Every 20 min."
+    },
+    "level_required": 50,
+    "tags": [
+      "legendary",
+      "utility",
+      "economy"
+    ],
+    "build_families": [
+      "all"
+    ],
+    "source_url": "https://www.falloutbuilds.com/fo76/legendary-perks/",
+    "source_name": "FalloutBuilds Legendary Perk Database 2026",
+    "source_type": "database",
+    "last_verified_date": "2026-05-06",
+    "patch_version": "Live as of May 6 2026",
+    "status": "verified",
+    "character_restriction": "Any"
   }
 ]
