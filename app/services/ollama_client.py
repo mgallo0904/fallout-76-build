@@ -88,7 +88,7 @@ def get_brain_config(*, require_api_key: bool = True) -> BrainConfig:
         api_key=api_key,
         web_search_enabled=env_bool('OLLAMA_WEB_SEARCH', True),
         web_search_url=os.getenv('OLLAMA_WEB_SEARCH_URL', DEFAULT_WEB_SEARCH_URL).rstrip('/'),
-        timeout_seconds=env_float('OLLAMA_TIMEOUT_SECONDS', 120.0, 1.0, 300.0),
+        timeout_seconds=env_float('OLLAMA_TIMEOUT_SECONDS', 120.0, 1.0, 600.0),
         max_search_results=env_int('OLLAMA_MAX_SEARCH_RESULTS', 5, 1, 10),
     )
 
