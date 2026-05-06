@@ -22,17 +22,16 @@ def summarize_effect(perk: PerkCard) -> str:
 
 
 def _compact_perk(perk: PerkCard) -> str:
-    tags = ",".join(perk.tags) if perk.tags else "none"
-    restr = perk.character_restriction if perk.character_restriction != "Any" else "any"
-    costs = ",".join(str(c) for c in perk.rank_costs.values()) if perk.rank_costs else "none"
-    # Format: id|SPECIAL|max_rank|costs|tags|restriction
-    return f"{perk.id}|{perk.special[:3].upper()}|max{perk.max_rank}|costs:{costs}|{tags}|{restr}"
+    tags = ",".join(perk.tags) if perk.tags else ""
+    restr = f"|{perk.character_restriction}" if perk.character_restriction != "Any" else ""
+    # Format: id|SPEC|max|tags[|restriction]
+    return f"{perk.id}|{perk.special[:3].upper()}|{perk.max_rank}|{tags}{restr}"
 
 
 def _compact_legendary_perk(perk: PerkCard) -> str:
-    restr = perk.character_restriction if perk.character_restriction != "Any" else "any"
-    # Format: id|name|max_rank|restriction|effect_summary
-    return f"{perk.id}|{perk.name}|max{perk.max_rank}|{restr}|{summarize_effect(perk)}"
+    restr = f"|{perk.character_restriction}" if perk.character_restriction != "Any" else ""
+    # Format: id|name|max|effect[|restriction]
+    return f"{perk.id}|{perk.name}|{perk.max_rank}|{summarize_effect(perk)}{restr}"
 
 
 def build_ollama_prompt(
@@ -61,8 +60,8 @@ def build_ollama_prompt(
         "6. Choose a playable, balanced build.\n"
         "7. Legendary perks must come from the allowed_legendary_perks list.\n"
         "8. Mutations must be from the known Fallout 76 mutation pool.\n"
-        "Format for allowed_perks is 'id|SPECIAL|max_rank|costs:cost1,cost2|tags|restriction'.\n"
-        "Format for allowed_legendary_perks is 'id|name|max_rank|restriction|effect'.\n"
+        "Format for allowed_perks is 'id|SPEC|max|tags[|restriction]'. Assume rank cost = rank.\n"
+        "Format for allowed_legendary_perks is 'id|name|max|effect[|restriction]'.\n"
     )
 
     return [
@@ -85,11 +84,12 @@ def build_ollama_prompt(
                         "swap_cards object[array[string]], assumptions array[string], "
                         "weaknesses array[string], reasoning_summary string."
                     ),
-                    "user_inputs": user.model_dump(mode="json"),
+                    "user_inputs": user.model_dump(mode="json", exclude_none=True),
                     "allowed_perks": [_compact_perk(p) for p in allowed_perks],
                     "allowed_legendary_perks": [_compact_legendary_perk(p) for p in allowed_legendary_perks],
                 },
                 default=str,
+                separators=(',', ':'),
             ),
         },
     ]
