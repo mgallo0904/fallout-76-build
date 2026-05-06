@@ -9,7 +9,9 @@ from typing import Any
 
 from pydantic import BaseModel, Field, ValidationError
 
-from app.models import BuildInput, GeneratedBuild, SourceRecord, WebSearchResult
+from app.models import BuildCandidate, BuildInput, GeneratedBuild, PerkCard, SourceRecord, WebSearchResult
+from app.services.prompting import build_ollama_prompt
+from app.services.llm_builder import generate_llm_candidate
 
 
 DEFAULT_MODEL = 'kimi-k2.6:cloud'
@@ -503,3 +505,65 @@ def research_patch_digest(query: str, max_results: int | None = None) -> dict[st
         'recommended_followups': digest.recommended_followups,
         'notes': notes,
     }
+
+
+def sanity_filter_candidate(
+    candidate: BuildCandidate,
+    allowed_legendary_names: set[str],
+    allowed_mutation_names: set[str],
+) -> BuildCandidate:
+    """
+    Drop hallucinated/illegal Legendary Perks and mutations from an LLM candidate.
+    Append brain_notes explaining each drop.
+    """
+    notes: list[str] = []
+
+    cleaned_legendary: list[dict[str, object]] = []
+    for lp in candidate.legendary_perks:
+        name = str(lp.get("name", ""))
+        if name in allowed_legendary_names:
+            cleaned_legendary.append(dict(lp))
+        else:
+            notes.append(f"Sanity filter dropped unknown/hallucinated legendary perk: {name}.")
+    candidate.legendary_perks = cleaned_legendary
+
+    cleaned_mutations: list[dict[str, str]] = []
+    for m in candidate.mutations:
+        name = str(m.get("name", ""))
+        if name in allowed_mutation_names:
+            cleaned_mutations.append(dict(m))
+        else:
+            notes.append(f"Sanity filter dropped unknown/hallucinated mutation: {name}.")
+    candidate.mutations = cleaned_mutations
+
+    # What Rads? brain note per plan specification
+    for lp in candidate.legendary_perks:
+        if str(lp.get("name", "")).lower() == "what rads?":
+            notes.append(
+                "What Rads? has known Ghoul transformation behavior caveats in Bethesda's Ghoul Within notes. "
+                "Verify in-game behavior before treating it as final for this character."
+            )
+            break
+
+    # Attach notes to candidate via assumptions ( consumed by pipeline )
+    if notes:
+        candidate.assumptions.extend(notes)
+    return candidate
+
+
+def generate_build_candidate(
+    user: BuildInput,
+    allowed_perks: list[PerkCard],
+    allowed_legendary_perks: list[PerkCard],
+    allowed_mutation_names: set[str],
+) -> BuildCandidate:
+    """
+    Generate a full build candidate using the Ollama brain.
+
+    Uses the strict prompt builder and the LLM builder with one retry.
+    Applies sanity filtering before returning.
+    """
+    messages = build_ollama_prompt(user, allowed_perks, allowed_legendary_perks)
+    candidate = generate_llm_candidate(messages, max_retries=1)
+    allowed_legendary_names = {p.name for p in allowed_legendary_perks}
+    return sanity_filter_candidate(candidate, allowed_legendary_names, allowed_mutation_names)

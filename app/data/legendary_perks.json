@@ -29,7 +29,8 @@
     "source_type": "database",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "verified",
+    "character_restriction": "Any"
   },
   {
     "id": "legendary_perception",
@@ -61,7 +62,8 @@
     "source_type": "database",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "verified",
+    "character_restriction": "Any"
   },
   {
     "id": "legendary_endurance",
@@ -93,7 +95,8 @@
     "source_type": "database",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "verified",
+    "character_restriction": "Any"
   },
   {
     "id": "legendary_charisma",
@@ -125,7 +128,8 @@
     "source_type": "database",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "verified",
+    "character_restriction": "Any"
   },
   {
     "id": "legendary_intelligence",
@@ -157,7 +161,8 @@
     "source_type": "database",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "verified",
+    "character_restriction": "Any"
   },
   {
     "id": "legendary_agility",
@@ -189,7 +194,8 @@
     "source_type": "database",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "verified",
+    "character_restriction": "Any"
   },
   {
     "id": "legendary_luck",
@@ -221,7 +227,8 @@
     "source_type": "database",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "verified",
+    "character_restriction": "Any"
   },
   {
     "id": "taking_one_for_the_team",
@@ -254,7 +261,8 @@
     "source_type": "database",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "verified",
+    "character_restriction": "Any"
   },
   {
     "id": "follow_through",
@@ -289,7 +297,8 @@
     "source_type": "database",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "verified",
+    "character_restriction": "Any"
   },
   {
     "id": "electric_absorption",
@@ -321,7 +330,8 @@
     "source_type": "database",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "verified",
+    "character_restriction": "Any"
   },
   {
     "id": "power_armor_reboot",
@@ -356,7 +366,8 @@
     "source_type": "database",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "verified",
+    "character_restriction": "Any"
   },
   {
     "id": "ammo_factory",
@@ -388,7 +399,8 @@
     "source_type": "database",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "verified",
+    "character_restriction": "Any"
   },
   {
     "id": "master_infiltrator",
@@ -420,7 +432,8 @@
     "source_type": "database",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "verified",
+    "character_restriction": "Any"
   },
   {
     "id": "sneak_attacker",
@@ -454,7 +467,8 @@
     "source_type": "database",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "verified",
+    "character_restriction": "Any"
   },
   {
     "id": "what_rads",
@@ -487,7 +501,11 @@
     "source_type": "database",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "uncertain",
+    "character_restriction": "Any",
+    "notes": [
+      "Bethesda Ghoul Within release notes reported inconsistent transformed-character behavior involving What Rads?, Action Diet, and Feral Rage."
+    ]
   },
   {
     "id": "funky_duds",
@@ -519,7 +537,8 @@
     "source_type": "database",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "verified",
+    "character_restriction": "Any"
   },
   {
     "id": "far_flung_fireworks",
@@ -552,7 +571,8 @@
     "source_type": "database",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "verified",
+    "character_restriction": "Any"
   },
   {
     "id": "retribution",
@@ -585,7 +605,8 @@
     "source_type": "database",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "verified",
+    "character_restriction": "Any"
   },
   {
     "id": "hack_and_slash",
@@ -618,7 +639,8 @@
     "source_type": "database",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "verified",
+    "character_restriction": "Any"
   },
   {
     "id": "blocker_legendary",
@@ -651,7 +673,8 @@
     "source_type": "database",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "verified",
+    "character_restriction": "Any"
   },
   {
     "id": "action_diet",
@@ -686,7 +709,8 @@
     "source_type": "wiki",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "verified",
+    "character_restriction": "Ghoul"
   },
   {
     "id": "feral_rage",
@@ -721,6 +745,7 @@
     "source_type": "wiki",
     "last_verified_date": "2026-05-06",
     "patch_version": "Live as of May 6 2026",
-    "status": "verified"
+    "status": "verified",
+    "character_restriction": "Ghoul"
   }
 ]

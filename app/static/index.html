@@ -22,17 +22,32 @@
     </nav>
   </header>
 
-  <main class="workspace">
-    <section class="builder-shell" aria-labelledby="builderTitle">
+  <main class="workspace build-board" id="buildBoard">
+    <!-- Left: Build Brief -->
+    <section class="build-brief" aria-labelledby="builderTitle">
       <div class="section-head">
         <div>
           <p class="eyebrow">Build bench</p>
-          <h1 id="builderTitle">Power Armor Heavy planner</h1>
+          <h1 id="builderTitle">Build Brief</h1>
         </div>
         <button id="generateBtn" class="primary-action" type="button">Create Build</button>
       </div>
 
       <form id="buildForm" class="control-grid">
+        <label class="wide">
+          Build goal
+          <textarea id="goal" name="goal" rows="3" placeholder="Describe what you want this build to do (e.g., high-DPS Power Armor heavy gunner for daily ops and bosses)"></textarea>
+        </label>
+
+        <label>
+          Generation mode
+          <select id="generation_mode" name="generation_mode">
+            <option value="hybrid" selected>Hybrid (AI + deterministic)</option>
+            <option value="deterministic">Deterministic only</option>
+            <option value="llm">LLM only</option>
+          </select>
+        </label>
+
         <label>
           Character level
           <select id="character_level" name="character_level">
@@ -51,23 +66,29 @@
             <option>Playable Ghoul</option>
           </select>
         </label>
+        <div id="characterTypeWarnings" class="validation-messages" aria-live="polite"></div>
 
         <label>
           Primary playstyle
           <select id="primary_playstyle" name="primary_playstyle">
-            <option>Power Armor Heavy</option>
-            <option>Bullet Storm Heavy</option>
-            <option>Pyromaniac</option>
             <option>Commando</option>
             <option>Rifleman</option>
-            <option>Bow Stealth</option>
+            <option>Heavy Gunner</option>
             <option>Shotgunner</option>
-            <option>Stealth Shotgun</option>
             <option>Gunslinger</option>
-            <option>Melee</option>
-            <option>Ghoul Heavy</option>
-            <option>Ghoul Commando</option>
-            <option>Ghoul Melee</option>
+            <option>Guerrilla</option>
+            <option>Bow / Archer</option>
+            <option>One-Handed Melee</option>
+            <option>Two-Handed Melee</option>
+            <option>Unarmed</option>
+            <option>Auto Melee</option>
+            <option>Explosives</option>
+            <option>Energy Weapons</option>
+            <option>Power Armor Tank</option>
+            <option>Support / Team Utility</option>
+            <option>XP / Leveling</option>
+            <option>Crafting / Utility</option>
+            <option>Hybrid</option>
           </select>
         </label>
 
@@ -147,34 +168,32 @@
           </select>
         </label>
 
-        <label>
-          Mutation preferences
-          <select id="mutation_preference" name="mutation_preference" multiple size="8">
-            <option selected>Use mutations</option>
-            <option>No mutations</option>
-            <optgroup label="Specific mutation focus">
-              <option>Speed Demon</option>
-              <option>Adrenal Reaction</option>
-              <option>Marsupial</option>
-              <option>Eagle Eyes</option>
-              <option>Talons</option>
-              <option>Bird Bones</option>
-              <option>Egg Head</option>
-              <option>Empath</option>
-              <option>Healing Factor</option>
-              <option>Herd Mentality</option>
-              <option>Carnivore</option>
-              <option>Herbivore</option>
-              <option>Twisted Muscles</option>
-              <option>Plague Walker</option>
-              <option>Grounded</option>
-              <option>Scaly Skin</option>
-              <option>Electrically Charged</option>
-              <option>Unstable Isotope</option>
-              <option>Chameleon</option>
-            </optgroup>
-          </select>
-        </label>
+        <fieldset class="control-field mutation-field" id="mutation_preference_group">
+          <legend>Mutation preferences</legend>
+          <div class="mutation-grid">
+            <label class="check-pill"><input type="checkbox" value="Use mutations" checked><span>Use mutations</span></label>
+            <label class="check-pill"><input type="checkbox" value="No mutations"><span>No mutations</span></label>
+            <label class="check-pill"><input type="checkbox" value="Speed Demon"><span>Speed Demon</span></label>
+            <label class="check-pill"><input type="checkbox" value="Adrenal Reaction"><span>Adrenal Reaction</span></label>
+            <label class="check-pill"><input type="checkbox" value="Marsupial"><span>Marsupial</span></label>
+            <label class="check-pill"><input type="checkbox" value="Eagle Eyes"><span>Eagle Eyes</span></label>
+            <label class="check-pill"><input type="checkbox" value="Talons"><span>Talons</span></label>
+            <label class="check-pill"><input type="checkbox" value="Bird Bones"><span>Bird Bones</span></label>
+            <label class="check-pill"><input type="checkbox" value="Egg Head"><span>Egg Head</span></label>
+            <label class="check-pill"><input type="checkbox" value="Empath"><span>Empath</span></label>
+            <label class="check-pill"><input type="checkbox" value="Healing Factor"><span>Healing Factor</span></label>
+            <label class="check-pill"><input type="checkbox" value="Herd Mentality"><span>Herd Mentality</span></label>
+            <label class="check-pill"><input type="checkbox" value="Carnivore"><span>Carnivore</span></label>
+            <label class="check-pill"><input type="checkbox" value="Herbivore"><span>Herbivore</span></label>
+            <label class="check-pill"><input type="checkbox" value="Twisted Muscles"><span>Twisted Muscles</span></label>
+            <label class="check-pill"><input type="checkbox" value="Plague Walker"><span>Plague Walker</span></label>
+            <label class="check-pill"><input type="checkbox" value="Grounded"><span>Grounded</span></label>
+            <label class="check-pill"><input type="checkbox" value="Scaly Skin"><span>Scaly Skin</span></label>
+            <label class="check-pill"><input type="checkbox" value="Electrically Charged"><span>Electrically Charged</span></label>
+            <label class="check-pill"><input type="checkbox" value="Unstable Isotope"><span>Unstable Isotope</span></label>
+            <label class="check-pill"><input type="checkbox" value="Chameleon"><span>Chameleon</span></label>
+          </div>
+        </fieldset>
 
         <label>
           Quality-of-life preference
@@ -210,51 +229,80 @@
           <textarea id="avoid_list" name="avoid_list" rows="3">No stealth</textarea>
         </label>
       </form>
+
+      <div id="revisionActions" class="revision-bar hidden" aria-label="Build revisions">
+        <p class="block-title">Revision intent</p>
+        <div class="revision-grid">
+          <button class="secondary-action revision-btn" data-intent="more_damage" type="button">More Damage</button>
+          <button class="secondary-action revision-btn" data-intent="more_tanky" type="button">More Tanky</button>
+          <button class="secondary-action revision-btn" data-intent="avoid_power_armor" type="button">Avoid Power Armor</button>
+          <button class="secondary-action revision-btn" data-intent="avoid_bloodied" type="button">Avoid Bloodied</button>
+          <button class="secondary-action revision-btn" data-intent="regenerate" type="button">Regenerate</button>
+        </div>
+      </div>
+
+      <div id="legendaryPicker" class="legendary-picker hidden" aria-label="Legendary perk picker">
+        <p class="block-title">Legendary Perks <span id="legendaryCounter" class="counter">0 / 6</span></p>
+        <div id="legendaryRows" class="legendary-rows"></div>
+        <button id="addLegendaryRow" class="mini-button" type="button">+ Add Legendary Perk</button>
+        <div id="legendaryWarnings" class="validation-messages" aria-live="polite"></div>
+      </div>
     </section>
 
-    <aside class="intel-rail" aria-label="Fallout 76 build intelligence">
-      <img class="appalachia-visual" src="/static/appalachia-grid.svg" alt="">
+    <!-- Center: SPECIAL Board -->
+    <section id="specialBoard" class="special-board" aria-label="SPECIAL perk board">
+      <div class="board-placeholder">
+        <p class="empty-state">Enter a build goal and click <strong>Create Build</strong> to generate your SPECIAL board.</p>
+      </div>
+    </section>
 
-      <section class="intel-block">
-        <div class="block-title">Core Stack</div>
-        <dl class="compact-list">
-          <div><dt>Damage</dt><dd>Heavy Gunner, Expert Heavy Gunner, Master Heavy Gunner</dd></div>
-          <div><dt>Power Armor</dt><dd>Stabilized for armor penetration and accuracy</dd></div>
-          <div><dt>Sustain</dt><dd>Electric Absorption, fusion cores, Vampire's variant</dd></div>
-          <div><dt>Armor effects</dt><dd>Overeater's baseline, enemy-specific swaps</dd></div>
-        </dl>
-      </section>
+    <!-- Right: Build Summary -->
+    <aside id="buildSummary" class="build-summary" aria-label="Build summary">
+      <div class="summary-placeholder">
+        <img class="appalachia-visual" src="/static/appalachia-grid.svg" alt="">
 
-      <section class="intel-block">
-        <div class="block-title">Weapon Targets</div>
-        <div class="tag-cloud">
-          <span>Gatling Plasma</span>
-          <span>Gatling Laser</span>
-          <span>Ultracite Gatling Laser</span>
-          <span>Gauss Minigun</span>
-          <span>Plasma Caster</span>
-        </div>
-      </section>
+        <section class="intel-block">
+          <div class="block-title">Core Stack</div>
+          <dl class="compact-list">
+            <div><dt>Damage</dt><dd>Heavy Gunner, Expert Heavy Gunner, Master Heavy Gunner</dd></div>
+            <div><dt>Power Armor</dt><dd>Stabilized for armor penetration and accuracy</dd></div>
+            <div><dt>Sustain</dt><dd>Electric Absorption, fusion cores, Vampire's variant</dd></div>
+            <div><dt>Armor effects</dt><dd>Overeater's baseline, enemy-specific swaps</dd></div>
+          </dl>
+        </section>
 
-      <section class="intel-block">
-        <div class="block-title">Mutations</div>
-        <div class="tag-cloud mixed">
-          <span>Speed Demon</span>
-          <span>Marsupial</span>
-          <span>Herd Mentality</span>
-          <span>Adrenal Reaction</span>
-          <span>Class Freak</span>
-          <span>Starched Genes</span>
-        </div>
-      </section>
+        <section class="intel-block">
+          <div class="block-title">Weapon Targets</div>
+          <div class="tag-cloud">
+            <span>Gatling Plasma</span>
+            <span>Gatling Laser</span>
+            <span>Ultracite Gatling Laser</span>
+            <span>Gauss Minigun</span>
+            <span>Plasma Caster</span>
+          </div>
+        </section>
 
-      <section class="intel-block">
-        <div class="block-title">Source Registry</div>
-        <div id="sourceList" class="source-list"></div>
-      </section>
+        <section class="intel-block">
+          <div class="block-title">Mutations</div>
+          <div class="tag-cloud mixed">
+            <span>Speed Demon</span>
+            <span>Marsupial</span>
+            <span>Herd Mentality</span>
+            <span>Adrenal Reaction</span>
+            <span>Class Freak</span>
+            <span>Starched Genes</span>
+          </div>
+        </section>
+
+        <section class="intel-block">
+          <div class="block-title">Source Registry</div>
+          <div id="sourceList" class="source-list"></div>
+        </section>
+      </div>
     </aside>
   </main>
 
+  <!-- Legacy result panel kept for JS transition; populated by old renderBuild until JS is updated -->
   <section id="resultPanel" class="results-shell hidden" aria-live="polite"></section>
 
   <script src="/static/index.js"></script>

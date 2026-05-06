@@ -12,6 +12,7 @@ from app.models import (
     BuildInput,
     CompareResult,
     GeneratedBuild,
+    PerkCard,
     PerkChoice,
     Status,
 )
@@ -98,6 +99,39 @@ GHOUL_RESTRICTED_PERK_IDS = frozenset(
         "vaccinated",
     }
 )
+
+MUTATION_SUPPORT_PERK_PICKS: tuple[tuple[str, int, str, str], ...] = (
+    ("starched_genes", 1, "Mutation Support", "Locks in selected mutations and protects against RadAway removal."),
+    ("class_freak", 3, "Mutation Support", "Reduces negative mutation effects for multi-mutation builds."),
+)
+TEAM_MUTATION_SUPPORT_PICK = (
+    "strange_in_numbers",
+    1,
+    "Team Mutation Support",
+    "Boosts positive mutation effects while grouped with mutated teammates.",
+)
+
+MUTATION_DETAILS: dict[str, dict[str, str]] = {
+    "Speed Demon": {"reason": "Reload speed and movement.", "support": "Class Freak + Starched Genes"},
+    "Adrenal Reaction": {"reason": "Low-health damage scaling.", "support": "Class Freak + Starched Genes"},
+    "Marsupial": {"reason": "Jump height and carry weight.", "support": "Class Freak + Starched Genes"},
+    "Eagle Eyes": {"reason": "Critical damage and Perception.", "support": "Class Freak + Starched Genes"},
+    "Talons": {"reason": "Unarmed damage support.", "support": "Class Freak + Starched Genes"},
+    "Bird Bones": {"reason": "Agility and slower falling.", "support": "Class Freak + Starched Genes"},
+    "Egg Head": {"reason": "Intelligence boost for XP and crafting utility.", "support": "Class Freak + Starched Genes"},
+    "Empath": {"reason": "Team damage mitigation.", "support": "Class Freak + Starched Genes + Strange in Numbers"},
+    "Healing Factor": {"reason": "Out-of-combat health regeneration.", "support": "Class Freak + Starched Genes"},
+    "Herd Mentality": {"reason": "SPECIAL boost while grouped.", "support": "Class Freak + Starched Genes + Strange in Numbers"},
+    "Carnivore": {"reason": "Meat food bonuses.", "support": "Class Freak + Starched Genes"},
+    "Herbivore": {"reason": "Plant food bonuses.", "support": "Class Freak + Starched Genes"},
+    "Twisted Muscles": {"reason": "Melee damage support.", "support": "Class Freak + Starched Genes"},
+    "Plague Walker": {"reason": "Poison aura when diseases are active.", "support": "Class Freak + Starched Genes"},
+    "Grounded": {"reason": "Energy resistance at the cost of energy weapon damage.", "support": "Class Freak + Starched Genes"},
+    "Scaly Skin": {"reason": "Damage and energy resistance at an AP cost.", "support": "Class Freak + Starched Genes"},
+    "Electrically Charged": {"reason": "Chance to shock melee attackers.", "support": "Class Freak + Starched Genes"},
+    "Unstable Isotope": {"reason": "Radiation burst chance when hit in melee.", "support": "Class Freak + Starched Genes"},
+    "Chameleon": {"reason": "Stealth invisibility while stationary and unarmored.", "support": "Class Freak + Starched Genes"},
+}
 GHOUL_RESTRICTED_LEGENDARY_NAMES = frozenset({"what rads?"})
 
 
@@ -822,6 +856,100 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 "Bosses with knockback or toxic AoE.",
             ),
         ),
+        ArchetypeBlueprint(
+            archetype_id="xp_leveling_fallback",
+            build_name="XP / Leveling Build",
+            aliases=("xp", "leveling", "xp farm"),
+            special_allocation={
+                "Strength": 3,
+                "Perception": 15,
+                "Endurance": 5,
+                "Charisma": 3,
+                "Intelligence": 15,
+                "Agility": 10,
+                "Luck": 5,
+            },
+            perk_picks=(
+                ("commando", 3, "Damage", "Core automatic rifle damage."),
+                ("expert_commando", 3, "Damage", "Stacks automatic rifle damage."),
+                ("master_commando", 3, "Damage", "Completes auto rifle damage stack."),
+                ("tank_killer", 2, "Armor Pen", "Patch 62: 40% armor ignore for all ranged."),
+                ("concentrated_fire", 3, "VATS", "Stacking accuracy + damage."),
+                ("better_criticals", 3, "Criticals", "Big VATS crit damage."),
+                ("critical_savvy", 3, "Criticals", "Reduced crit meter consumption."),
+                ("grim_reapers_sprint", 1, "AP regen", "VATS kills restore AP."),
+            ),
+            legendary_perks=(
+                {"name": "Legendary Intelligence", "priority": "Required", "reason": "Max INT for XP gain.", "rank": 4},
+                {"name": "Legendary Luck", "priority": "Recommended", "reason": "Crit meter throughput.", "rank": 2},
+                {"name": "Follow Through", "priority": "Recommended", "reason": "Damage support while leveling.", "rank": 2},
+            ),
+            mutations=(
+                {"name": "Egg Head", "use": "Yes", "reason": "Intelligence boost for XP and crafting utility."},
+                {"name": "Herd Mentality", "use": "Yes", "reason": "SPECIAL boost while grouped."},
+                {"name": "Speed Demon", "use": "Yes", "reason": "Reload and mobility."},
+            ),
+            gear={
+                "weapons": ["The Fixer", "Handmade Rifle", "V63 Laser Carbine"],
+                "armor": ["Secret Service Armor", "Civil Engineer Armor"],
+                "weapon_effects": ["Anti-Armor", "Quad", "Vampire's"],
+                "armor_effects": ["Overeater's"],
+                "ammo_consumables": ["Company Tea", "Cranberry Relish"],
+            },
+            variants={
+                "Heavy Gunner XP": ["Switch to Heavy Gunner baseline if preferred."],
+            },
+            swap_cards={"XP Events": ["Inspirational"]},
+            weaknesses=("Lower peak DPS than dedicated combat builds.",),
+            extra_assumptions=(
+                "XP / Leveling is a goal overlay, so the engine used the closest combat archetype and emphasized Intelligence/XP support.",
+                "Preferred team context: Casual public team.",
+            ),
+        ),
+        ArchetypeBlueprint(
+            archetype_id="crafting_utility_fallback",
+            build_name="Crafting / Utility Build",
+            aliases=("crafting", "utility", "camp", "vendor"),
+            special_allocation={
+                "Strength": 6,
+                "Perception": 6,
+                "Endurance": 6,
+                "Charisma": 9,
+                "Intelligence": 15,
+                "Agility": 6,
+                "Luck": 8,
+            },
+            perk_picks=(
+                ("commando", 3, "Damage", "Combat shell for playability."),
+                ("expert_commando", 3, "Damage", "Combat shell for playability."),
+                ("tank_killer", 2, "Armor Pen", "Basic ranged support."),
+            ),
+            optional_perk_picks=(
+                ("demolition_expert", 5, "Crafting", "Explosive crafting support."),
+            ),
+            legendary_perks=(
+                {"name": "Ammo Factory", "priority": "Required", "reason": "Ammo crafting.", "rank": 1},
+                {"name": "Master Infiltrator", "priority": "Recommended", "reason": "Lockpicking/hacking convenience.", "rank": 1},
+                {"name": "Legendary Intelligence", "priority": "Recommended", "reason": "Crafting/XP overlap.", "rank": 2},
+            ),
+            mutations=(
+                {"name": "Speed Demon", "use": "Optional", "reason": "Mobility."},
+            ),
+            gear={
+                "weapons": ["The Fixer", "Handmade Rifle"],
+                "armor": ["Secret Service Armor"],
+                "weapon_effects": ["Anti-Armor", "Vampire's"],
+                "armor_effects": ["Overeater's"],
+            },
+            variants={
+                "Crafting Focus": ["Ammo Factory swap-in"],
+            },
+            swap_cards={"Crafting": ["Weapon Artisan", "Fix It Good"], "Selling": ["Hard Bargain"]},
+            weaknesses=("Not optimized for boss DPS.",),
+            extra_assumptions=(
+                "Crafting / Utility is a non-combat loadout; combat performance is secondary.",
+            ),
+        ),
     ]
     return {bp.archetype_id: bp for bp in blueprints}
 
@@ -844,6 +972,14 @@ def _free_text(inp: BuildInput) -> str:
 
 def classify(inp: BuildInput) -> str:
     """Return the archetype id that best matches the user's free-text inputs."""
+    playstyle = (inp.primary_playstyle or "").strip()
+
+    # Primary playstyle dropdown values take priority.
+    if playstyle == "XP / Leveling":
+        return "xp_leveling_fallback"
+    if playstyle == "Crafting / Utility":
+        return "crafting_utility_fallback"
+
     text = _free_text(inp)
 
     is_ghoul = "ghoul" in text or "feral" in text
@@ -940,22 +1076,280 @@ def _build_assumptions(extra: tuple[str, ...]) -> List[str]:
     return base
 
 
-def _materialize_picks(blueprint: ArchetypeBlueprint) -> tuple[List[PerkChoice], Dict[str, List[PerkChoice]]]:
+def _normalize_mutation_name(name: str) -> str:
+    normalized = re.sub(r"\s+", " ", name.strip()).lower()
+    for known in MUTATION_DETAILS:
+        if known.lower() == normalized:
+            return known
+    return name.strip()
+
+
+def _selected_mutation_names(blueprint: ArchetypeBlueprint, user: BuildInput) -> list[str]:
+    preference = (user.mutation_preference or "").strip()
+    if preference.lower().startswith("no mutations"):
+        return []
+
+    names: list[str] = []
+    if preference.lower().startswith("specific mutations:"):
+        raw_names = preference.split(":", 1)[1].split(",")
+        for raw_name in raw_names:
+            name = _normalize_mutation_name(raw_name)
+            if name and name not in names:
+                names.append(name)
+        return names
+
+    for mutation in blueprint.mutations:
+        name = str(mutation.get("name", "")).strip()
+        if name and name not in names:
+            names.append(name)
+    return names
+
+
+def _uses_mutations(blueprint: ArchetypeBlueprint, user: BuildInput) -> bool:
+    return bool(_selected_mutation_names(blueprint, user))
+
+
+def _mutation_recommendations(blueprint: ArchetypeBlueprint, user: BuildInput) -> List[Dict[str, str]]:
+    names = _selected_mutation_names(blueprint, user)
+    if not names:
+        return []
+
+    specific_request = (user.mutation_preference or "").strip().lower().startswith("specific mutations:")
+    blueprint_by_name = {
+        str(mutation.get("name", "")).strip().lower(): dict(mutation)
+        for mutation in blueprint.mutations
+    }
+    recommendations: List[Dict[str, str]] = []
+    for name in names:
+        recommendation = blueprint_by_name.get(name.lower(), {})
+        details = MUTATION_DETAILS.get(name, {})
+        if specific_request:
+            recommendation["use"] = "Requested"
+        recommendation["name"] = name
+        recommendation.setdefault("use", "Yes")
+        recommendation.setdefault("reason", details.get("reason", "Requested mutation preference."))
+        recommendation.setdefault("support", details.get("support", "Class Freak + Starched Genes"))
+        if name == "Adrenal Reaction" and user.health_model == "Full health":
+            recommendation["use"] = "Requested / bloodied variant" if specific_request else "Variant"
+            recommendation["reason"] = "Best for bloodied or low-health variants; optional on full-health builds."
+        if name == "Grounded" and "energy" in user.primary_weapon_type.lower():
+            recommendation["reason"] = "Requested, but watch the energy weapon damage penalty on energy weapons."
+        recommendations.append(recommendation)
+    return recommendations
+
+
+def _mutation_support_picks(blueprint: ArchetypeBlueprint, user: BuildInput) -> tuple[tuple[str, int, str, str], ...]:
+    if not _uses_mutations(blueprint, user):
+        return ()
+    picks = list(MUTATION_SUPPORT_PERK_PICKS)
+    if user.team_preference != "Solo":
+        picks.append(TEAM_MUTATION_SUPPORT_PICK)
+    return tuple(picks)
+
+
+def _rank_cost(card: PerkCard, rank: int) -> int | None:
+    return card.rank_costs.get(rank)
+
+
+def _is_context_allowed_for_completion(card: PerkCard, blueprint: ArchetypeBlueprint, *, uses_mutations: bool) -> bool:
+    is_ghoul = blueprint.archetype_id in GHOUL_ARCHETYPES
+    tags = set(card.tags)
+    families = set(card.build_families)
+    if "mutation" in tags and not uses_mutations:
+        return False
+    if "ghoul_only" in tags and not is_ghoul:
+        return False
+    if is_ghoul and card.id in GHOUL_RESTRICTED_PERK_IDS:
+        return False
+    allowed_families: set[str] = set()
+    if "heavy" in blueprint.archetype_id or "cremator" in blueprint.archetype_id:
+        allowed_families.add("heavy")
+    if "commando" in blueprint.archetype_id:
+        allowed_families.add("commando")
+    if "rifleman" in blueprint.archetype_id or "bow" in blueprint.archetype_id:
+        allowed_families.add("rifleman")
+    if "gunslinger" in blueprint.archetype_id:
+        allowed_families.add("gunslinger")
+    if "shotgun" in blueprint.archetype_id or "pepper_shaker" in blueprint.archetype_id:
+        allowed_families.add("shotgunner")
+    if "melee" in blueprint.archetype_id:
+        allowed_families.add("melee")
+    if is_ghoul:
+        allowed_families.add("ghoul")
+    exclusive_families = {"commando", "rifleman", "gunslinger", "shotgunner", "melee"}
+    if families.intersection(exclusive_families) and not families.intersection(allowed_families):
+        return False
+    if card.bloodied_synergy and "Bloodied" not in blueprint.build_name:
+        return False
+    is_stealth_build = "stealth" in blueprint.archetype_id or "Stealth" in blueprint.build_name
+    if (card.stealth_synergy or "stealth" in tags) and not is_stealth_build:
+        return False
+    is_vats_build = any(
+        keyword in blueprint.archetype_id
+        for keyword in ("commando", "rifleman", "gunslinger", "bow", "pepper_shaker")
+    )
+    if card.vats_synergy and not is_vats_build:
+        return False
+    return True
+
+
+def _is_basic_allowed_for_completion(card: PerkCard, blueprint: ArchetypeBlueprint, *, uses_mutations: bool) -> bool:
+    is_ghoul = blueprint.archetype_id in GHOUL_ARCHETYPES
+    tags = set(card.tags)
+    if "mutation" in tags and not uses_mutations:
+        return False
+    if "ghoul_only" in tags and not is_ghoul:
+        return False
+    if is_ghoul and card.id in GHOUL_RESTRICTED_PERK_IDS:
+        return False
+    if card.bloodied_synergy and "Bloodied" not in blueprint.build_name:
+        return False
+    return True
+
+
+def _completion_score(
+    card: PerkCard,
+    blueprint: ArchetypeBlueprint,
+    selected_tag_context: set[str],
+    *,
+    uses_mutations: bool,
+) -> int:
+    score = 10
+    families = set(card.build_families)
+    tags = set(card.tags)
+    if blueprint.archetype_id in families:
+        score += 100
+    if blueprint.archetype_id in GHOUL_ARCHETYPES and "ghoul" in families:
+        score += 90
+    if "heavy" in families and "heavy" in blueprint.archetype_id:
+        score += 65
+    if families.intersection({"commando", "rifleman", "gunslinger", "shotgunner", "melee"}):
+        if any(family in blueprint.archetype_id for family in families):
+            score += 65
+    score += 8 * len(tags.intersection(selected_tag_context))
+    if "defense" in tags or "utility" in tags or "mutation" in tags:
+        score += 12
+    if "mutation" in tags and uses_mutations:
+        score += 45
+    if "damage" in tags:
+        score += 8
+    if card.crafting_or_swap_only:
+        score -= 80
+    return score
+
+
+def _best_completion_choices(candidates: list[tuple[int, str, int, int, str, str]], remaining: int) -> list[tuple[str, int, str, str]]:
+    """Choose one rank per candidate card to exactly fill the remaining cost."""
+    grouped: dict[str, list[tuple[int, str, int, int, str, str]]] = {}
+    for candidate in candidates:
+        grouped.setdefault(candidate[1], []).append(candidate)
+
+    # cost -> (score, choices)
+    dp: dict[int, tuple[int, list[tuple[str, int, str, str]]]] = {0: (0, [])}
+    for card_id, options in grouped.items():
+        next_dp = dict(dp)
+        for current_cost, (current_score, current_choices) in dp.items():
+            for score, _, rank, cost, role, why in options:
+                new_cost = current_cost + cost
+                if new_cost > remaining:
+                    continue
+                new_score = current_score + score
+                new_choices = current_choices + [(card_id, rank, role, why)]
+                previous = next_dp.get(new_cost)
+                if previous is None or new_score > previous[0]:
+                    next_dp[new_cost] = (new_score, new_choices)
+        dp = next_dp
+    return dp.get(remaining, (0, []))[1]
+
+
+def _complete_special_allocations(
+    blueprint: ArchetypeBlueprint,
+    user: BuildInput,
+    perks_by_id: dict[str, PerkCard],
+    selected: list[PerkChoice],
+    spent_per_special: dict[str, int],
+) -> None:
+    uses_mutations = _uses_mutations(blueprint, user)
+    selected_ids = {choice.card_id for choice in selected}
+    selected_tag_context = {
+        tag
+        for choice in selected
+        if (card := perks_by_id.get(choice.card_id)) is not None
+        for tag in card.tags
+    }
+
+    for special in SPECIALS:
+        budget = blueprint.special_allocation.get(special, 0)
+        remaining = budget - spent_per_special.get(special, 0)
+        if remaining <= 0:
+            continue
+
+        def _build_candidates(*, strict: bool) -> list[tuple[int, str, int, int, str, str]]:
+            built: list[tuple[int, str, int, int, str, str]] = []
+            for card in perks_by_id.values():
+                if card.special != special or card.id in selected_ids:
+                    continue
+                allowed = (
+                    _is_context_allowed_for_completion(card, blueprint, uses_mutations=uses_mutations)
+                    if strict
+                    else _is_basic_allowed_for_completion(card, blueprint, uses_mutations=uses_mutations)
+                )
+                if not allowed:
+                    continue
+                base_score = _completion_score(
+                    card,
+                    blueprint,
+                    selected_tag_context,
+                    uses_mutations=uses_mutations,
+                )
+                if not strict:
+                    base_score -= 35
+                for rank in range(card.max_rank, 0, -1):
+                    cost = _rank_cost(card, rank)
+                    if cost is None or cost > remaining:
+                        continue
+                    role = "Completion"
+                    why = f"Fills the {special} allocation for a complete playable loadout."
+                    # Score by point value so a strong rank-3 fit beats three
+                    # weak rank-1 fillers that merely happen to add up.
+                    built.append((base_score * cost + cost - 25, card.id, rank, cost, role, why))
+            return built
+
+        candidates = _build_candidates(strict=True)
+        choices = _best_completion_choices(candidates, remaining)
+        if not choices:
+            choices = _best_completion_choices(_build_candidates(strict=False), remaining)
+
+        for card_id, rank, role, why in choices:
+            card = perks_by_id[card_id]
+            cost = _rank_cost(card, rank)
+            if cost is None:
+                continue
+            selected_ids.add(card_id)
+            spent_per_special[special] += cost
+            selected.append(PerkChoice(card_id=card_id, rank=rank, role=role, why=why))
+
+
+def _materialize_picks(blueprint: ArchetypeBlueprint, user: BuildInput) -> tuple[List[PerkChoice], Dict[str, List[PerkChoice]]]:
     perks_by_id = {p.id: p for p in load_active_perks()}
     spent_per_special: Dict[str, int] = {k: 0 for k in SPECIALS}
     selected: List[PerkChoice] = []
+    selected_ids: set[str] = set()
 
     def _try_add(card_id: str, rank: int, role: str, why: str, *, optional: bool) -> None:
+        if card_id in selected_ids:
+            return
         card = perks_by_id.get(card_id)
         if card is None:
             return
-        cost = card.rank_costs.get(rank)
+        cost = _rank_cost(card, rank)
         if cost is None:
             return
         budget = blueprint.special_allocation.get(card.special, 0)
-        if optional and spent_per_special[card.special] + cost > budget:
+        if spent_per_special[card.special] + cost > budget:
             return
         spent_per_special[card.special] += cost
+        selected_ids.add(card_id)
         selected.append(PerkChoice(card_id=card_id, rank=rank, role=role, why=why))
 
     for card_id, rank, role, why in blueprint.perk_picks:
@@ -963,6 +1357,11 @@ def _materialize_picks(blueprint: ArchetypeBlueprint) -> tuple[List[PerkChoice],
 
     for card_id, rank, role, why in blueprint.optional_perk_picks:
         _try_add(card_id, rank, role, why, optional=True)
+
+    for card_id, rank, role, why in _mutation_support_picks(blueprint, user):
+        _try_add(card_id, rank, role, why, optional=True)
+
+    _complete_special_allocations(blueprint, user, perks_by_id, selected, spent_per_special)
 
     by_special: Dict[str, List[PerkChoice]] = {k: [] for k in SPECIALS}
     for choice in selected:
@@ -973,7 +1372,7 @@ def _materialize_picks(blueprint: ArchetypeBlueprint) -> tuple[List[PerkChoice],
 
 
 def _build_from_blueprint(blueprint: ArchetypeBlueprint, user: BuildInput) -> GeneratedBuild:
-    selected, by_special = _materialize_picks(blueprint)
+    selected, by_special = _materialize_picks(blueprint, user)
     sources = list_sources()
     return GeneratedBuild(
         id=f"build-{uuid4().hex[:12]}",
@@ -983,7 +1382,7 @@ def _build_from_blueprint(blueprint: ArchetypeBlueprint, user: BuildInput) -> Ge
         special_allocation=dict(blueprint.special_allocation),
         perk_cards_by_special=by_special,
         legendary_perks=[dict(lp) for lp in blueprint.legendary_perks],
-        mutations=[dict(m) for m in blueprint.mutations],
+        mutations=_mutation_recommendations(blueprint, user),
         gear=dict(blueprint.gear),
         variants=dict(blueprint.variants),
         swap_cards=dict(blueprint.swap_cards),
@@ -1005,6 +1404,53 @@ def generate_build(user: BuildInput) -> GeneratedBuild:
             f"Archetype '{archetype}' is not yet supported."
         )
     return _build_from_blueprint(blueprint, user)
+
+
+def _apply_revision_intent_archetype(archetype: str, user: BuildInput) -> str:
+    """Reroute archetype based on temporary revision_intent modifiers."""
+    intent = user.revision_intent
+    if intent == "avoid_power_armor" and archetype == "power_armor_heavy_energy":
+        return "bullet_storm_heavy"
+    if intent == "avoid_bloodied" and archetype == "melee":
+        return "onslaught_commando"
+    return archetype
+
+
+def get_baseline_for_inputs(user: BuildInput) -> GeneratedBuild:
+    """Produce a deterministic baseline build for hybrid mode.
+
+    Applies revision_intent routing, XP/Leveling and Crafting/Utility
+    fallback templates, and records intent assumptions.
+    """
+    archetype = classify(user)
+    archetype = _apply_revision_intent_archetype(archetype, user)
+    blueprint = _BLUEPRINTS.get(archetype)
+    if blueprint is None:
+        raise NotImplementedError(f"Archetype '{archetype}' is not yet supported.")
+
+    build = _build_from_blueprint(blueprint, user)
+
+    # Add revision_intent assumptions
+    if user.revision_intent == "more_damage":
+        build.assumptions.append(
+            "revision_intent=more_damage: Prefer offense-focused perk allocation where valid. "
+            "Favor damage/crit/scaling perks over QOL. Do not violate survivability hard rules."
+        )
+    elif user.revision_intent == "more_tanky":
+        build.assumptions.append(
+            "revision_intent=more_tanky: Prefer defensive allocation. "
+            "Increase survivability emphasis through Endurance, Agility, defensive perks, and defensive Legendary Perks where valid."
+        )
+    elif user.revision_intent == "avoid_power_armor":
+        build.assumptions.append(
+            "revision_intent=avoid_power_armor: Power Armor treated as excluded for this request only."
+        )
+    elif user.revision_intent == "avoid_bloodied":
+        build.assumptions.append(
+            "revision_intent=avoid_bloodied: Bloodied/Low Health treated as excluded for this request only."
+        )
+
+    return build
 
 
 def _env_bool(name: str, default: bool = False) -> bool:
@@ -1138,7 +1584,8 @@ def validate_build(build: GeneratedBuild) -> list[str]:
     avoid_stealth = "stealth" in build.user_inputs.avoid_list.lower()
     pa_user = "Power Armor" in build.user_inputs.armor_type
 
-    for special, picks in build.perk_cards_by_special.items():
+    for special in SPECIALS:
+        picks = build.perk_cards_by_special.get(special, [])
         spent = 0
         for pick in picks:
             card = perks_by_id.get(pick.card_id)
@@ -1169,6 +1616,8 @@ def validate_build(build: GeneratedBuild) -> list[str]:
         budget = build.special_allocation.get(special, 0)
         if spent > budget:
             issues.append(f"{special} overspent ({spent} > {budget})")
+        if spent < budget:
+            issues.append(f"{special} underfilled ({spent} < {budget})")
 
     # Validate legendary perks
     for lp in build.legendary_perks:

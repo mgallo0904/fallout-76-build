@@ -1,5 +1,8 @@
 const inputIds = [
+  'goal',
+  'generation_mode',
   'character_level',
+  'character_type',
   'primary_playstyle',
   'primary_weapon_type',
   'preferred_weapons',
@@ -7,7 +10,6 @@ const inputIds = [
   'health_model',
   'combat_style',
   'team_preference',
-  'mutation_preference',
   'qol_preference',
   'legendary_perk_availability',
   'current_gear',
@@ -16,7 +18,12 @@ const inputIds = [
 
 const state = {
   perksById: {},
+  legendaryPerks: [],
+  legendaryPerksById: {},
   brainPollTimers: {},
+  currentBuild: null,
+  revisionIntent: null,
+  legendaryLoadout: [],
 };
 
 const $ = (id) => document.getElementById(id);
@@ -39,29 +46,49 @@ function titleFromKey(key) {
 function buildRequestBody() {
   const body = {};
   inputIds.forEach((id) => {
-    const input = $(id);
-    if (input?.multiple) {
-      const selected = [...input.selectedOptions].map((option) => option.value);
-      if (selected.includes('No mutations')) {
-        body[id] = 'No mutations';
-      } else {
-        const specific = selected.filter((value) => value !== 'Use mutations');
-        body[id] = specific.length ? `Specific mutations: ${specific.join(', ')}` : 'Use mutations';
-      }
+    let value = $(id).value;
+    if (id === 'character_type' && value === 'Playable Ghoul') {
+      value = 'Ghoul';
+    }
+    body[id] = value;
+  });
+  body.mutation_preference = selectedMutationPreference();
+  body.revision_intent = state.revisionIntent || null;
+  body.legendary_loadout = getLegendaryLoadout();
+  return body;
+}
+
+function selectedMutationPreference() {
+  const checked = [...document.querySelectorAll('#mutation_preference_group input[type="checkbox"]:checked')]
+    .map((input) => input.value);
+  if (checked.includes('No mutations')) return 'No mutations';
+  const specific = checked.filter((value) => value !== 'Use mutations');
+  return specific.length ? `Specific mutations: ${specific.join(', ')}` : 'Use mutations';
+}
+
+function initMutationPicker() {
+  const group = $('mutation_preference_group');
+  if (!group) return;
+  group.addEventListener('change', (event) => {
+    const changed = event.target;
+    if (!(changed instanceof HTMLInputElement)) return;
+    const boxes = [...group.querySelectorAll('input[type="checkbox"]')];
+    const noMutations = boxes.find((box) => box.value === 'No mutations');
+    const useMutations = boxes.find((box) => box.value === 'Use mutations');
+    if (changed.value === 'No mutations' && changed.checked) {
+      boxes.forEach((box) => {
+        if (box !== changed) box.checked = false;
+      });
       return;
     }
-    body[id] = input.value;
-  });
-  // Character type: prepend "Ghoul " to playstyle so the engine classifier routes
-  // to ghoul_commando / ghoul_melee / playable_ghoul as appropriate.
-  const characterType = $('character_type')?.value;
-  if (characterType === 'Playable Ghoul') {
-    const playstyle = body.primary_playstyle || '';
-    if (!/ghoul/i.test(playstyle)) {
-      body.primary_playstyle = `Ghoul ${playstyle}`.trim();
+    if (changed.checked && noMutations) {
+      noMutations.checked = false;
     }
-  }
-  return body;
+    const hasSpecific = boxes.some((box) => box.checked && !['Use mutations', 'No mutations'].includes(box.value));
+    if (useMutations) {
+      useMutations.checked = !hasSpecific && !noMutations?.checked;
+    }
+  });
 }
 
 function setLoading(isLoading) {
@@ -137,47 +164,43 @@ async function loadPerks() {
   }
 }
 
-function renderSpecial(allocation) {
-  const order = ['Strength', 'Perception', 'Endurance', 'Charisma', 'Intelligence', 'Agility', 'Luck'];
-  return `
-    <div class="special-grid">
-      ${order.map((name) => {
-        const value = Number(allocation?.[name] ?? 0);
-        const width = Math.max(0, Math.min(100, (value / 15) * 100));
-        return `
-          <div class="special-row">
-            <strong>${escapeHtml(name[0])}</strong>
-            <div class="bar" aria-label="${escapeHtml(name)} ${value}">
-              <span style="width:${width}%"></span>
-            </div>
-            <span>${value}</span>
-          </div>
-        `;
-      }).join('')}
-    </div>
-  `;
+async function loadLegendaryPerks() {
+  try {
+    const characterType = $('character_type')?.value || 'Human';
+    const response = await fetch(`/api/legendary-perks?character_type=${encodeURIComponent(characterType)}`);
+    const perks = await response.json();
+    state.legendaryPerks = perks;
+    state.legendaryPerksById = Object.fromEntries(perks.map((p) => [p.id, p]));
+  } catch {
+    state.legendaryPerks = [];
+    state.legendaryPerksById = {};
+  }
 }
 
-function renderPerks(perksBySpecial) {
+function perkCost(card) {
+  const perk = state.perksById[card.card_id];
+  return Number(perk?.rank_costs?.[card.rank] ?? perk?.rank_costs?.[String(card.rank)] ?? card.rank ?? 0);
+}
+
+function renderSpecialColumns(build) {
   const order = ['Strength', 'Perception', 'Endurance', 'Charisma', 'Intelligence', 'Agility', 'Luck'];
-  const data = perksBySpecial || {};
+  const data = build.perk_cards_by_special || {};
+  const allocation = build.special_allocation || {};
   return `
-    <div class="perk-grid">
+    <div class="special-columns">
       ${order.map((special) => {
         const cards = data[special] || [];
+        const budget = Number(allocation[special] ?? 0);
+        const spent = cards.reduce((total, card) => total + perkCost(card), 0);
+        const headerClass = special.toLowerCase();
+        const overspent = spent > budget;
         return `
-          <div class="perk-special">
-            <strong>${escapeHtml(special)} <span style="opacity:.6;font-weight:400">(${cards.length})</span></strong>
-            ${cards.length ? cards.map((card) => {
-              const perk = state.perksById[card.card_id];
-              const effect = perk?.effect_by_rank?.[card.rank] || perk?.effect_by_rank?.[String(card.rank)] || card.why;
-              return `
-                <div class="perk-card">
-                  <strong>${escapeHtml(perk?.name || card.card_id)} rank ${escapeHtml(card.rank)}</strong>
-                  <small>${escapeHtml(card.role)} - ${escapeHtml(effect)}</small>
-                </div>
-              `;
-            }).join('') : '<small style="opacity:.55">No required cards in this stat - free for swap-ins.</small>'}
+          <div class="special-column">
+            <div class="special-header ${headerClass}">${escapeHtml(special)}</div>
+            <div class="special-value">${budget}</div>
+            <div class="special-budget" style="${overspent ? 'color:var(--red);font-weight:700' : ''}">${spent} / ${budget}</div>
+            ${cards.map((card) => renderPerkCard(card, state.perksById[card.card_id])).join('')}
+            ${!cards.length ? '<small style="opacity:.55">No cards</small>' : ''}
           </div>
         `;
       }).join('')}
@@ -185,17 +208,28 @@ function renderPerks(perksBySpecial) {
   `;
 }
 
-function renderObjectLists(title, value) {
-  const entries = Object.entries(value || {});
-  if (!entries.length) return '';
+function renderPerkCard(card, perk) {
+  const effect = perk?.effect_by_rank?.[card.rank] || perk?.effect_by_rank?.[String(card.rank)] || card.why;
   return `
-    <section class="result-section full">
-      <h2>${escapeHtml(title)}</h2>
-      <div class="gear-grid">
-        ${entries.map(([key, items]) => `
+    <div class="perk-card-board">
+      <span class="rank-badge">${escapeHtml(card.rank)}</span>
+      <div class="card-name">${escapeHtml(perk?.name || card.card_id)}</div>
+      <div class="card-role">${escapeHtml(card.role)} - ${escapeHtml(effect)}</div>
+    </div>
+  `;
+}
+
+function renderLegendaryPerks(build) {
+  const perks = build.legendary_perks || [];
+  if (!perks.length) return '';
+  return `
+    <section class="summary-block">
+      <div class="block-title">Legendary Perks</div>
+      <div class="perk-grid">
+        ${perks.map((lp) => `
           <div class="gear-card">
-            <strong>${escapeHtml(titleFromKey(key))}</strong>
-            <ul>${(items || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
+            <strong>${escapeHtml(lp.name || 'Unknown')}</strong>
+            <small>${escapeHtml(lp.priority || '')} - Rank ${escapeHtml(lp.rank || 1)} - ${escapeHtml(lp.reason || '')}</small>
           </div>
         `).join('')}
       </div>
@@ -203,11 +237,101 @@ function renderObjectLists(title, value) {
   `;
 }
 
+function renderValidationBadge(build, payload) {
+  const status = build.validation_status || 'unknown';
+  const issues = payload.issues || [];
+  const repairs = build.repair_notes?.length || 0;
+  const pass = status === 'passed' && !issues.length;
+  const cls = pass ? 'pass' : issues.length ? 'fail' : 'warn';
+  const label = pass ? 'Passed' : issues.length ? `Failed (${issues.length})` : status;
+  return `
+    <span class="validation-indicator ${cls}">
+      Validation: ${escapeHtml(label)}
+      ${repairs > 0 ? ` | Repairs: ${repairs}` : ''}
+    </span>
+  `;
+}
+
+function renderRepairNotes(build) {
+  const notes = build.repair_notes || [];
+  if (!notes.length) return '';
+  return `
+    <section class="summary-block">
+      <div class="block-title">Repair Notes</div>
+      <div class="repair-notes">
+        <ul class="clean-list">${notes.map((n) => `<li>${escapeHtml(n)}</li>`).join('')}</ul>
+      </div>
+    </section>
+  `;
+}
+
+function renderBuildSummary(build, payload) {
+  const brainNotes = [
+    ...(build.brain_notes || []),
+    ...((payload.brain?.notes || []).filter((note) => !(build.brain_notes || []).includes(note))),
+  ];
+  const status = build.brain_status || (build.brain_confirmed ? 'complete' : 'not_requested');
+  const brainLabels = {
+    pending: 'Brain queued',
+    running: 'Brain refining',
+    complete: 'Brain complete',
+    failed: 'Brain failed',
+  };
+  const engineLabel = build.logic_engine || 'deterministic';
+
+  return `
+    <div class="summary-head">
+      <h2>${escapeHtml(build.build_name)}</h2>
+      <div class="summary-meta">
+        ${renderValidationBadge(build, payload)}
+        <span class="validation-indicator ${status === 'complete' ? 'pass' : status === 'failed' ? 'fail' : 'warn'}">
+          ${escapeHtml(brainLabels[status] || status)}
+        </span>
+        <span class="validation-indicator">${escapeHtml(engineLabel)}</span>
+      </div>
+      <button id="copyBuildId" class="secondary-action" type="button" style="margin-top:10px;">Copy Build ID</button>
+    </div>
+
+    ${renderLegendaryPerks(build)}
+
+    ${renderDictList('Mutations', build.mutations)}
+    ${renderObjectLists('Gear', build.gear)}
+    ${renderObjectLists('Variants', build.variants)}
+    ${renderObjectLists('Swap Cards', build.swap_cards)}
+
+    <section class="summary-block">
+      <div class="block-title">Assumptions</div>
+      <ul class="clean-list">${(build.assumptions || []).map((a) => `<li>${escapeHtml(a)}</li>`).join('')}</ul>
+    </section>
+
+    <section class="summary-block">
+      <div class="block-title">Weaknesses</div>
+      <div class="warning-card">
+        <ul class="clean-list">${(build.weaknesses || []).map((w) => `<li>${escapeHtml(w)}</li>`).join('')}</ul>
+      </div>
+    </section>
+
+    ${renderRepairNotes(build)}
+
+    <section class="summary-block">
+      <div class="block-title">Brain Notes</div>
+      ${brainNotes.length ? `<ul class="clean-list">${brainNotes.map((n) => `<li>${escapeHtml(n)}</li>`).join('')}</ul>` : '<p class="empty-state">No brain notes.</p>'}
+    </section>
+
+    ${renderSearchResults(build.web_search_results)}
+
+    <section class="summary-block">
+      <button class="transcript-toggle" id="toggleRaw" type="button">Show raw payload</button>
+      <pre id="rawPayload" class="raw-json hidden" style="margin-top:8px;">${escapeHtml(JSON.stringify(payload, null, 2))}</pre>
+    </section>
+  `;
+}
+
 function renderDictList(title, items, primaryKey = 'name') {
   if (!items?.length) return '';
   return `
-    <section class="result-section">
-      <h2>${escapeHtml(title)}</h2>
+    <section class="summary-block">
+      <div class="block-title">${escapeHtml(title)}</div>
       <div class="perk-grid">
         ${items.map((item) => `
           <div class="gear-card">
@@ -224,13 +348,19 @@ function renderDictList(title, items, primaryKey = 'name') {
   `;
 }
 
-function renderCleanList(title, items, warning = false) {
-  if (!items?.length) return '';
+function renderObjectLists(title, value) {
+  const entries = Object.entries(value || {});
+  if (!entries.length) return '';
   return `
-    <section class="result-section ${warning ? 'full' : ''}">
-      <h2>${escapeHtml(title)}</h2>
-      <div class="${warning ? 'warning-card' : ''}">
-        <ul class="clean-list">${items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
+    <section class="summary-block">
+      <div class="block-title">${escapeHtml(title)}</div>
+      <div class="gear-grid">
+        ${entries.map(([key, items]) => `
+          <div class="gear-card">
+            <strong>${escapeHtml(titleFromKey(key))}</strong>
+            <ul>${(items || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
+          </div>
+        `).join('')}
       </div>
     </section>
   `;
@@ -239,8 +369,8 @@ function renderCleanList(title, items, warning = false) {
 function renderSearchResults(results) {
   if (!results?.length) return '';
   return `
-    <section class="result-section full">
-      <h2>Web Search Evidence</h2>
+    <section class="summary-block">
+      <div class="block-title">Web Search Evidence</div>
       <div class="source-list">
         ${results.map((result) => `
           <a href="${escapeHtml(result.url)}" target="_blank" rel="noreferrer">
@@ -251,22 +381,6 @@ function renderSearchResults(results) {
       </div>
     </section>
   `;
-}
-
-function renderBrainPanel(build) {
-  const status = build.brain_status || (build.brain_confirmed ? 'complete' : 'not_requested');
-  if (status === 'not_requested') return '';
-  const labels = {
-    pending: 'Brain queued',
-    running: 'Brain refining',
-    complete: 'Brain complete',
-    failed: 'Brain failed',
-  };
-  const details = [];
-  details.push(labels[status] || status);
-  if (build.brain_error) details.push(build.brain_error);
-  if (build.brain_updated_at) details.push(`Updated: ${build.brain_updated_at}`);
-  return renderCleanList('Brain Status', details, status === 'failed');
 }
 
 function isBrainActive(build) {
@@ -301,76 +415,64 @@ function scheduleBrainPoll(build) {
 
 function renderBuild(payload, options = {}) {
   const build = payload.build || payload;
-  const panel = $('resultPanel');
-  const brainNotes = [
-    ...(build.brain_notes || []),
-    ...((payload.brain?.notes || []).filter((note) => !(build.brain_notes || []).includes(note))),
-  ];
-  panel.classList.remove('hidden');
-  panel.innerHTML = `
+  state.currentBuild = build;
+
+  const specialBoard = $('specialBoard');
+  const buildSummary = $('buildSummary');
+  const revisionActions = $('revisionActions');
+  const legendaryPicker = $('legendaryPicker');
+  const resultPanel = $('resultPanel');
+
+  // Hide legacy result panel
+  if (resultPanel) resultPanel.classList.add('hidden');
+
+  // Populate center board
+  specialBoard.innerHTML = `
     <div class="section-head">
       <div>
-        <p class="eyebrow">Generated build</p>
+        <p class="eyebrow">SPECIAL Board</p>
         <h1>${escapeHtml(build.build_name)}</h1>
-        <div class="meta-row">
-          <span>${escapeHtml(build.id)}</span>
-          <span>${escapeHtml(build.validation_status)}</span>
-          <span>${escapeHtml(build.logic_engine)}</span>
-          <span>Brain: ${escapeHtml(build.brain_status || 'not_requested')}</span>
-        </div>
       </div>
-      <button id="copyBuildId" class="secondary-action" type="button">Copy ID</button>
     </div>
-
-    <div class="result-grid">
-      <section class="result-section">
-        <h2>SPECIAL</h2>
-        ${renderSpecial(build.special_allocation)}
-      </section>
-
-      <section class="result-section">
-        <h2>Core Perks</h2>
-        ${renderPerks(build.perk_cards_by_special)}
-      </section>
-
-      ${renderDictList('Legendary Perks', build.legendary_perks)}
-      ${renderDictList('Mutations', build.mutations)}
-      ${renderObjectLists('Gear', build.gear)}
-      ${renderObjectLists('Variants', build.variants)}
-      ${renderObjectLists('Swap Cards', build.swap_cards)}
-      ${renderBrainPanel(build)}
-      ${renderCleanList('Assumptions', build.assumptions)}
-      ${renderCleanList('Weaknesses', build.weaknesses, true)}
-      ${renderCleanList('Validation Issues', payload.issues, true)}
-      ${renderCleanList('Brain Notes', brainNotes)}
-      ${renderSearchResults(build.web_search_results)}
-      ${renderCleanList('Source Verification', build.source_verification_notes)}
-
-      <section class="result-section full">
-        <h2>Raw Payload</h2>
-        <pre class="raw-json">${escapeHtml(JSON.stringify(payload, null, 2))}</pre>
-      </section>
-    </div>
+    ${renderSpecialColumns(build)}
   `;
+
+  // Populate right summary
+  buildSummary.innerHTML = renderBuildSummary(build, payload);
+
+  // Wire copy button
   $('copyBuildId')?.addEventListener('click', async () => {
     await navigator.clipboard?.writeText(build.id);
   });
+
+  // Wire raw payload toggle
+  $('toggleRaw')?.addEventListener('click', () => {
+    const pre = $('rawPayload');
+    if (!pre) return;
+    const hidden = pre.classList.toggle('hidden');
+    $('toggleRaw').textContent = hidden ? 'Show raw payload' : 'Hide raw payload';
+  });
+
+  // Show revision actions and legendary picker
+  revisionActions.classList.remove('hidden');
+  legendaryPicker.classList.remove('hidden');
+
   saveRecentBuild(build);
   scheduleBrainPoll(build);
   if (!options.preserveScroll) {
-    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    specialBoard.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
 
 function renderError(error) {
-  const panel = $('resultPanel');
-  panel.classList.remove('hidden');
-  panel.innerHTML = `
+  const specialBoard = $('specialBoard');
+  specialBoard.innerHTML = `
     <div class="warning-card">
       <h2>Build request failed</h2>
       <p>${escapeHtml(error.message || error)}</p>
     </div>
   `;
+  $('resultPanel')?.classList.add('hidden');
 }
 
 async function generateBuild() {
@@ -390,12 +492,160 @@ async function generateBuild() {
     renderError(error);
   } finally {
     setLoading(false);
+    state.revisionIntent = null;
   }
 }
 
+/* ===== Character type warnings ===== */
+function getCharacterTypeRestrictedPerks() {
+  const type = $('character_type')?.value || 'Human';
+  const restricted = [];
+  state.legendaryPerks.forEach((p) => {
+    const restriction = p.character_restriction || 'Any';
+    if (restriction !== 'Any' && restriction !== type) {
+      restricted.push(p);
+    }
+  });
+  return restricted;
+}
+
+function updateCharacterTypeWarnings() {
+  const container = $('characterTypeWarnings');
+  if (!container) return;
+  const restricted = getCharacterTypeRestrictedPerks();
+  if (!restricted.length) {
+    container.innerHTML = '';
+    return;
+  }
+  container.innerHTML = `
+    <div class="msg warn">
+      Character type change warning: ${restricted.map((p) => escapeHtml(p.name)).join(', ')} cannot be used by the selected character type.
+      Remove them from your Legendary Perk loadout or change the character type back.
+    </div>
+  `;
+}
+
+/* ===== Legendary perk picker ===== */
+function getLegendaryLoadout() {
+  return state.legendaryLoadout.map((row) => ({
+    perk_id: row.perk_id,
+    rank: Number(row.rank),
+    equipped: Boolean(row.equipped),
+  }));
+}
+
+function updateLegendaryCounter() {
+  const equipped = state.legendaryLoadout.filter((r) => r.equipped).length;
+  const counter = $('legendaryCounter');
+  if (counter) counter.textContent = `${equipped} / 6`;
+}
+
+function renderLegendaryPickerRows() {
+  const rows = $('legendaryRows');
+  if (!rows) return;
+  const available = state.legendaryPerks;
+  rows.innerHTML = state.legendaryLoadout.map((row, index) => {
+    const selected = available.find((p) => p.id === row.perk_id);
+    const maxRank = selected?.max_rank || 4;
+    const invalid = selected && selected.character_restriction && selected.character_restriction !== 'Any' && selected.character_restriction !== ($('character_type')?.value || 'Human');
+    return `
+      <div class="legendary-row" data-index="${index}">
+        <select class="legendary-select">
+          <option value="">-- Select perk --</option>
+          ${available.map((p) => `<option value="${escapeHtml(p.id)}" ${p.id === row.perk_id ? 'selected' : ''}>${escapeHtml(p.name)}${p.character_restriction && p.character_restriction !== 'Any' ? ` [${escapeHtml(p.character_restriction)}]` : ''}</option>
+          `).join('')}
+        </select>
+        <select class="legendary-rank">
+          ${Array.from({ length: maxRank }, (_, i) => `<option value="${i + 1}" ${String(i + 1) === String(row.rank) ? 'selected' : ''}>Rank ${i + 1}</option>
+          `).join('')}
+        </select>
+        <label class="check-pill" style="padding:0 6px;min-height:28px;">
+          <input type="checkbox" class="legendary-equipped" ${row.equipped ? 'checked' : ''}>
+          <span>On</span>
+        </label>
+        <button class="remove-btn" type="button" title="Remove">×</button>
+        ${invalid ? `<div class="msg" style="grid-column:1 / -1;margin-top:2px;">${escapeHtml(selected.name)} is ${escapeHtml(selected.character_restriction)}-only and cannot be used by this character type.</div>` : ''}
+      </div>
+    `;
+  }).join('');
+
+  // Wire events
+  rows.querySelectorAll('.legendary-row').forEach((rowEl) => {
+    const idx = Number(rowEl.dataset.index);
+    const select = rowEl.querySelector('.legendary-select');
+    const rank = rowEl.querySelector('.legendary-rank');
+    const equipped = rowEl.querySelector('.legendary-equipped');
+    const remove = rowEl.querySelector('.remove-btn');
+
+    select?.addEventListener('change', () => {
+      state.legendaryLoadout[idx].perk_id = select.value;
+      const perk = state.legendaryPerksById[select.value];
+      if (perk) {
+        state.legendaryLoadout[idx].rank = Math.min(state.legendaryLoadout[idx].rank, perk.max_rank);
+      }
+      renderLegendaryPickerRows();
+      updateLegendaryCounter();
+      updateCharacterTypeWarnings();
+    });
+    rank?.addEventListener('change', () => {
+      state.legendaryLoadout[idx].rank = Number(rank.value);
+      updateLegendaryCounter();
+    });
+    equipped?.addEventListener('change', () => {
+      state.legendaryLoadout[idx].equipped = equipped.checked;
+      updateLegendaryCounter();
+    });
+    remove?.addEventListener('click', () => {
+      state.legendaryLoadout.splice(idx, 1);
+      renderLegendaryPickerRows();
+      updateLegendaryCounter();
+      updateCharacterTypeWarnings();
+    });
+  });
+}
+
+function addLegendaryRow() {
+  state.legendaryLoadout.push({ perk_id: '', rank: 1, equipped: true });
+  renderLegendaryPickerRows();
+  updateLegendaryCounter();
+}
+
+/* ===== Revision buttons ===== */
+function initRevisionButtons() {
+  const bar = $('revisionActions');
+  if (!bar) return;
+  bar.addEventListener('click', (e) => {
+    const btn = e.target.closest('.revision-btn');
+    if (!btn) return;
+    const intent = btn.dataset.intent;
+    if (intent === 'regenerate') {
+      state.revisionIntent = null;
+    } else {
+      state.revisionIntent = intent;
+    }
+    generateBuild();
+  });
+}
+
+/* ===== Character type change handler ===== */
+function initCharacterTypeHandler() {
+  const select = $('character_type');
+  if (!select) return;
+  select.addEventListener('change', async () => {
+    await loadLegendaryPerks();
+    renderLegendaryPickerRows();
+    updateCharacterTypeWarnings();
+  });
+}
+
 async function init() {
+  initMutationPicker();
+  initRevisionButtons();
+  initCharacterTypeHandler();
   $('generateBtn').addEventListener('click', generateBuild);
-  await Promise.all([loadBrainStatus(), loadSources(), loadPerks()]);
+  $('addLegendaryRow')?.addEventListener('click', addLegendaryRow);
+  await Promise.all([loadBrainStatus(), loadSources(), loadPerks(), loadLegendaryPerks()]);
+  renderLegendaryPickerRows();
 }
 
 init();

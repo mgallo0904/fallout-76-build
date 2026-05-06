@@ -15,6 +15,23 @@ def _input(**overrides) -> BuildInput:
     return BuildInput(**overrides)
 
 
+def _spent_by_special(build):
+    perks_by_id = {p.id: p for p in load_perks()}
+    spent = {special: 0 for special in SPECIALS}
+    for special, picks in build.perk_cards_by_special.items():
+        for pick in picks:
+            spent[special] += perks_by_id[pick.card_id].rank_costs[pick.rank]
+    return spent
+
+
+def _perk_ids(build):
+    return {
+        pick.card_id
+        for picks in build.perk_cards_by_special.values()
+        for pick in picks
+    }
+
+
 def test_archetype_listing_covers_2026_meta():
     ids = {arch["id"] for arch in list_archetypes()}
     assert ids == {
@@ -31,6 +48,8 @@ def test_archetype_listing_covers_2026_meta():
         "pepper_shaker_stealth",
         "ghoul_commando",
         "ghoul_melee",
+        "xp_leveling_fallback",
+        "crafting_utility_fallback",
     }
 
 
@@ -128,9 +147,8 @@ def test_each_archetype_passes_validation():
         build = generate_build(user)
         issues = validate_build(build)
         assert classify(user) == archetype
-        # Allow up to a couple of soft warnings (e.g. status drift) but the SPECIAL math must be clean.
-        assert not any("exceed" in i for i in issues), (archetype, issues)
-        assert not any("overspent" in i for i in issues), (archetype, issues)
+        assert issues == [], (archetype, issues)
+        assert _spent_by_special(build) == build.special_allocation
 
 
 def test_special_budget_overflow_is_flagged():
@@ -139,6 +157,45 @@ def test_special_budget_overflow_is_flagged():
     build.special_allocation = {s: 15 for s in SPECIALS}  # 105 total, no legendary perks
     issues = validate_build(build)
     assert any("exceed" in issue for issue in issues)
+
+
+def test_underfilled_special_column_is_flagged():
+    build = generate_build(_input())
+    build.perk_cards_by_special["Perception"] = []
+    issues = validate_build(build)
+    assert any("Perception underfilled" in issue for issue in issues), issues
+
+
+def test_specific_mutations_are_reflected_and_supported():
+    build = generate_build(_input(
+        mutation_preference=(
+            "Specific mutations: Adrenal Reaction, Marsupial, Eagle Eyes, Talons, "
+            "Egg Head, Herd Mentality, Carnivore, Plague Walker, Unstable Isotope"
+        )
+    ))
+    mutation_names = {mutation["name"] for mutation in build.mutations}
+    assert mutation_names == {
+        "Adrenal Reaction",
+        "Marsupial",
+        "Eagle Eyes",
+        "Talons",
+        "Egg Head",
+        "Herd Mentality",
+        "Carnivore",
+        "Plague Walker",
+        "Unstable Isotope",
+    }
+    assert {"class_freak", "starched_genes", "strange_in_numbers"} <= _perk_ids(build)
+    assert validate_build(build) == []
+    assert _spent_by_special(build) == build.special_allocation
+
+
+def test_no_mutations_omits_mutation_cards_and_recommendations():
+    build = generate_build(_input(mutation_preference="No mutations"))
+    assert build.mutations == []
+    assert not {"class_freak", "starched_genes", "strange_in_numbers"}.intersection(_perk_ids(build))
+    assert validate_build(build) == []
+    assert _spent_by_special(build) == build.special_allocation
 
 
 def test_ghoul_unyielding_armor_is_flagged():

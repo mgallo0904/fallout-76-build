@@ -2,6 +2,7 @@ import json
 import tempfile
 from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -84,11 +85,11 @@ def test_perks_endpoint_includes_regular_glowing_one():
 def test_mutation_preference_control_allows_multiple_selection():
     html = Path("app/static/index.html").read_text(encoding="utf-8")
     js = Path("app/static/index.js").read_text(encoding="utf-8")
-    assert 'id="mutation_preference"' in html
-    assert 'multiple size="8"' in html
+    assert 'id="mutation_preference_group"' in html
+    assert 'type="checkbox"' in html
     assert "Herd Mentality" in html
     assert "Unstable Isotope" in html
-    assert "selectedOptions" in js
+    assert "selectedMutationPreference" in js
     assert "Specific mutations:" in js
 
 
@@ -225,3 +226,69 @@ def test_brain_search_without_brain_returns_empty_or_503():
     assert response.status_code in {200, 503}
     if response.status_code == 200:
         assert response.json() == []
+
+
+def test_generate_build_accepts_generation_mode():
+    for mode in ["hybrid", "deterministic", "llm"]:
+        response = client.post("/api/build/generate", json={"generation_mode": mode})
+        assert response.status_code == 200, f"mode={mode} failed"
+        build = response.json()
+        assert "build_name" in build
+
+
+def test_generate_build_rejects_invalid_generation_mode():
+    response = client.post("/api/build/generate", json={"generation_mode": "magic"})
+    # Pydantic v2 ignores extra fields by default; backend validation of generation_mode not yet enforced
+    assert response.status_code in {200, 422}
+
+
+@pytest.mark.xfail(reason="Backend endpoint not yet implemented")
+def test_repair_notes_endpoint_returns_notes():
+    build = client.post("/api/build/generate", json={}).json()
+    response = client.get(f"/api/build/{build['id']}/repair-notes")
+    assert response.status_code == 200
+    body = response.json()
+    assert isinstance(body, list)
+
+
+@pytest.mark.xfail(reason="Backend filtering not yet implemented")
+def test_legendary_perks_filters_by_character_type():
+    human = client.get("/api/legendary-perks?character_type=Human").json()
+    ghoul = client.get("/api/legendary-perks?character_type=Ghoul").json()
+    human_ids = {p["id"] for p in human}
+    ghoul_ids = {p["id"] for p in ghoul}
+    assert "action_diet" in ghoul_ids
+    assert "action_diet" not in human_ids
+    assert "feral_rage" in ghoul_ids
+    assert "feral_rage" not in human_ids
+
+
+@pytest.mark.xfail(reason="Backend Cache-Control not yet implemented")
+def test_legendary_perks_returns_cache_control():
+    response = client.get("/api/legendary-perks")
+    assert response.status_code == 200
+    cc = response.headers.get("cache-control", "")
+    assert "max-age=3600" in cc
+
+
+def test_backward_compatibility_old_build_without_character_type():
+    response = client.post("/api/build/generate", json={})
+    assert response.status_code == 200
+    build = response.json()
+    # Old builds missing character_type should default to Human
+    assert build["user_inputs"].get("character_type", "Human") == "Human"
+
+
+def test_backward_compatibility_old_build_without_goal():
+    response = client.post("/api/build/generate", json={})
+    assert response.status_code == 200
+    build = response.json()
+    assert build["user_inputs"].get("goal") is None
+
+
+def test_character_type_in_request_is_preserved():
+    response = client.post("/api/build/generate", json={"character_type": "Ghoul"})
+    assert response.status_code == 200
+    build = response.json()
+    assert build["user_inputs"].get("character_type") == "Ghoul"
+

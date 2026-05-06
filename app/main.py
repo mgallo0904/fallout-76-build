@@ -14,6 +14,7 @@ from app.models import (
     CompareRequest,
     CompareResult,
     GeneratedBuild,
+    GenerationMode,
     PerkCard,
     SourceRecord,
     WebSearchRequest,
@@ -26,6 +27,7 @@ from app.services.brain import (
     research_patch_digest,
     web_search,
 )
+from app.services.build_pipeline import run_build_pipeline
 from app.services.db import init_db
 from app.services.engine import (
     compare_builds,
@@ -106,15 +108,22 @@ def api_get_perk(perk_id: str):
 @app.get("/api/legendary-perks", response_model=List[PerkCard])
 def api_get_legendary_perks(
     include_deprecated: bool = False,
+    character_type: str | None = None,
     limit: int | None = None,
     offset: int = 0,
 ):
     perks = load_legendary_perks() if include_deprecated else load_active_legendary_perks()
+    if character_type:
+        ct = character_type.strip().lower()
+        perks = [p for p in perks if p.character_restriction.lower() in ("any", ct)]
     if offset:
         perks = perks[offset:]
     if limit is not None:
         perks = perks[:limit]
-    return perks
+    return JSONResponse(
+        content=[p.model_dump(mode="json") for p in perks],
+        headers={"Cache-Control": "max-age=3600"},
+    )
 
 
 @app.get("/api/legendary-perks/{perk_id}", response_model=PerkCard)
@@ -141,10 +150,13 @@ def api_get_archetype_preview(archetype_id: str):
 # ---- Builds ----
 
 @app.post("/api/build/generate", response_model=GeneratedBuild)
-def api_generate_build(user_input: BuildInput, background_tasks: BackgroundTasks):
+def api_generate_build(
+    user_input: BuildInput,
+    background_tasks: BackgroundTasks,
+    generation_mode: GenerationMode = GenerationMode.hybrid,
+):
     try:
-        build = prepare_build_for_response(user_input)
-        save_build(build)
+        build = run_build_pipeline(user_input, mode=generation_mode)
         if build.brain_status == "pending":
             background_tasks.add_task(refine_saved_build_with_brain, build.id)
         return build
@@ -169,6 +181,18 @@ def api_get_build(build_id: str):
     if not build:
         raise HTTPException(status_code=404, detail="Build not found")
     return build
+
+
+@app.get("/api/build/{build_id}/repair-notes")
+def api_get_build_repair_notes(build_id: str):
+    build = get_build(build_id)
+    if not build:
+        raise HTTPException(status_code=404, detail="Build not found")
+    return {
+        "build_id": build_id,
+        "repair_notes": build.repair_notes,
+        "generation_mode": build.generation_mode,
+    }
 
 
 @app.post("/api/build/compare", response_model=CompareResult)

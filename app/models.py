@@ -1,7 +1,7 @@
 from __future__ import annotations
 from datetime import date, datetime
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Literal, Optional
 from pydantic import BaseModel, Field
 
 class SourceType(str, Enum):
@@ -17,6 +17,11 @@ class Status(str, Enum):
     deprecated="deprecated"
     conflicting="conflicting"
 
+class GenerationMode(str, Enum):
+    deterministic="deterministic"
+    llm="llm"
+    hybrid="hybrid"
+
 class PerkCard(BaseModel):
     id: str
     name: str
@@ -27,6 +32,7 @@ class PerkCard(BaseModel):
     level_required: int
     tags: List[str]
     build_families: List[str]
+    character_restriction: Literal["Any", "Human", "Ghoul"] = "Any"
     power_armor_only: bool=False
     regular_armor_only: bool=False
     bloodied_synergy: bool=False
@@ -68,10 +74,26 @@ class BuildInput(BaseModel):
     team_preference: str = "Public team"
     mutation_preference: str = "Use mutations"
     qol_preference: str = "Balanced"
-    legendary_perk_availability: str = "Some"
+    legendary_perk_availability: str = ""
+    legendary_loadout: List[Dict[str, Any]] = Field(default_factory=list)
     current_gear: str = ""
     avoid_list: str = ""
+    character_type: Literal["Human", "Ghoul"] = "Human"
+    goal: str | None = None
+    revision_intent: Literal["more_damage", "more_tanky", "avoid_power_armor", "avoid_bloodied"] | None = None
 
+class BuildCandidate(BaseModel):
+    build_name: str = ""
+    special_allocation: Dict[str, int] = Field(default_factory=dict)
+    perk_cards_by_special: Dict[str, List[Dict[str, Any]]] = Field(default_factory=dict)
+    legendary_perks: List[Dict[str, Any]] = Field(default_factory=list)
+    mutations: List[Dict[str, str]] = Field(default_factory=list)
+    gear: Dict[str, List[str]] = Field(default_factory=dict)
+    variants: Dict[str, List[str]] = Field(default_factory=dict)
+    swap_cards: Dict[str, List[str]] = Field(default_factory=dict)
+    assumptions: List[str] = Field(default_factory=list)
+    weaknesses: List[str] = Field(default_factory=list)
+    reasoning_summary: str = ""
 
 class WebSearchRequest(BaseModel):
     query: str = Field(min_length=2)
@@ -105,8 +127,10 @@ class GeneratedBuild(BaseModel):
     weaknesses: List[str]
     validation_status: str
     source_verification_notes: List[str]
-    created_at: datetime
+    created_at: datetime | None = Field(default_factory=datetime.now)
     logic_engine: str = "deterministic"
+    generation_mode: GenerationMode = GenerationMode.deterministic
+    repair_notes: List[str] = Field(default_factory=list)
     brain_notes: List[str] = Field(default_factory=list)
     web_search_results: List[WebSearchResult] = Field(default_factory=list)
     brain_confirmed: bool = False
