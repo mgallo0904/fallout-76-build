@@ -232,7 +232,7 @@ def _build_search_query(user: BuildInput) -> str:
     return ' '.join(
         part
         for part in [
-            'Fallout 76 April 21 2026 patch perk card build meta',
+            'Fallout 76 May 6 2026 live patch perk card build meta',
             user.primary_playstyle,
             user.primary_weapon_type,
             user.preferred_weapons,
@@ -257,14 +257,18 @@ def _build_prompt(
             'role': 'system',
             'content': (
                 'You are kimi-k2.6:cloud acting as the logic engine for a Fallout 76 SPECIAL '
-                'and perk-card build generator. The current live game state is Patch 62 '
-                '(CAMP Revamp / Season 22) plus the April 21 2026 update. Key 2026 facts: '
+                'and perk-card build generator. The current live game state is May 6 2026: '
+                'Patch 62 (CAMP Revamp / Season 22) plus the April 21 2026 update; '
+                'the April 28 2026 maintenance has no build impact, and Patch 68 / '
+                'Protect Appalachia PTS notes must not be applied to live defaults. Key 2026 facts: '
                 'armor durability buffed; explosions retain more damage on indirect hits and '
                 'against high-resist enemies; Demolition Expert + explosive bobbleheads now '
                 'count in self-damage math; Fancy Pump-Action Shotgun and Fancy Single-Action '
                 'Revolver pivoted to a stealth niche (smaller cone while sneaking, +25% reload, '
                 '+10% fire rate, +10% AP cost, lower durability); Playable Ghouls cannot equip '
-                'Unyielding and use radiation/glow as resources; Bows scale with Rifleman perks. '
+                'Unyielding, cannot use restricted hunger/rad perks such as Rad Sponge, '
+                'Ghoulish, Radicool, Thirst Quencher, Natural Resistance, or What Rads?, '
+                'and use Glow/Feral meter as resources; Bows scale with Rifleman perks. '
                 'Return only compact JSON matching the requested schema. Preserve the '
                 'deterministic core perk IDs and SPECIAL allocation; you may only refine '
                 'narrative fields (assumptions, gear, mutations, weaknesses, notes, variants, '
@@ -457,7 +461,9 @@ def research_patch_digest(query: str, max_results: int | None = None) -> dict[st
                     'content': (
                         'You are kimi-k2.6:cloud summarizing live Fallout 76 patch and meta '
                         'information for a build generator. The current live game state is '
-                        'Patch 62 + the April 21 2026 update. Return only JSON matching: '
+                        'May 6 2026 live baseline: Patch 62 + the April 21 2026 update; '
+                        'April 28 maintenance has no build impact; exclude Patch 68 / Protect Appalachia PTS from live defaults. '
+                        'Return only JSON matching: '
                         'summary string, conflicts_or_uncertain array[string], '
                         'recommended_followups array[string]. Cite only material that '
                         'appears in the provided web search results.'

@@ -9,8 +9,8 @@ Production-oriented FastAPI web backend + browser UI for validated Fallout 76 bu
   - **Power Armor Shotgunner**, **Pepper Shaker Stealth Shotgunner** (April 21 2026 Fancy Pump-Action niche)
   - **VATS Gunslinger**, **Bloodied Melee Bruiser**
   - **Playable Ghoul Heavy**, **Playable Ghoul Commando**, **Playable Ghoul Melee Bruiser**
-- Aligned with **Patch 62 (CAMP Revamp / Season 22)** and the **April 21 2026** update: armor durability buff, explosion retention vs high-resist enemies, Demolition Expert + bobblehead self-damage math, Fancy Pump-Action / Fancy Single-Action Revolver stealth pivot, Fierce cost normalize, locked-mod exploit fix.
-- Comprehensive perk database: 100+ regular perk cards plus 18 ghoul-only cards and 22 legendary perks (including Glowing One, Rad Reborn, Far-Flung Fireworks, Hack and Slash, Retribution, all 7 Legendary SPECIAL stat perks).
+- Aligned with the **May 6 2026 live baseline**: Patch 62 (CAMP Revamp / Season 22) plus the April 21 2026 update. The April 28 maintenance is tracked as no build-impact, and Patch 68 / Protect Appalachia PTS notes are excluded from live defaults.
+- Comprehensive perk database: 100+ regular perk cards including all 28 regular ghoul-only cards, plus 22 legendary perks including Action Diet, Feral Rage, Far-Flung Fireworks, Hack and Slash, Retribution, and all 7 Legendary SPECIAL stat perks.
 - Interactive `/planner` UI with patch banner, SPECIAL sliders, perk picker by SPECIAL column, live validation.
 - Server-side validation: perk existence + status, rank legality, SPECIAL budget incl. legendary stat perks, PA / VATS / bloodied / stealth synergy mismatches, **Ghoul Unyielding restriction**.
 - SQLite persistence for generated builds and source records (auto-seeded at startup).

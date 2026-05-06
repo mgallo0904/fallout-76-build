@@ -55,8 +55,8 @@ async def _lifespan(_app: FastAPI):
 
 app = FastAPI(
     title="Fallout 76 Build Agent",
-    description="Agent-backed Fallout 76 SPECIAL and Perk Card builder, aligned with Patch 62 + April 21 2026 update.",
-    version="2.0.0",
+    description="Agent-backed Fallout 76 SPECIAL and Perk Card builder, aligned with the May 6 2026 live baseline: Patch 62 + April 21 2026 update.",
+    version="2.1.0",
     lifespan=_lifespan,
 )
 

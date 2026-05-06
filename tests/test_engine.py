@@ -1,4 +1,5 @@
-from app.models import BuildInput
+from app.models import BuildInput, PerkChoice
+from app.services.repository import load_legendary_perks, load_perks, load_sources_json
 from app.services.engine import (
     SPECIALS,
     SPECIAL_BUDGET,
@@ -153,7 +154,10 @@ def test_ghoul_unyielding_armor_is_flagged():
 def test_apr21_2026_assumptions_are_present():
     build = generate_build(_input())
     joined = " | ".join(build.assumptions)
+    assert "May 6 2026" in joined
     assert "April 21 2026" in joined
+    assert "April 28 2026 maintenance" in joined
+    assert "Patch 68" in joined
     assert "armor durability" in joined.lower()
 
 
@@ -177,3 +181,47 @@ def test_special_budget_legendary_special_perks_raise_cap():
     issues = validate_build(build)
     assert not any("exceed" in issue for issue in issues), issues
     assert sum(build.special_allocation.values()) > SPECIAL_BUDGET
+
+
+def test_ghoul_catalog_counts_match_live_may_2026_sources():
+    ghoul_perks = [
+        p for p in load_perks()
+        if p.status.value == "verified" and "ghoul_only" in p.tags
+    ]
+    ghoul_legendary = [
+        p for p in load_legendary_perks()
+        if p.status.value == "verified" and "ghoul_only" in p.tags
+    ]
+    assert len(ghoul_perks) == 28
+    assert {p.name for p in ghoul_legendary} == {"Action Diet", "Feral Rage"}
+
+
+def test_glowing_one_is_regular_perk_not_legendary():
+    regular = {p.id: p for p in load_perks()}
+    legendary = {p.id: p for p in load_legendary_perks()}
+    assert regular["glowing_one"].name == "Glowing One"
+    assert regular["glowing_one"].special == "Charisma"
+    assert "glowing_one" not in legendary
+    assert {"action_diet", "feral_rage"} <= set(legendary)
+
+
+def test_ghoul_restricted_perks_are_rejected():
+    build = generate_build(_input(primary_playstyle="Ghoul Commando", primary_weapon_type="Auto rifle"))
+    build.perk_cards_by_special["Endurance"].append(
+        PerkChoice(card_id="rad_sponge", rank=2, role="Invalid", why="restricted test")
+    )
+    build.legendary_perks.append(
+        {"name": "What Rads?", "priority": "Invalid", "reason": "restricted test", "rank": 1}
+    )
+    issues = validate_build(build)
+    assert any("Rad Sponge" in issue and "restricted" in issue for issue in issues), issues
+    assert any("What Rads?" in issue and "restricted" in issue for issue in issues), issues
+
+
+def test_source_registry_records_may6_and_no_impact_maintenance():
+    sources = load_sources_json()
+    assert sources
+    assert {s.date_accessed.isoformat() for s in sources} == {"2026-05-06"}
+    apr28 = next(s for s in sources if s.id == "steam-apr28-2026-maintenance")
+    assert "no build-impact" in apr28.summary
+    assert any("Patch 68" in s.relevant_patch and "PTS" in s.notes for s in sources)

@@ -70,6 +70,15 @@ def test_perks_endpoint_filters_deprecated_by_default():
 def test_legendary_perks_endpoint():
     payload = client.get("/api/legendary-perks").json()
     assert any(p["id"] == "taking_one_for_the_team" for p in payload)
+    assert {p["id"] for p in payload if "ghoul_only" in p["tags"]} == {"action_diet", "feral_rage"}
+    assert all(p["id"] != "glowing_one" for p in payload)
+
+
+def test_perks_endpoint_includes_regular_glowing_one():
+    payload = client.get("/api/perks").json()
+    glowing_one = next(p for p in payload if p["id"] == "glowing_one")
+    assert glowing_one["special"] == "Charisma"
+    assert "ghoul_only" in glowing_one["tags"]
 
 
 def test_generate_and_get_build_default_is_pa_heavy_energy():

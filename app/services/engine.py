@@ -67,6 +67,32 @@ class ArchetypeBlueprint:
 
 
 GHOUL_ARCHETYPES = frozenset({"playable_ghoul", "ghoul_commando", "ghoul_melee"})
+GHOUL_RESTRICTED_PERK_IDS = frozenset(
+    {
+        "chem_resistant",
+        "dromedary",
+        "ghoulish",
+        "happy_camper",
+        "hydro_fix",
+        "iron_stomach",
+        "lead_belly",
+        "munchy_resistance",
+        "mystery_meat",
+        "natural_resistance",
+        "overly_generous",
+        "pharmacist",
+        "quick_hands",
+        "rad_resistant",
+        "rad_sponge",
+        "radicool",
+        "rejuvenated",
+        "slow_metabolizer",
+        "sun_kissed",
+        "thirst_quencher",
+        "vaccinated",
+    }
+)
+GHOUL_RESTRICTED_LEGENDARY_NAMES = frozenset({"what rads?"})
 
 
 def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
@@ -434,28 +460,30 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
             build_name="Playable Ghoul Heavy",
             aliases=("ghoul", "feral", "rad-absorber", "rad sponge"),
             special_allocation={
-                "Strength": 13,
-                "Perception": 3,
-                "Endurance": 13,
-                "Charisma": 3,
-                "Intelligence": 11,
-                "Agility": 3,
+                "Strength": 15,
+                "Perception": 1,
+                "Endurance": 8,
+                "Charisma": 4,
+                "Intelligence": 12,
+                "Agility": 6,
                 "Luck": 10,
             },
             perk_picks=(
-                ("rad_sponge", 2, "Survival", "Patch 62 rad-absorb to Hunger/Thirst."),
-                ("ghoulish", 3, "Healing", "Radiation regenerates health."),
                 ("bullet_storm", 3, "Damage", "Pairs heavy energy with Ghoul mechanics."),
                 ("tightly_wound", 3, "Utility", "Faster spin-up."),
                 ("bringing_the_big_guns", 1, "Damage", "Doubles BS stack cap."),
-                ("stabilized", 3, "Accuracy", "Big-gun accuracy + PA bonus if equipped."),
                 ("bear_arms", 3, "Carry", "Heavy weapon weight."),
+                ("arms_of_steel", 2, "Accuracy", "Ghoul ranged accuracy support."),
+                ("glowing_one", 2, "Team Glow", "Team Glow support while stocked on Glow."),
+                ("stabilized", 3, "Accuracy", "Big-gun accuracy + PA bonus if equipped."),
+                ("action_ghoul", 3, "AP", "AP regen while holding Glow."),
                 ("class_freak", 3, "Mutations", "Reduce mutation downsides."),
             ),
             legendary_perks=(
-                {"name": "Legendary Endurance", "priority": "Required", "reason": "Health pool and rad management.", "rank": 4},
+                {"name": "Action Diet", "priority": "Required", "reason": "Maintains non-feral uptime and heals on kills.", "rank": 3},
                 {"name": "Electric Absorption", "priority": "Strongly Recommended", "reason": "Sustains PA variant.", "rank": 3},
                 {"name": "Taking One for the Team", "priority": "Recommended", "reason": "Team amp.", "rank": 2},
+                {"name": "Legendary Strength", "priority": "Recommended", "reason": "Heavy-weapon perk pressure.", "rank": 2},
             ),
             mutations=(
                 {"name": "Speed Demon", "use": "Yes", "reason": "Mobility."},
@@ -465,18 +493,18 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 "weapons": ["Holy Fire", "Gatling Plasma", "Cremator"],
                 "armor": ["Civil Engineer Armor", "Union PA (variant)"],
                 "weapon_effects": ["Anti-Armor", "Vampire's", "Furious"],
-                "armor_effects": ["Overeater's"],
+                "armor_effects": ["Powered", "Sentinel's", "Ghoul-friendly defensive rolls"],
                 "ammo_consumables": ["Glowing Blood", "Toxic Goo", "Psychobuff"],
                 "weapon_mods": ["Conductors"],
             },
             variants={
                 "PA Ghoul": ["Stabilized stack", "Union PA"],
-                "Non-PA Ghoul": ["Civil Engineer", "Ghoulish stack"],
+                "Non-PA Ghoul": ["Civil Engineer", "Action Ghoul + Glowing One stack"],
             },
             swap_cards={"Travel": ["Marsupial maintenance"]},
             extra_assumptions=(
                 "Cannot use Unyielding armor (Ghoul restriction).",
-                "Radiation acts as a resource via Rad Sponge + Ghoulish.",
+                "Ghouls use Glow and the Feral meter as resources; Rad Sponge and Ghoulish are restricted for playable ghouls.",
             ),
             weaknesses=("Cannot use Unyielding", "Pure-radiation immunity zones reduce uptime"),
         ),
@@ -560,11 +588,11 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 ("stabilized", 3, "Accuracy", "Big-gun accuracy + PA bonus."),
                 ("demolition_expert", 5, "Damage", "Boosts Cremator splash and Enclave Flamer ignition."),
                 ("grenadier", 2, "AoE", "Doubles explosive AoE radius."),
-                ("fire_in_the_hole", 3, "Utility", "Better trajectory; pairs with Cremator alt-fire."),
+                ("one_gun_army", 3, "Utility", "Cripple/stagger support on heavy hits."),
                 ("batteries_included", 3, "Economy", "Energy ammo weight."),
             ),
             optional_perk_picks=(
-                ("one_gun_army", 3, "Utility", "Cripple/stagger on splash."),
+                ("science_monster", 3, "Ghoul Variant", "Glow-based damage option for ghoul pyromaniacs."),
             ),
             legendary_perks=(
                 {"name": "Far-Flung Fireworks", "priority": "Required", "reason": "Cremator chains kills with rocket splash.", "rank": 4},
@@ -685,6 +713,7 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 ("concentrated_fire", 3, "VATS", "Stacking VATS accuracy/damage."),
                 ("better_criticals", 3, "Criticals", "VATS crit damage."),
                 ("critical_savvy", 3, "Criticals", "Crit meter throughput."),
+                ("glowing_one", 2, "Team Glow", "Team Glow support."),
                 ("hyper_reflexes", 3, "Speed", "Action speed while feral."),
                 ("action_ghoul", 3, "AP", "AP regen while feral."),
                 ("class_freak", 3, "Mutations", "Reduce mutation downsides."),
@@ -694,9 +723,8 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
             ),
             legendary_perks=(
                 {"name": "Follow Through", "priority": "Required", "reason": "Sneak amp + ghoul stealth synergy.", "rank": 4},
-                {"name": "Glowing One", "priority": "Recommended", "reason": "Team glow buff.", "rank": 2},
+                {"name": "Action Diet", "priority": "Recommended", "reason": "Keeps the Feral meter controlled during events.", "rank": 3},
                 {"name": "Legendary Agility", "priority": "Recommended", "reason": "AP throughput.", "rank": 2},
-                {"name": "What Rads?", "priority": "Optional", "reason": "Rad cap insurance.", "rank": 1},
             ),
             mutations=(
                 {"name": "Eagle Eyes", "use": "Yes", "reason": "Crit damage + Perception."},
@@ -707,7 +735,7 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 "weapons": ["The Fixer", "Elder's Mark", "Handmade", "V63 Laser Carbine"],
                 "armor": ["Civil Engineer Armor", "Secret Service Armor"],
                 "weapon_effects": ["Anti-Armor", "Bloodied", "Vampire's"],
-                "armor_effects": ["Overeater's"],
+                "armor_effects": ["Powered", "Sentinel's", "Ghoul-friendly defensive rolls"],
                 "ammo_consumables": ["Glowing Blood", "Toxic Goo", "Company Tea"],
                 "weapon_mods": ["Limit Breaking (4-star)", "Number Cruncher (4-star)"],
             },
@@ -744,11 +772,11 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 ("incisor", 3, "Armor Pen", "75% armor ignore for melee."),
                 ("martial_artist", 3, "Utility", "Swing speed + weight reduction."),
                 ("bone_shatterer", 3, "Cripple", "Ghoul melee crippling chance."),
-                ("feral_rage", 3, "Damage", "Damage while feral."),
-                ("brick_wall", 3, "Defense", "DR while feral."),
+                ("radioactive_strength", 3, "Damage", "Glow-fueled power attack and bash damage."),
                 ("class_freak", 3, "Mutation", "Reduce mutation downsides."),
             ),
             optional_perk_picks=(
+                ("brick_wall", 1, "Defense", "Stagger immunity while Glow is high."),
                 ("wound_salter", 3, "Damage", "+30% vs bleeding (STR swap-in)."),
                 ("battle_genes", 3, "Mutation", "Mutation damage stack (STR swap-in)."),
                 ("blocker", 3, "Defense", "Melee damage taken reduction."),
@@ -757,8 +785,8 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
             legendary_perks=(
                 {"name": "Hack and Slash", "priority": "Required", "reason": "Shockwave on melee hits.", "rank": 4},
                 {"name": "Retribution", "priority": "Required", "reason": "Reflect damage taken as fire.", "rank": 4},
+                {"name": "Feral Rage", "priority": "Recommended", "reason": "Reduces Glow costs while feral.", "rank": 3},
                 {"name": "Legendary Strength", "priority": "Recommended", "reason": "Hard-cap on melee scaling.", "rank": 2},
-                {"name": "Glowing One", "priority": "Recommended", "reason": "Team glow buff.", "rank": 2},
             ),
             mutations=(
                 {"name": "Adrenal Reaction", "use": "Yes", "reason": "Bloodied scaling."},
@@ -769,18 +797,18 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 "weapons": ["Auto Axe", "Chainsaw", "Power Fist", "Super Sledge"],
                 "armor": ["Solar Armor", "Secret Service Armor"],
                 "weapon_effects": ["Bloodied", "Vampire's", "Furious"],
-                "armor_effects": ["Overeater's"],
+                "armor_effects": ["Powered", "Sentinel's", "Ghoul-friendly defensive rolls"],
                 "ammo_consumables": ["Glowing Blood", "Adrenal Reaction food", "Psychobuff"],
                 "weapon_mods": ["Furious"],
             },
             variants={
-                "Feral Ghoul Melee": ["Feral Rage", "Hyper Reflexes", "Brick Wall"],
-                "Full-health Ghoul Melee": ["Overeater's"],
+                "Feral Ghoul Melee": ["Feral Rage legendary perk", "Hyper Reflexes", "Brick Wall"],
+                "Full-health Ghoul Melee": ["Powered defensive armor"],
             },
             swap_cards={"Defense": ["Blocker"], "Events": ["Strange in Numbers"]},
             extra_assumptions=(
                 "Cannot use Unyielding armor (Ghoul restriction).",
-                "Glow + Feral state stack with melee damage via Feral Rage / Battle-Genes.",
+                "Glow + Feral state stack with melee damage via Radioactive Strength and Feral Rage.",
             ),
             weaknesses=(
                 "Cannot use Unyielding.",
@@ -892,7 +920,9 @@ def _build_assumptions(extra: tuple[str, ...]) -> List[str]:
     accessed = latest_source_date_accessed().isoformat()
     base = [
         f"Validated against local source registry accessed on {accessed}.",
-        "Aligned with Patch 62 (CAMP Revamp) and the April 21 2026 update.",
+        "Live baseline as of May 6 2026: Patch 62 (CAMP Revamp) plus the April 21 2026 update.",
+        "April 28 2026 maintenance is recorded as no build-impact (status-bar display fix only).",
+        "Protect Appalachia / Patch 68 PTS notes are tracked as future-facing context only and excluded from live defaults.",
         "April 21 2026: armor durability buffed; explosions retain more damage on indirect hits and vs high-resist enemies.",
         "April 21 2026: Demolition Expert + explosive bobbleheads now correctly factored into self-damage math.",
         "April 21 2026: Fancy Pump-Action Shotgun + Fancy Single-Action Revolver pivoted to stealth (smaller cone while sneaking, +25% reload, +10% fire rate, +10% AP cost, lower durability).",
@@ -1093,6 +1123,18 @@ def validate_build(build: GeneratedBuild) -> list[str]:
             issues.append(
                 "Ghoul build conflict: Unyielding armor is not usable by Playable Ghoul characters."
             )
+        selected_restricted = []
+        for picks in build.perk_cards_by_special.values():
+            for pick in picks:
+                if pick.card_id in GHOUL_RESTRICTED_PERK_IDS:
+                    card = perks_by_id.get(pick.card_id)
+                    selected_restricted.append(card.name if card else pick.card_id)
+        for name in selected_restricted:
+            issues.append(f"Ghoul build conflict: {name} is restricted for Playable Ghoul characters.")
+        for lp in build.legendary_perks:
+            name = str(lp.get("name", ""))
+            if name.lower() in GHOUL_RESTRICTED_LEGENDARY_NAMES:
+                issues.append(f"Ghoul build conflict: {name} is restricted for Playable Ghoul characters.")
 
     return issues
 
