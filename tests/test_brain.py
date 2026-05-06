@@ -85,3 +85,46 @@ def test_enhance_build_with_brain_does_not_overwrite_special(monkeypatch):
 
     assert build.build_name == "Brain Renamed"
     assert build.special_allocation == original_special
+
+
+def test_enhance_build_continues_when_web_search_fails(monkeypatch):
+    monkeypatch.setenv("OLLAMA_API_KEY", "test-key")
+    monkeypatch.setenv("OLLAMA_WEB_SEARCH", "1")
+
+    payload = json.dumps(
+        {
+            "message": {
+                "content": json.dumps(
+                    {
+                        "build_name": "Brain Without Search",
+                        "assumptions": ["a"],
+                        "weaknesses": ["w"],
+                        "brain_notes": ["bn"],
+                    }
+                )
+            }
+        }
+    ).encode("utf-8")
+
+    class FakeResponse(io.BytesIO):
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            self.close()
+
+    user = BuildInput()
+    build = generate_build(user)
+
+    def fake_web_search(*_args, **_kwargs):
+        raise BrainError("simulated search timeout")
+
+    def fake_urlopen(_request, timeout=None):
+        return FakeResponse(payload)
+
+    monkeypatch.setattr(brain_module, "web_search", fake_web_search)
+    with patch("urllib.request.urlopen", side_effect=fake_urlopen):
+        enhance_build_with_brain(user, build, validation_issues=[])
+
+    assert build.build_name == "Brain Without Search"
+    assert any("web search unavailable" in note.lower() for note in build.brain_notes)

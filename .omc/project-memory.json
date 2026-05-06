@@ -1,0 +1,130 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1778087125381,
+  "projectRoot": "/Users/markgallo/fallout-76-build",
+  "techStack": {
+    "languages": [
+      {
+        "name": "Python",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "pyproject.toml"
+        ]
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "fastapi",
+        "version": null,
+        "category": "backend"
+      },
+      {
+        "name": "pytest",
+        "version": null,
+        "category": "testing"
+      }
+    ],
+    "packageManager": "poetry",
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": "pytest",
+    "lintCommand": "ruff check",
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": "snake_case",
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "app",
+      "tests"
+    ],
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "app": {
+      "path": "app",
+      "purpose": "Application code",
+      "fileCount": 2,
+      "lastAccessed": 1778087125346,
+      "keyFiles": [
+        "main.py",
+        "models.py"
+      ]
+    },
+    "fallout76_special_perk_agent.egg-info": {
+      "path": "fallout76_special_perk_agent.egg-info",
+      "purpose": null,
+      "fileCount": 5,
+      "lastAccessed": 1778087125346,
+      "keyFiles": [
+        "PKG-INFO",
+        "SOURCES.txt",
+        "dependency_links.txt",
+        "requires.txt",
+        "top_level.txt"
+      ]
+    },
+    "tests": {
+      "path": "tests",
+      "purpose": "Test files",
+      "fileCount": 5,
+      "lastAccessed": 1778087125347,
+      "keyFiles": [
+        "conftest.py",
+        "test_api.py",
+        "test_brain.py",
+        "test_engine.py",
+        "test_repository.py"
+      ]
+    },
+    "app/data": {
+      "path": "app/data",
+      "purpose": "Data files",
+      "fileCount": 3,
+      "lastAccessed": 1778087125349,
+      "keyFiles": [
+        "legendary_perks.json",
+        "perks.json",
+        "sources.json"
+      ]
+    },
+    "app/services": {
+      "path": "app/services",
+      "purpose": "Business logic services",
+      "fileCount": 4,
+      "lastAccessed": 1778087125350,
+      "keyFiles": [
+        "brain.py",
+        "db.py",
+        "engine.py"
+      ]
+    },
+    "app/static": {
+      "path": "app/static",
+      "purpose": "Static files",
+      "fileCount": 9,
+      "lastAccessed": 1778087125352,
+      "keyFiles": [
+        "appalachia-grid.svg",
+        "compare.html",
+        "compare.js"
+      ]
+    }
+  },
+  "hotPaths": [],
+  "userDirectives": []
+}

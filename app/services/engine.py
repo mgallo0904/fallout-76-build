@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import os
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Callable, Dict, List
@@ -1002,9 +1003,24 @@ def generate_build(user: BuildInput) -> GeneratedBuild:
 
 
 def generate_and_refine_build(user: BuildInput, max_retries: int = 2) -> GeneratedBuild:
-    """Deterministic build, mandatory brain-driven confirmation and enhancement."""
+    """Generate a build, optionally refining it with the Ollama brain.
+
+    The deterministic engine is the default so local app usage does not require
+    an Ollama API key. Brain enhancement runs when USE_OLLAMA_BRAIN=1 or an
+    OLLAMA_API_KEY is present; set USE_OLLAMA_BRAIN=0 to force deterministic
+    generation even when a key is available.
+    """
     build = generate_build(user)
     issues = validate_build(build)
+
+    raw_use_brain = os.getenv("USE_OLLAMA_BRAIN")
+    if raw_use_brain is None:
+        use_brain = bool(os.getenv("OLLAMA_API_KEY"))
+    else:
+        use_brain = raw_use_brain.strip().lower() in {"1", "true", "yes", "on"}
+    if not use_brain:
+        build.validation_status = "passed" if not issues else "issues"
+        return build
 
     for _ in range(max(1, max_retries)):
         enhance_build_with_brain(user, build, issues)

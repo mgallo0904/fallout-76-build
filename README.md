@@ -31,15 +31,15 @@ The app can optionally use Ollama as the logic engine with `kimi-k2.6:cloud` and
 ```bash
 export OLLAMA_API_KEY="your_ollama_api_key"
 export OLLAMA_MODEL="kimi-k2.6:cloud"
-export USE_OLLAMA_BRAIN=1
 export OLLAMA_WEB_SEARCH=1
 
 uvicorn app.main:app --reload
 ```
 
 Optional settings:
+- `USE_OLLAMA_BRAIN`: brain generation is enabled automatically when `OLLAMA_API_KEY` is present; set `USE_OLLAMA_BRAIN=0` to force deterministic local generation, or `USE_OLLAMA_BRAIN=1` to require brain mode explicitly.
 - `OLLAMA_BASE_URL`: defaults to `https://ollama.com` when `OLLAMA_API_KEY` is set, otherwise `http://localhost:11434`.
-- `OLLAMA_TIMEOUT_SECONDS`: request timeout, default `35`.
+- `OLLAMA_TIMEOUT_SECONDS`: request timeout, default `120`.
 - `OLLAMA_MAX_SEARCH_RESULTS`: web results per request, default `5`, max `10`.
 
 Check configuration with:

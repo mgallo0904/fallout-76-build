@@ -91,6 +91,26 @@ def test_generate_and_get_build_default_is_pa_heavy_energy():
     assert fetched.json()["id"] == build["id"]
 
 
+def test_generate_build_without_brain_env_uses_deterministic_engine(monkeypatch):
+    monkeypatch.delenv("USE_OLLAMA_BRAIN", raising=False)
+    monkeypatch.delenv("OLLAMA_API_KEY", raising=False)
+    response = client.post("/api/build/generate", json={})
+    assert response.status_code == 200
+    build = response.json()
+    assert build["logic_engine"] == "deterministic"
+    assert build["brain_confirmed"] is False
+
+
+def test_generate_build_with_api_key_uses_brain(monkeypatch):
+    monkeypatch.delenv("USE_OLLAMA_BRAIN", raising=False)
+    monkeypatch.setenv("OLLAMA_API_KEY", "test-key")
+    response = client.post("/api/build/generate", json={})
+    assert response.status_code == 200
+    build = response.json()
+    assert build["logic_engine"].startswith("ollama:")
+    assert build["brain_confirmed"] is True
+
+
 def test_compare_endpoint_accepts_build_ids_object():
     a = client.post("/api/build/generate", json={"primary_playstyle": "Commando", "primary_weapon_type": "Auto rifle", "armor_type": "Regular armor", "combat_style": "VATS"}).json()
     b = client.post("/api/build/generate", json={"primary_playstyle": "Power Armor Heavy", "primary_weapon_type": "Heavy energy"}).json()

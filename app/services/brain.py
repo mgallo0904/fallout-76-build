@@ -99,7 +99,7 @@ def get_brain_config() -> BrainConfig:
         api_key=api_key,
         web_search_enabled=_env_bool('OLLAMA_WEB_SEARCH', True),
         web_search_url=os.getenv('OLLAMA_WEB_SEARCH_URL', DEFAULT_WEB_SEARCH_URL).rstrip('/'),
-        timeout_seconds=_env_float('OLLAMA_TIMEOUT_SECONDS', 35.0, 1.0, 180.0),
+        timeout_seconds=_env_float('OLLAMA_TIMEOUT_SECONDS', 120.0, 1.0, 300.0),
         max_search_results=_env_int('OLLAMA_MAX_SEARCH_RESULTS', 5, 1, 10),
     )
 
@@ -357,7 +357,7 @@ def enhance_build_with_brain(
             build.web_search_results = search_results
             notes.append(f'Ollama web search returned {len(search_results)} result(s).')
         except BrainError as exc:
-            raise BrainError(f'Web search failed: {exc}') from exc
+            notes.append(f'Ollama web search unavailable: {exc}')
 
     try:
         raw = _chat_json(_build_prompt(user, build, validation_issues, search_results), cfg)
