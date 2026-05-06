@@ -29,7 +29,7 @@ uvicorn app.main:app --reload
 The app can optionally use Ollama as the logic engine with `kimi-k2.6:cloud` and Ollama web search. Do not put your key in the repo; export it in your shell before starting the server:
 
 ```bash
-export OLLAMA_API_KEY="your_ollama_api_key"
+export OLLAMA_API_KEY="your_ollama_api_key_here"
 export OLLAMA_MODEL="kimi-k2.6:cloud"
 export OLLAMA_WEB_SEARCH=1
 
