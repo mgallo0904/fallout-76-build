@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Callable, Dict, List
 from uuid import uuid4
@@ -33,11 +33,17 @@ SPECIALS: List[str] = [
     "Luck",
 ]
 SPECIAL_BUDGET = 56
-LEGENDARY_SPECIAL_BONUS_MAX = 5  # +5 SPECIAL points per fully ranked Legendary stat perk
 LEGENDARY_NAME_PATTERN = re.compile(
     r"^Legendary\s+(Strength|Perception|Endurance|Charisma|Intelligence|Agility|Luck)$",
     re.IGNORECASE,
 )
+
+
+RANK_TO_SPECIAL_BONUS = {1: 1, 2: 2, 3: 3, 4: 5}
+
+
+def _legendary_special_bonus(rank: int) -> int:
+    return RANK_TO_SPECIAL_BONUS.get(min(4, max(1, rank)), 1)
 
 
 @dataclass(frozen=True)
@@ -51,11 +57,11 @@ class ArchetypeBlueprint:
     """(card_id, rank, role, why) for verified perk cards."""
     optional_perk_picks: tuple[tuple[str, int, str, str], ...] = ()
     """Picks added only if the perk is loadable; tolerated if missing."""
-    legendary_perks: tuple[Dict[str, str], ...] = ()
+    legendary_perks: tuple[Dict[str, str | int], ...] = ()
     mutations: tuple[Dict[str, str], ...] = ()
-    gear: Dict[str, List[str]] = None  # type: ignore[assignment]
-    variants: Dict[str, List[str]] = None  # type: ignore[assignment]
-    swap_cards: Dict[str, List[str]] = None  # type: ignore[assignment]
+    gear: Dict[str, List[str]] = field(default_factory=dict)
+    variants: Dict[str, List[str]] = field(default_factory=dict)
+    swap_cards: Dict[str, List[str]] = field(default_factory=dict)
     weaknesses: tuple[str, ...] = ()
     extra_assumptions: tuple[str, ...] = ()
 
@@ -91,10 +97,10 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 ("ricochet", 3, "Defense", "Ranged damage deflection."),
             ),
             legendary_perks=(
-                {"name": "Electric Absorption", "priority": "Required", "reason": "Fusion core sustain and energy mitigation."},
-                {"name": "Taking One for the Team", "priority": "Strongly Recommended", "reason": "Team damage amplification in boss content."},
-                {"name": "Power Armor Reboot", "priority": "Optional", "reason": "Stand-back-up insurance for raid pulls."},
-                {"name": "Ammo Factory", "priority": "Swap-in", "reason": "Fusion / plasma core economy."},
+                {"name": "Electric Absorption", "priority": "Required", "reason": "Fusion core sustain and energy mitigation.", "rank": 4},
+                {"name": "Taking One for the Team", "priority": "Strongly Recommended", "reason": "Team damage amplification in boss content.", "rank": 3},
+                {"name": "Power Armor Reboot", "priority": "Optional", "reason": "Stand-back-up insurance for raid pulls.", "rank": 1},
+                {"name": "Ammo Factory", "priority": "Swap-in", "reason": "Fusion / plasma core economy.", "rank": 1},
             ),
             mutations=(
                 {"name": "Speed Demon", "use": "Yes", "reason": "Reload and mobility.", "support": "Class Freak"},
@@ -159,9 +165,9 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 ("ricochet", 3, "Defense", "Ranged deflection."),
             ),
             legendary_perks=(
-                {"name": "Taking One for the Team", "priority": "Required", "reason": "Team damage amplification."},
-                {"name": "Legendary Strength", "priority": "Recommended", "reason": "Frees STR perk slots."},
-                {"name": "Ammo Factory", "priority": "Swap-in", "reason": "Ammo economy."},
+                {"name": "Taking One for the Team", "priority": "Required", "reason": "Team damage amplification.", "rank": 4},
+                {"name": "Legendary Strength", "priority": "Recommended", "reason": "Frees STR perk slots.", "rank": 2},
+                {"name": "Ammo Factory", "priority": "Swap-in", "reason": "Ammo economy.", "rank": 1},
             ),
             mutations=(
                 {"name": "Speed Demon", "use": "Yes", "reason": "Reload/mobility."},
@@ -207,9 +213,9 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 ("grim_reapers_sprint", 1, "AP regen", "VATS kills restore AP."),
             ),
             legendary_perks=(
-                {"name": "Follow Through", "priority": "Required", "reason": "Stealth-amplified ranged damage."},
-                {"name": "Legendary Agility", "priority": "Recommended", "reason": "More AP and perk slots."},
-                {"name": "Legendary Luck", "priority": "Recommended", "reason": "Crit meter throughput."},
+                {"name": "Follow Through", "priority": "Required", "reason": "Stealth-amplified ranged damage.", "rank": 4},
+                {"name": "Legendary Agility", "priority": "Recommended", "reason": "More AP and perk slots.", "rank": 2},
+                {"name": "Legendary Luck", "priority": "Recommended", "reason": "Crit meter throughput.", "rank": 2},
             ),
             mutations=(
                 {"name": "Eagle Eyes", "use": "Yes", "reason": "Critical damage and Perception."},
@@ -255,9 +261,9 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 ("grim_reapers_sprint", 1, "AP regen", "VATS kills restore AP."),
             ),
             legendary_perks=(
-                {"name": "Follow Through", "priority": "Required", "reason": "Sneak attack damage amplifier."},
-                {"name": "Legendary Perception", "priority": "Recommended", "reason": "Long-range build cohesion."},
-                {"name": "Legendary Luck", "priority": "Recommended", "reason": "Crit cadence."},
+                {"name": "Follow Through", "priority": "Required", "reason": "Sneak attack damage amplifier.", "rank": 4},
+                {"name": "Legendary Perception", "priority": "Recommended", "reason": "Long-range build cohesion.", "rank": 2},
+                {"name": "Legendary Luck", "priority": "Recommended", "reason": "Crit cadence.", "rank": 2},
             ),
             mutations=(
                 {"name": "Eagle Eyes", "use": "Yes", "reason": "Crit damage + Perception."},
@@ -303,8 +309,8 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 ("critical_savvy", 3, "Criticals", "Reduced crit meter consumption."),
             ),
             legendary_perks=(
-                {"name": "Taking One for the Team", "priority": "Required", "reason": "Team damage amplifier."},
-                {"name": "Legendary Strength", "priority": "Recommended", "reason": "Free up STR perk slots."},
+                {"name": "Taking One for the Team", "priority": "Required", "reason": "Team damage amplifier.", "rank": 4},
+                {"name": "Legendary Strength", "priority": "Recommended", "reason": "Free up STR perk slots.", "rank": 2},
             ),
             mutations=(
                 {"name": "Speed Demon", "use": "Yes", "reason": "Reload speed."},
@@ -350,9 +356,9 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 ("grim_reapers_sprint", 1, "AP regen", "VATS kills restore AP."),
             ),
             legendary_perks=(
-                {"name": "Follow Through", "priority": "Required", "reason": "Stealth pistol amp."},
-                {"name": "Legendary Agility", "priority": "Recommended", "reason": "AP + perk slots."},
-                {"name": "Legendary Luck", "priority": "Recommended", "reason": "Crit cadence."},
+                {"name": "Follow Through", "priority": "Required", "reason": "Stealth pistol amp.", "rank": 4},
+                {"name": "Legendary Agility", "priority": "Recommended", "reason": "AP + perk slots.", "rank": 2},
+                {"name": "Legendary Luck", "priority": "Recommended", "reason": "Crit cadence.", "rank": 2},
             ),
             mutations=(
                 {"name": "Eagle Eyes", "use": "Yes", "reason": "Crit damage + Perception."},
@@ -399,9 +405,9 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 ("natural_stance", 1, "Defense", "Stagger reduction (swap-in)."),
             ),
             legendary_perks=(
-                {"name": "Legendary Strength", "priority": "Required", "reason": "Hard-cap on melee scaling."},
-                {"name": "Taking One for the Team", "priority": "Recommended", "reason": "Team amp at point-blank."},
-                {"name": "Power Armor Reboot", "priority": "Optional", "reason": "PA melee variant insurance."},
+                {"name": "Legendary Strength", "priority": "Required", "reason": "Hard-cap on melee scaling.", "rank": 4},
+                {"name": "Taking One for the Team", "priority": "Recommended", "reason": "Team amp at point-blank.", "rank": 2},
+                {"name": "Power Armor Reboot", "priority": "Optional", "reason": "PA melee variant insurance.", "rank": 1},
             ),
             mutations=(
                 {"name": "Adrenal Reaction", "use": "Yes", "reason": "Bloodied scaling."},
@@ -447,9 +453,9 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 ("class_freak", 3, "Mutations", "Reduce mutation downsides."),
             ),
             legendary_perks=(
-                {"name": "Legendary Endurance", "priority": "Required", "reason": "Health pool and rad management."},
-                {"name": "Electric Absorption", "priority": "Strongly Recommended", "reason": "Sustains PA variant."},
-                {"name": "Taking One for the Team", "priority": "Recommended", "reason": "Team amp."},
+                {"name": "Legendary Endurance", "priority": "Required", "reason": "Health pool and rad management.", "rank": 4},
+                {"name": "Electric Absorption", "priority": "Strongly Recommended", "reason": "Sustains PA variant.", "rank": 3},
+                {"name": "Taking One for the Team", "priority": "Recommended", "reason": "Team amp.", "rank": 2},
             ),
             mutations=(
                 {"name": "Speed Demon", "use": "Yes", "reason": "Mobility."},
@@ -502,10 +508,10 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 ("sneak", 3, "Stealth", "Stealth multiplier (swap-in if PER allows)."),
             ),
             legendary_perks=(
-                {"name": "Follow Through", "priority": "Required", "reason": "Sneak attack damage amplifier."},
-                {"name": "Sneak Attacker", "priority": "Required", "reason": "Stacks with bow sneak damage."},
-                {"name": "Legendary Perception", "priority": "Recommended", "reason": "More PER for stealth tier."},
-                {"name": "Legendary Luck", "priority": "Recommended", "reason": "Crit cadence."},
+                {"name": "Follow Through", "priority": "Required", "reason": "Sneak attack damage amplifier.", "rank": 4},
+                {"name": "Sneak Attacker", "priority": "Required", "reason": "Stacks with bow sneak damage.", "rank": 4},
+                {"name": "Legendary Perception", "priority": "Recommended", "reason": "More PER for stealth tier.", "rank": 2},
+                {"name": "Legendary Luck", "priority": "Recommended", "reason": "Crit cadence.", "rank": 2},
             ),
             mutations=(
                 {"name": "Eagle Eyes", "use": "Yes", "reason": "Crit damage + Perception."},
@@ -561,10 +567,10 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 ("one_gun_army", 3, "Utility", "Cripple/stagger on splash."),
             ),
             legendary_perks=(
-                {"name": "Far-Flung Fireworks", "priority": "Required", "reason": "Cremator chains kills with rocket splash."},
-                {"name": "Taking One for the Team", "priority": "Strongly Recommended", "reason": "Team amp on tagged enemies."},
-                {"name": "Electric Absorption", "priority": "Optional", "reason": "Sustains PA Enclave Flamer variant."},
-                {"name": "Ammo Factory", "priority": "Swap-in", "reason": "Cremator/flamer ammo economy."},
+                {"name": "Far-Flung Fireworks", "priority": "Required", "reason": "Cremator chains kills with rocket splash.", "rank": 4},
+                {"name": "Taking One for the Team", "priority": "Strongly Recommended", "reason": "Team amp on tagged enemies.", "rank": 3},
+                {"name": "Electric Absorption", "priority": "Optional", "reason": "Sustains PA Enclave Flamer variant.", "rank": 1},
+                {"name": "Ammo Factory", "priority": "Swap-in", "reason": "Cremator/flamer ammo economy.", "rank": 1},
             ),
             mutations=(
                 {"name": "Speed Demon", "use": "Yes", "reason": "Reload and mobility."},
@@ -628,9 +634,9 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 ("better_criticals", 3, "Criticals", "VATS crit damage."),
             ),
             legendary_perks=(
-                {"name": "Follow Through", "priority": "Required", "reason": "Sneak attack damage amplifier for shotgun stealth pivot."},
-                {"name": "Sneak Attacker", "priority": "Required", "reason": "Stacks with the new Fancy Pump-Action stealth tuning."},
-                {"name": "Taking One for the Team", "priority": "Recommended", "reason": "Team amp on tagged enemies."},
+                {"name": "Follow Through", "priority": "Required", "reason": "Sneak attack damage amplifier for shotgun stealth pivot.", "rank": 4},
+                {"name": "Sneak Attacker", "priority": "Required", "reason": "Stacks with the new Fancy Pump-Action stealth tuning.", "rank": 4},
+                {"name": "Taking One for the Team", "priority": "Recommended", "reason": "Team amp on tagged enemies.", "rank": 2},
             ),
             mutations=(
                 {"name": "Eagle Eyes", "use": "Yes", "reason": "Crit damage + Perception."},
@@ -687,10 +693,10 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 ("glowing_hunter", 3, "Damage", "Marked target damage stack (ghoul; PER swap-in)."),
             ),
             legendary_perks=(
-                {"name": "Follow Through", "priority": "Required", "reason": "Sneak amp + ghoul stealth synergy."},
-                {"name": "Glowing One", "priority": "Recommended", "reason": "Team glow buff."},
-                {"name": "Legendary Agility", "priority": "Recommended", "reason": "AP throughput."},
-                {"name": "What Rads?", "priority": "Optional", "reason": "Rad cap insurance."},
+                {"name": "Follow Through", "priority": "Required", "reason": "Sneak amp + ghoul stealth synergy.", "rank": 4},
+                {"name": "Glowing One", "priority": "Recommended", "reason": "Team glow buff.", "rank": 2},
+                {"name": "Legendary Agility", "priority": "Recommended", "reason": "AP throughput.", "rank": 2},
+                {"name": "What Rads?", "priority": "Optional", "reason": "Rad cap insurance.", "rank": 1},
             ),
             mutations=(
                 {"name": "Eagle Eyes", "use": "Yes", "reason": "Crit damage + Perception."},
@@ -749,10 +755,10 @@ def _build_archetype_blueprints() -> Dict[str, ArchetypeBlueprint]:
                 ("hyper_reflexes", 3, "Speed", "Action speed while feral."),
             ),
             legendary_perks=(
-                {"name": "Hack and Slash", "priority": "Required", "reason": "Shockwave on melee hits."},
-                {"name": "Retribution", "priority": "Required", "reason": "Reflect damage taken as fire."},
-                {"name": "Legendary Strength", "priority": "Recommended", "reason": "Hard-cap on melee scaling."},
-                {"name": "Glowing One", "priority": "Recommended", "reason": "Team glow buff."},
+                {"name": "Hack and Slash", "priority": "Required", "reason": "Shockwave on melee hits.", "rank": 4},
+                {"name": "Retribution", "priority": "Required", "reason": "Reflect damage taken as fire.", "rank": 4},
+                {"name": "Legendary Strength", "priority": "Recommended", "reason": "Hard-cap on melee scaling.", "rank": 2},
+                {"name": "Glowing One", "priority": "Recommended", "reason": "Team glow buff.", "rank": 2},
             ),
             mutations=(
                 {"name": "Adrenal Reaction", "use": "Yes", "reason": "Bloodied scaling."},
@@ -872,7 +878,7 @@ def get_archetype_preview(archetype_id: str) -> Dict[str, object] | None:
         "perk_picks": _picks(bp.perk_picks),
         "optional_perk_picks": _picks(bp.optional_perk_picks),
         "legendary_perks": [dict(lp) for lp in bp.legendary_perks],
-        "gear": bp.gear or {},
+        "gear": dict(bp.gear),
         "weaknesses": list(bp.weaknesses),
         "extra_assumptions": list(bp.extra_assumptions),
     }
@@ -942,9 +948,9 @@ def _build_from_blueprint(blueprint: ArchetypeBlueprint, user: BuildInput) -> Ge
         perk_cards_by_special=by_special,
         legendary_perks=[dict(lp) for lp in blueprint.legendary_perks],
         mutations=[dict(m) for m in blueprint.mutations],
-        gear=blueprint.gear or {},
-        variants=blueprint.variants or {},
-        swap_cards=blueprint.swap_cards or {},
+        gear=dict(blueprint.gear),
+        variants=dict(blueprint.variants),
+        swap_cards=dict(blueprint.swap_cards),
         weaknesses=list(blueprint.weaknesses),
         validation_status="pending",
         source_verification_notes=[
@@ -966,11 +972,10 @@ def generate_build(user: BuildInput) -> GeneratedBuild:
 
 
 def generate_and_refine_build(user: BuildInput, max_retries: int = 2) -> GeneratedBuild:
-    """Deterministic build, optional brain-driven enhancement of narrative fields."""
+    """Deterministic build, mandatory brain-driven confirmation and enhancement."""
     build = generate_build(user)
     issues = validate_build(build)
 
-    # First pass: if deterministic build is already valid, optionally enrich; else try to fix.
     for _ in range(max(1, max_retries)):
         enhance_build_with_brain(user, build, issues)
         new_issues = validate_build(build)
@@ -978,7 +983,6 @@ def generate_and_refine_build(user: BuildInput, max_retries: int = 2) -> Generat
             build.validation_status = "passed"
             return build
         if new_issues == issues:
-            # Brain made no useful change; stop early.
             break
         issues = new_issues
 
@@ -986,33 +990,35 @@ def generate_and_refine_build(user: BuildInput, max_retries: int = 2) -> Generat
     return build
 
 
-def _count_legendary_special_perks(build: GeneratedBuild) -> int:
-    count = 0
+def _legendary_special_bonus_total(build: GeneratedBuild) -> int:
+    bonus = 0
     for lp in build.legendary_perks:
         name = lp.get("name", "")
         if LEGENDARY_NAME_PATTERN.match(name):
-            count += 1
-    return count
+            rank = lp.get("rank", 1)
+            bonus += _legendary_special_bonus(rank if isinstance(rank, int) else 1)
+    return bonus
 
 
 def validate_build(build: GeneratedBuild) -> list[str]:
     perks_by_id = {p.id: p for p in load_perks()}
+    legendary_perks_by_id = {p.id: p for p in load_legendary_perks()}
     issues: list[str] = []
 
     # SPECIAL totals
     total_special_points = 0
-    legendary_special_equipped = _count_legendary_special_perks(build)
+    legendary_special_bonus = _legendary_special_bonus_total(build)
     for special in SPECIALS:
         points = build.special_allocation.get(special, 1)
         total_special_points += points
         if points < 1 or points > 15:
             issues.append(f"{special} allocation ({points}) is invalid. Must be between 1 and 15.")
 
-    max_allowed_points = SPECIAL_BUDGET + (legendary_special_equipped * LEGENDARY_SPECIAL_BONUS_MAX)
+    max_allowed_points = SPECIAL_BUDGET + legendary_special_bonus
     if total_special_points > max_allowed_points:
         issues.append(
             f"Total SPECIAL points ({total_special_points}) exceed the maximum of "
-            f"{max_allowed_points} (with {legendary_special_equipped} legendary stat perks)."
+            f"{max_allowed_points} (with {legendary_special_bonus} bonus from legendary stat perks)."
         )
 
     full_health = build.user_inputs.health_model == "Full health"
@@ -1051,6 +1057,25 @@ def validate_build(build: GeneratedBuild) -> list[str]:
         budget = build.special_allocation.get(special, 0)
         if spent > budget:
             issues.append(f"{special} overspent ({spent} > {budget})")
+
+    # Validate legendary perks
+    for lp in build.legendary_perks:
+        name = str(lp.get("name", ""))
+        rank = lp.get("rank", 1)
+        if not name:
+            issues.append("Legendary perk missing name")
+            continue
+        found = False
+        for card in legendary_perks_by_id.values():
+            if card.name == name:
+                found = True
+                if not isinstance(rank, int) or rank < 1 or rank > card.max_rank:
+                    issues.append(
+                        f"Legendary perk {name} has invalid rank {rank} (max {card.max_rank})"
+                    )
+                break
+        if not found:
+            issues.append(f"Unknown legendary perk: {name}")
 
     if not build.weaknesses:
         issues.append("Weaknesses/tradeoffs section required")

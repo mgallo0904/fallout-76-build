@@ -97,7 +97,7 @@ class GeneratedBuild(BaseModel):
     assumptions: List[str]
     special_allocation: Dict[str,int]
     perk_cards_by_special: Dict[str,List[PerkChoice]]
-    legendary_perks: List[Dict[str,str]]
+    legendary_perks: List[Dict[str,str|int]]
     mutations: List[Dict[str,str]]
     gear: Dict[str,List[str]]
     variants: Dict[str,List[str]]
@@ -109,6 +109,10 @@ class GeneratedBuild(BaseModel):
     logic_engine: str = "deterministic"
     brain_notes: List[str] = Field(default_factory=list)
     web_search_results: List[WebSearchResult] = Field(default_factory=list)
+    brain_confirmed: bool = False
+    brain_suggested_swaps: List[Dict[str,str]] = Field(default_factory=list)
+    brain_override_reasoning: List[str] = Field(default_factory=list)
+    legendary_perk_rank_changes: List[Dict[str,str|int]] = Field(default_factory=list)
 
 class ArchetypeSummary(BaseModel):
     id: str
@@ -122,7 +126,7 @@ class ArchetypePreview(BaseModel):
     special_allocation: Dict[str, int]
     perk_picks: List[Dict[str, str]]
     optional_perk_picks: List[Dict[str, str]] = Field(default_factory=list)
-    legendary_perks: List[Dict[str, str]] = Field(default_factory=list)
+    legendary_perks: List[Dict[str, str|int]] = Field(default_factory=list)
     gear: Dict[str, List[str]] = Field(default_factory=dict)
     weaknesses: List[str] = Field(default_factory=list)
     extra_assumptions: List[str] = Field(default_factory=list)

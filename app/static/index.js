@@ -84,7 +84,8 @@ function renderBrainBadge(status) {
     badge.classList.add('online');
     return;
   }
-  badge.textContent = status.has_api_key ? 'Brain disabled' : 'Brain offline';
+  badge.textContent = 'Brain unreachable';
+  badge.style.color = '#ef6464';
   badge.classList.remove('online');
 }
 

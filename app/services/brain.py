@@ -22,10 +22,9 @@ class BrainError(RuntimeError):
 
 @dataclass(frozen=True)
 class BrainConfig:
-    enabled: bool
     model: str
     base_url: str
-    api_key: str | None
+    api_key: str
     web_search_enabled: bool
     web_search_url: str
     timeout_seconds: float
@@ -39,13 +38,18 @@ class BrainConfig:
 class BuildEnhancement(BaseModel):
     build_name: str | None = None
     assumptions: list[str] = Field(default_factory=list)
-    legendary_perks: list[dict[str, str]] = Field(default_factory=list)
+    legendary_perks: list[dict[str, str|int]] = Field(default_factory=list)
     mutations: list[dict[str, str]] = Field(default_factory=list)
     gear: dict[str, list[str]] = Field(default_factory=dict)
     variants: dict[str, list[str]] = Field(default_factory=dict)
     swap_cards: dict[str, list[str]] = Field(default_factory=dict)
     weaknesses: list[str] = Field(default_factory=list)
     brain_notes: list[str] = Field(default_factory=list)
+    confirmed_picks: list[str] = Field(default_factory=list)
+    suggested_swaps: list[dict[str, str]] = Field(default_factory=list)
+    overrides: list[dict[str, str]] = Field(default_factory=list)
+    override_reasoning: list[str] = Field(default_factory=list)
+    legendary_perk_rank_changes: list[dict[str, str|int]] = Field(default_factory=list)
 
 
 class ResearchDigest(BaseModel):
@@ -85,15 +89,15 @@ def _env_float(name: str, default: float, minimum: float, maximum: float) -> flo
 
 def get_brain_config() -> BrainConfig:
     api_key = os.getenv('OLLAMA_API_KEY') or None
-    default_base_url = 'https://ollama.com' if api_key else 'http://localhost:11434'
+    if not api_key:
+        raise BrainError('OLLAMA_API_KEY is required for mandatory brain mode')
+    default_base_url = 'https://ollama.com'
     base_url = os.getenv('OLLAMA_BASE_URL') or os.getenv('OLLAMA_HOST') or default_base_url
-    enabled = _env_bool('USE_OLLAMA_BRAIN', bool(api_key))
     return BrainConfig(
-        enabled=enabled,
         model=os.getenv('OLLAMA_MODEL', DEFAULT_MODEL).strip() or DEFAULT_MODEL,
         base_url=base_url.rstrip('/'),
         api_key=api_key,
-        web_search_enabled=_env_bool('OLLAMA_WEB_SEARCH', bool(api_key)),
+        web_search_enabled=_env_bool('OLLAMA_WEB_SEARCH', True),
         web_search_url=os.getenv('OLLAMA_WEB_SEARCH_URL', DEFAULT_WEB_SEARCH_URL).rstrip('/'),
         timeout_seconds=_env_float('OLLAMA_TIMEOUT_SECONDS', 35.0, 1.0, 180.0),
         max_search_results=_env_int('OLLAMA_MAX_SEARCH_RESULTS', 5, 1, 10),
@@ -101,16 +105,27 @@ def get_brain_config() -> BrainConfig:
 
 
 def brain_status() -> dict[str, Any]:
-    cfg = get_brain_config()
-    return {
-        'enabled': cfg.enabled,
-        'model': cfg.model,
-        'base_url': cfg.base_url,
-        'has_api_key': cfg.has_api_key,
-        'web_search_enabled': cfg.web_search_enabled,
-        'web_search_url': cfg.web_search_url,
-        'max_search_results': cfg.max_search_results,
-    }
+    try:
+        cfg = get_brain_config()
+        return {
+            'enabled': True,
+            'model': cfg.model,
+            'base_url': cfg.base_url,
+            'has_api_key': cfg.has_api_key,
+            'web_search_enabled': cfg.web_search_enabled,
+            'web_search_url': cfg.web_search_url,
+            'max_search_results': cfg.max_search_results,
+        }
+    except BrainError:
+        return {
+            'enabled': False,
+            'model': DEFAULT_MODEL,
+            'base_url': 'https://ollama.com',
+            'has_api_key': False,
+            'web_search_enabled': False,
+            'web_search_url': DEFAULT_WEB_SEARCH_URL,
+            'max_search_results': 5,
+        }
 
 
 def api_url(base_url: str, path: str) -> str:
@@ -263,13 +278,17 @@ def _build_prompt(
             'content': json.dumps(
                 {
                     'task': (
-                        'Improve the build recommendation around assumptions, legendary perks, '
-                        'mutations, gear, variants, swap cards, weaknesses, and notes. '
+                        'Evaluate the deterministic build against live web search evidence. '
+                        'Confirm core perk picks or suggest overrides with reasoning. '
+                        'Evaluate legendary perk ranks (1-4) against current meta and suggest rank changes. '
                         'The response JSON schema is: build_name optional string, assumptions '
-                        'array[string], legendary_perks array[object string values], mutations '
+                        'array[string], legendary_perks array[object with name, priority, reason, rank int 1-4], mutations '
                         'array[object string values], gear object[array[string]], variants '
                         'object[array[string]], swap_cards object[array[string]], weaknesses '
-                        'array[string], brain_notes array[string].'
+                        'array[string], brain_notes array[string], confirmed_picks array[string], '
+                        'suggested_swaps array[object with from_card_id, to_card_id, reason], '
+                        'overrides array[object with field, old_value, new_value, reason], '
+                        'override_reasoning array[string], legendary_perk_rank_changes array[object with name, rank int, reason].'
                     ),
                     'user_inputs': user.model_dump(mode='json'),
                     'deterministic_baseline': baseline,
@@ -301,6 +320,22 @@ def _apply_enhancement(build: GeneratedBuild, enhancement: BuildEnhancement) -> 
         build.weaknesses = enhancement.weaknesses[:12]
     if enhancement.brain_notes:
         build.brain_notes.extend(enhancement.brain_notes[:10])
+    if enhancement.confirmed_picks:
+        build.brain_notes.append(f'Confirmed picks: {", ".join(enhancement.confirmed_picks)}')
+    if enhancement.suggested_swaps:
+        build.brain_suggested_swaps = enhancement.suggested_swaps[:12]
+    if enhancement.overrides:
+        build.brain_suggested_swaps.extend(enhancement.overrides[:8])
+    if enhancement.override_reasoning:
+        build.brain_override_reasoning = enhancement.override_reasoning[:8]
+    if enhancement.legendary_perk_rank_changes:
+        build.legendary_perk_rank_changes = enhancement.legendary_perk_rank_changes[:8]
+        for change in build.legendary_perk_rank_changes:
+            name = str(change.get('name', ''))
+            new_rank = change.get('rank')
+            for lp in build.legendary_perks:
+                if lp.get('name') == name and isinstance(new_rank, int):
+                    lp['rank'] = new_rank
 
 
 def enhance_build_with_brain(
@@ -309,15 +344,6 @@ def enhance_build_with_brain(
     validation_issues: list[str],
 ) -> dict[str, Any]:
     cfg = get_brain_config()
-    if not cfg.enabled:
-        build.logic_engine = 'deterministic'
-        return {
-            'enabled': False,
-            'model': cfg.model,
-            'web_search_enabled': cfg.web_search_enabled,
-            'search_results': 0,
-            'notes': [],
-        }
 
     notes: list[str] = []
     search_results: list[WebSearchResult] = []
@@ -327,26 +353,17 @@ def enhance_build_with_brain(
             build.web_search_results = search_results
             notes.append(f'Ollama web search returned {len(search_results)} result(s).')
         except BrainError as exc:
-            notes.append(f'Ollama web search unavailable: {exc}')
+            raise BrainError(f'Web search failed: {exc}') from exc
 
     try:
         raw = _chat_json(_build_prompt(user, build, validation_issues, search_results), cfg)
         enhancement = BuildEnhancement.model_validate(raw)
     except (BrainError, ValidationError) as exc:
-        build.logic_engine = 'deterministic'
-        build.brain_notes.extend(notes)
-        build.brain_notes.append(f'Ollama brain unavailable: {exc}')
-        return {
-            'enabled': True,
-            'model': cfg.model,
-            'web_search_enabled': cfg.web_search_enabled,
-            'search_results': len(search_results),
-            'notes': build.brain_notes,
-            'error': str(exc),
-        }
+        raise BrainError(f'Brain enhancement failed: {exc}') from exc
 
     _apply_enhancement(build, enhancement)
     build.logic_engine = f'ollama:{cfg.model}'
+    build.brain_confirmed = True
     if notes:
         build.brain_notes.extend(notes)
     build.brain_notes.append('Build recommendation refined by Ollama logic engine.')
@@ -373,38 +390,37 @@ def research_digest(sources: list[SourceRecord]) -> dict[str, Any]:
             notes.append(f'Ollama web search unavailable: {exc}')
 
     digest = ResearchDigest()
-    if cfg.enabled:
-        try:
-            raw = _chat_json(
-                [
-                    {
-                        'role': 'system',
-                        'content': (
-                            'You summarize Fallout 76 source freshness for a build generator. '
-                            'Return only JSON matching: summary string, conflicts_or_uncertain '
-                            'array[string], recommended_followups array[string].'
-                        ),
-                    },
-                    {
-                        'role': 'user',
-                        'content': json.dumps(
-                            {
-                                'known_sources': [s.model_dump(mode='json') for s in sources],
-                                'web_search_results': [r.model_dump(mode='json') for r in search_results],
-                            },
-                            default=str,
-                        ),
-                    },
-                ],
-                cfg,
-            )
-            digest = ResearchDigest.model_validate(raw)
-            notes.append('Research digest refined by Ollama logic engine.')
-        except (BrainError, ValidationError) as exc:
-            notes.append(f'Ollama research digest unavailable: {exc}')
+    try:
+        raw = _chat_json(
+            [
+                {
+                    'role': 'system',
+                    'content': (
+                        'You summarize Fallout 76 source freshness for a build generator. '
+                        'Return only JSON matching: summary string, conflicts_or_uncertain '
+                        'array[string], recommended_followups array[string].'
+                    ),
+                },
+                {
+                    'role': 'user',
+                    'content': json.dumps(
+                        {
+                            'known_sources': [s.model_dump(mode='json') for s in sources],
+                            'web_search_results': [r.model_dump(mode='json') for r in search_results],
+                        },
+                        default=str,
+                    ),
+                },
+            ],
+            cfg,
+        )
+        digest = ResearchDigest.model_validate(raw)
+        notes.append('Research digest refined by Ollama logic engine.')
+    except (BrainError, ValidationError) as exc:
+        notes.append(f'Ollama research digest unavailable: {exc}')
 
     return {
-        'enabled': cfg.enabled,
+        'enabled': True,
         'model': cfg.model,
         'web_search_enabled': cfg.web_search_enabled,
         'search_results': [r.model_dump(mode='json') for r in search_results],
@@ -433,43 +449,42 @@ def research_patch_digest(query: str, max_results: int | None = None) -> dict[st
             notes.append(f'Ollama web search unavailable: {exc}')
 
     digest = ResearchDigest()
-    if cfg.enabled:
-        try:
-            raw = _chat_json(
-                [
-                    {
-                        'role': 'system',
-                        'content': (
-                            'You are kimi-k2.6:cloud summarizing live Fallout 76 patch and meta '
-                            'information for a build generator. The current live game state is '
-                            'Patch 62 + the April 21 2026 update. Return only JSON matching: '
-                            'summary string, conflicts_or_uncertain array[string], '
-                            'recommended_followups array[string]. Cite only material that '
-                            'appears in the provided web search results.'
-                        ),
-                    },
-                    {
-                        'role': 'user',
-                        'content': json.dumps(
-                            {
-                                'query': query,
-                                'web_search_results': [
-                                    r.model_dump(mode='json') for r in search_results
-                                ],
-                            },
-                            default=str,
-                        ),
-                    },
-                ],
-                cfg,
-            )
-            digest = ResearchDigest.model_validate(raw)
-            notes.append('Patch digest refined by Ollama logic engine.')
-        except (BrainError, ValidationError) as exc:
-            notes.append(f'Ollama patch digest unavailable: {exc}')
+    try:
+        raw = _chat_json(
+            [
+                {
+                    'role': 'system',
+                    'content': (
+                        'You are kimi-k2.6:cloud summarizing live Fallout 76 patch and meta '
+                        'information for a build generator. The current live game state is '
+                        'Patch 62 + the April 21 2026 update. Return only JSON matching: '
+                        'summary string, conflicts_or_uncertain array[string], '
+                        'recommended_followups array[string]. Cite only material that '
+                        'appears in the provided web search results.'
+                    ),
+                },
+                {
+                    'role': 'user',
+                    'content': json.dumps(
+                        {
+                            'query': query,
+                            'web_search_results': [
+                                r.model_dump(mode='json') for r in search_results
+                            ],
+                        },
+                        default=str,
+                    ),
+                },
+            ],
+            cfg,
+        )
+        digest = ResearchDigest.model_validate(raw)
+        notes.append('Patch digest refined by Ollama logic engine.')
+    except (BrainError, ValidationError) as exc:
+        notes.append(f'Ollama patch digest unavailable: {exc}')
 
     return {
-        'enabled': cfg.enabled,
+        'enabled': True,
         'model': cfg.model,
         'query': query,
         'web_search_enabled': cfg.web_search_enabled,

@@ -2,14 +2,18 @@ import io
 import json
 from unittest.mock import patch
 
+import pytest
+
 from app.models import BuildInput
 from app.services import brain as brain_module
 from app.services.brain import (
+    BrainError,
     DEFAULT_MODEL,
     api_url,
     brain_status,
     enhance_build_with_brain,
     extract_json_object,
+    get_brain_config,
 )
 from app.services.engine import generate_build
 
@@ -34,26 +38,14 @@ def test_api_url_normalizes_hosts():
     assert api_url("https://ollama.com/api", "/chat") == "https://ollama.com/api/chat"
 
 
-def test_enhance_build_with_brain_disabled_does_not_call_network(monkeypatch):
-    monkeypatch.setenv("USE_OLLAMA_BRAIN", "0")
-    user = BuildInput()
-    build = generate_build(user)
-    original_special = dict(build.special_allocation)
-    original_perks = {k: list(v) for k, v in build.perk_cards_by_special.items()}
-
-    with patch("urllib.request.urlopen") as urlopen:
-        result = enhance_build_with_brain(user, build, validation_issues=[])
-
-    urlopen.assert_not_called()
-    assert result["enabled"] is False
-    # Brain is forbidden from mutating SPECIAL or core perk picks regardless.
-    assert build.special_allocation == original_special
-    assert {k: list(v) for k, v in build.perk_cards_by_special.items()} == original_perks
+def test_mandatory_brain_raises_without_api_key(monkeypatch):
+    monkeypatch.delenv("OLLAMA_API_KEY", raising=False)
+    with pytest.raises(BrainError):
+        get_brain_config()
 
 
 def test_enhance_build_with_brain_does_not_overwrite_special(monkeypatch):
     monkeypatch.setenv("OLLAMA_API_KEY", "test-key")
-    monkeypatch.setenv("USE_OLLAMA_BRAIN", "1")
     monkeypatch.setenv("OLLAMA_WEB_SEARCH", "0")
 
     payload = json.dumps(

@@ -1,11 +1,14 @@
 from __future__ import annotations
 import json
+import logging
 from datetime import date
 from pathlib import Path
 from threading import Lock
 
 from app.models import GeneratedBuild, PerkCard, SourceRecord
 from app.services.db import get_conn
+
+logger = logging.getLogger(__name__)
 
 DATA_DIR = Path(__file__).resolve().parents[1] / 'data'
 _SOURCE_SEED_LOCK = Lock()
@@ -88,10 +91,25 @@ def upsert_source(record: SourceRecord) -> None:
 
 
 def latest_source_date_accessed() -> date:
+    """Return the most recent source `date_accessed` from the live SQLite store.
+
+    Falls back to the bundled JSON seed if the DB is empty (e.g. first boot
+    before `seed_sources()` has run) and finally to today's date.
+    """
+    seed_sources()
+    with get_conn() as conn:
+        row = conn.execute(
+            'SELECT MAX(date_accessed) AS d FROM source_records'
+        ).fetchone()
+    if row and row['d']:
+        try:
+            return date.fromisoformat(row['d'])
+        except ValueError:
+            logger.warning("malformed date_accessed in source_records: %r", row['d'])
     sources = load_sources_json()
-    if not sources:
-        return date.today()
-    return max(s.date_accessed for s in sources)
+    if sources:
+        return max(s.date_accessed for s in sources)
+    return date.today()
 
 
 def save_build(build: GeneratedBuild) -> None:
@@ -108,4 +126,10 @@ def get_build(build_id: str) -> GeneratedBuild | None:
         row = conn.execute(
             'SELECT build_json FROM generated_builds WHERE id=?', (build_id,)
         ).fetchone()
-    return GeneratedBuild.model_validate_json(row['build_json']) if row else None
+    if not row:
+        return None
+    try:
+        return GeneratedBuild.model_validate_json(row['build_json'])
+    except Exception as exc:  # pydantic.ValidationError or older schema mismatch
+        logger.warning("corrupt build_json for id=%s: %s", build_id, exc)
+        return None

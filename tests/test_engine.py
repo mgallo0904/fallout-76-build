@@ -170,10 +170,10 @@ def test_pepper_shaker_stealth_assumption_includes_fancy_pump_pivot():
 def test_special_budget_legendary_special_perks_raise_cap():
     user = BuildInput()
     build = generate_build(user)
-    # 56 + 5*7 = 91 cap; allocate 91 evenly with legendary stat perks for each SPECIAL.
+    # 56 + 5*7 = 91 cap with rank-4 legendary stat perks.
     build.special_allocation = {s: 13 for s in SPECIALS}
     build.special_allocation["Luck"] = 13  # 91 total
-    build.legendary_perks = [{"name": f"Legendary {s}", "priority": "Required", "reason": "test"} for s in SPECIALS]
+    build.legendary_perks = [{"name": f"Legendary {s}", "priority": "Required", "reason": "test", "rank": 4} for s in SPECIALS]
     issues = validate_build(build)
     assert not any("exceed" in issue for issue in issues), issues
     assert sum(build.special_allocation.values()) > SPECIAL_BUDGET

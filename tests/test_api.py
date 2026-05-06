@@ -51,12 +51,12 @@ def test_legendary_perk_detail_endpoint():
     assert response.json()["name"] == "Taking One for the Team"
 
 
-def test_brain_research_without_brain_returns_empty_or_503():
+def test_brain_research_returns_enabled_true_or_503():
     response = client.post("/api/brain/research", json={"query": "fallout 76 april 2026 patch", "max_results": 3})
     assert response.status_code in {200, 503}
     if response.status_code == 200:
         body = response.json()
-        assert body["enabled"] is False
+        assert body["enabled"] is True
         assert body["search_results"] == []
 
 
@@ -131,6 +131,52 @@ def test_brain_status_hides_api_key(monkeypatch):
     body = response.json()
     assert body["has_api_key"] is True
     assert "secret-value" not in response.text
+
+
+def test_perks_pagination():
+    full = client.get("/api/perks").json()
+    page = client.get("/api/perks?limit=5").json()
+    assert len(page) == 5
+    assert page == full[:5]
+    page2 = client.get("/api/perks?limit=5&offset=5").json()
+    assert page2 == full[5:10]
+
+
+def test_legendary_perks_pagination():
+    full = client.get("/api/legendary-perks").json()
+    page = client.get("/api/legendary-perks?limit=3").json()
+    assert len(page) == min(3, len(full))
+    assert page == full[:3]
+
+
+def test_generate_build_brain_error_returns_503(monkeypatch):
+    from app.services import brain as brain_module
+    from app import main as main_module
+
+    def boom(_user_input):
+        raise main_module.BrainError("simulated brain outage")
+
+    monkeypatch.setattr(main_module, "generate_and_refine_build", boom)
+    response = client.post("/api/build/generate", json={})
+    assert response.status_code == 503
+    assert "simulated brain outage" in response.text
+
+
+def test_admin_import_partial_success_returns_207():
+    valid = client.get("/api/admin/export/sources").json()[:1]
+    payload = valid + [{"id": "broken", "not": "valid"}]
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as fh:
+        json.dump(payload, fh)
+        tmp_path = Path(fh.name)
+    with tmp_path.open("rb") as binary:
+        response = client.post(
+            "/api/admin/import/sources",
+            files={"file": ("sources.json", binary, "application/json")},
+        )
+    assert response.status_code == 207
+    body = response.json()
+    assert body["imported"] == 1
+    assert body["errors"]
 
 
 def test_brain_search_without_brain_returns_empty_or_503():

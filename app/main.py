@@ -7,6 +7,7 @@ from typing import Any, List
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+from pydantic import ValidationError
 
 from app.models import (
     BuildInput,
@@ -80,8 +81,17 @@ def read_planner():
 # ---- Perks ----
 
 @app.get("/api/perks", response_model=List[PerkCard])
-def api_get_perks(include_deprecated: bool = False):
-    return load_perks() if include_deprecated else load_active_perks()
+def api_get_perks(
+    include_deprecated: bool = False,
+    limit: int | None = None,
+    offset: int = 0,
+):
+    perks = load_perks() if include_deprecated else load_active_perks()
+    if offset:
+        perks = perks[offset:]
+    if limit is not None:
+        perks = perks[:limit]
+    return perks
 
 
 @app.get("/api/perks/{perk_id}", response_model=PerkCard)
@@ -93,8 +103,17 @@ def api_get_perk(perk_id: str):
 
 
 @app.get("/api/legendary-perks", response_model=List[PerkCard])
-def api_get_legendary_perks(include_deprecated: bool = False):
-    return load_legendary_perks() if include_deprecated else load_active_legendary_perks()
+def api_get_legendary_perks(
+    include_deprecated: bool = False,
+    limit: int | None = None,
+    offset: int = 0,
+):
+    perks = load_legendary_perks() if include_deprecated else load_active_legendary_perks()
+    if offset:
+        perks = perks[offset:]
+    if limit is not None:
+        perks = perks[:limit]
+    return perks
 
 
 @app.get("/api/legendary-perks/{perk_id}", response_model=PerkCard)
@@ -128,6 +147,10 @@ def api_generate_build(user_input: BuildInput):
         return build
     except NotImplementedError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except BrainError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except ValidationError as exc:
+        raise HTTPException(status_code=422, detail=exc.errors()) from exc
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"An error occurred: {exc}") from exc
 
@@ -188,6 +211,9 @@ def api_import_sources(file: UploadFile = File(...)):
     payload: dict[str, Any] = {"imported": imported, "errors": errors}
     if errors and imported == 0:
         return JSONResponse(payload, status_code=400)
+    if errors:
+        # partial success
+        return JSONResponse(payload, status_code=207)
     return payload
 
 

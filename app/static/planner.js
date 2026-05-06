@@ -168,12 +168,41 @@ function rerenderInteractive() {
 function renderLegendary() {
   const wrap = $('legendaryList');
   if (!wrap) return;
-  wrap.innerHTML = state.legendaryPerks.map((card) => `
-    <div class="perk-tile">
+  wrap.innerHTML = state.legendaryPerks.map((card) => {
+    const rank = card.selectedRank || 1;
+    return `
+    <div class="perk-tile" data-card-id="${card.id}">
       <strong>${escapeHtml(card.name)}</strong>
-      <small>${escapeHtml(card.effect_by_rank?.['4'] || card.effect_by_rank?.['1'] || '')}</small>
+      <small>${escapeHtml(card.effect_by_rank?.[String(rank)] || card.effect_by_rank?.['1'] || '')}</small>
+      <div class="rank-row legendary-rank-row">
+        <button type="button" data-legendary-rank-down>-</button>
+        <span>rank ${rank} / ${card.max_rank}</span>
+        <button type="button" data-legendary-rank-up>+</button>
+      </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
+  wrap.querySelectorAll('.perk-tile').forEach((tile) => {
+    const cardId = tile.dataset.cardId;
+    tile.querySelector('[data-legendary-rank-up]')?.addEventListener('click', (event) => {
+      event.stopPropagation();
+      bumpLegendaryRank(cardId, +1);
+    });
+    tile.querySelector('[data-legendary-rank-down]')?.addEventListener('click', (event) => {
+      event.stopPropagation();
+      bumpLegendaryRank(cardId, -1);
+    });
+  });
+}
+
+function bumpLegendaryRank(cardId, delta) {
+  const card = state.legendaryPerks.find((c) => c.id === cardId);
+  if (!card) return;
+  const current = card.selectedRank || 1;
+  const next = current + delta;
+  if (next < 1 || next > card.max_rank) return;
+  card.selectedRank = next;
+  renderLegendary();
 }
 
 function buildPayloadForValidation() {
@@ -210,7 +239,12 @@ function buildPayloadForValidation() {
     assumptions: baseline.assumptions || ['Custom planner build'],
     special_allocation: { ...state.special },
     perk_cards_by_special: perksBySpecial,
-    legendary_perks: baseline.legendary_perks || [],
+    legendary_perks: state.legendaryPerks.map((card) => ({
+      name: card.name,
+      priority: 'Selected',
+      reason: 'User selected in planner',
+      rank: card.selectedRank || 1,
+    })) || [],
     mutations: baseline.mutations || [],
     gear: baseline.gear || {},
     variants: baseline.variants || {},
@@ -264,7 +298,9 @@ async function loadBrainStatus() {
       badge.textContent = `Brain: ${status.model}`;
       badge.classList.add('online');
     } else {
-      badge.textContent = status.has_api_key ? 'Brain disabled' : 'Brain offline';
+      badge.textContent = 'Brain unreachable';
+      badge.style.color = '#ef6464';
+      badge.classList.remove('online');
     }
   } catch {}
 }

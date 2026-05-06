@@ -23,11 +23,6 @@ CREATE TABLE IF NOT EXISTS generated_builds (
   build_json TEXT NOT NULL,
   created_at TEXT NOT NULL
 );
-CREATE TABLE IF NOT EXISTS update_runs (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  ran_at TEXT NOT NULL,
-  result_json TEXT NOT NULL
-);
 '''
 
 

@@ -195,6 +195,22 @@
 
 .legendary-grid .perk-tile { cursor: default; }
 
+.legendary-rank-row {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.25rem;
+}
+
+.legendary-rank-row button {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: inherit;
+  border-radius: 6px;
+  width: 24px; height: 24px;
+  cursor: pointer;
+}
+
 .patch-banner {
   margin: 0 0 16px 0;
   padding: 12px 16px;
