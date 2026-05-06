@@ -16,6 +16,7 @@ const inputIds = [
 
 const state = {
   perksById: {},
+  brainPollTimers: {},
 };
 
 const $ = (id) => document.getElementById(id);
@@ -38,7 +39,18 @@ function titleFromKey(key) {
 function buildRequestBody() {
   const body = {};
   inputIds.forEach((id) => {
-    body[id] = $(id).value;
+    const input = $(id);
+    if (input?.multiple) {
+      const selected = [...input.selectedOptions].map((option) => option.value);
+      if (selected.includes('No mutations')) {
+        body[id] = 'No mutations';
+      } else {
+        const specific = selected.filter((value) => value !== 'Use mutations');
+        body[id] = specific.length ? `Specific mutations: ${specific.join(', ')}` : 'Use mutations';
+      }
+      return;
+    }
+    body[id] = input.value;
   });
   // Character type: prepend "Ghoul " to playstyle so the engine classifier routes
   // to ghoul_commando / ghoul_melee / playable_ghoul as appropriate.
@@ -241,7 +253,53 @@ function renderSearchResults(results) {
   `;
 }
 
-function renderBuild(payload) {
+function renderBrainPanel(build) {
+  const status = build.brain_status || (build.brain_confirmed ? 'complete' : 'not_requested');
+  if (status === 'not_requested') return '';
+  const labels = {
+    pending: 'Brain queued',
+    running: 'Brain refining',
+    complete: 'Brain complete',
+    failed: 'Brain failed',
+  };
+  const details = [];
+  details.push(labels[status] || status);
+  if (build.brain_error) details.push(build.brain_error);
+  if (build.brain_updated_at) details.push(`Updated: ${build.brain_updated_at}`);
+  return renderCleanList('Brain Status', details, status === 'failed');
+}
+
+function isBrainActive(build) {
+  return ['pending', 'running'].includes(build?.brain_status);
+}
+
+function scheduleBrainPoll(build) {
+  if (!isBrainActive(build) || state.brainPollTimers[build.id]) return;
+  let attempts = 80;
+  const poll = async () => {
+    try {
+      const response = await fetch(`/api/build/${encodeURIComponent(build.id)}`);
+      if (!response.ok) throw new Error('Build refresh failed');
+      const updated = await response.json();
+      renderBuild(updated, { preserveScroll: true });
+      if (isBrainActive(updated) && attempts > 0) {
+        attempts -= 1;
+        state.brainPollTimers[build.id] = window.setTimeout(poll, 3000);
+        return;
+      }
+    } catch {
+      if (attempts > 0) {
+        attempts -= 1;
+        state.brainPollTimers[build.id] = window.setTimeout(poll, 5000);
+        return;
+      }
+    }
+    delete state.brainPollTimers[build.id];
+  };
+  state.brainPollTimers[build.id] = window.setTimeout(poll, 3000);
+}
+
+function renderBuild(payload, options = {}) {
   const build = payload.build || payload;
   const panel = $('resultPanel');
   const brainNotes = [
@@ -258,6 +316,7 @@ function renderBuild(payload) {
           <span>${escapeHtml(build.id)}</span>
           <span>${escapeHtml(build.validation_status)}</span>
           <span>${escapeHtml(build.logic_engine)}</span>
+          <span>Brain: ${escapeHtml(build.brain_status || 'not_requested')}</span>
         </div>
       </div>
       <button id="copyBuildId" class="secondary-action" type="button">Copy ID</button>
@@ -279,6 +338,7 @@ function renderBuild(payload) {
       ${renderObjectLists('Gear', build.gear)}
       ${renderObjectLists('Variants', build.variants)}
       ${renderObjectLists('Swap Cards', build.swap_cards)}
+      ${renderBrainPanel(build)}
       ${renderCleanList('Assumptions', build.assumptions)}
       ${renderCleanList('Weaknesses', build.weaknesses, true)}
       ${renderCleanList('Validation Issues', payload.issues, true)}
@@ -296,7 +356,10 @@ function renderBuild(payload) {
     await navigator.clipboard?.writeText(build.id);
   });
   saveRecentBuild(build);
-  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  scheduleBrainPoll(build);
+  if (!options.preserveScroll) {
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 
 function renderError(error) {

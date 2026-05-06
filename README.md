@@ -26,7 +26,7 @@ uvicorn app.main:app --reload
 ```
 
 ## Ollama Brain + Web Search
-The app can optionally use Ollama as the logic engine with `kimi-k2.6:cloud` and Ollama web search. Do not put your key in the repo; export it in your shell before starting the server:
+The app can optionally use Ollama as a background refinement engine with `kimi-k2.6:cloud`. Build generation returns a deterministic build immediately, saves it, then marks `brain_status` as `pending` / `running` / `complete` / `failed` while the browser polls for updates. Do not put your key in the repo; export it in your shell before starting the server:
 
 ```bash
 export OLLAMA_API_KEY="your_ollama_api_key_here"
@@ -41,6 +41,7 @@ Optional settings:
 - `OLLAMA_BASE_URL`: defaults to `https://ollama.com` when `OLLAMA_API_KEY` is set, otherwise `http://localhost:11434`.
 - `OLLAMA_TIMEOUT_SECONDS`: request timeout, default `120`.
 - `OLLAMA_MAX_SEARCH_RESULTS`: web results per request, default `5`, max `10`.
+- `OLLAMA_BUILD_WEB_SEARCH`: defaults to `0`; build refinement uses the local source registry by default instead of doing live web search on every click. Set to `1` only when you want per-build web grounding and accept slower refinement.
 
 Check configuration with:
 

@@ -81,6 +81,17 @@ def test_perks_endpoint_includes_regular_glowing_one():
     assert "ghoul_only" in glowing_one["tags"]
 
 
+def test_mutation_preference_control_allows_multiple_selection():
+    html = Path("app/static/index.html").read_text(encoding="utf-8")
+    js = Path("app/static/index.js").read_text(encoding="utf-8")
+    assert 'id="mutation_preference"' in html
+    assert 'multiple size="8"' in html
+    assert "Herd Mentality" in html
+    assert "Unstable Isotope" in html
+    assert "selectedOptions" in js
+    assert "Specific mutations:" in js
+
+
 def test_generate_and_get_build_default_is_pa_heavy_energy():
     response = client.post("/api/build/generate", json={})
     assert response.status_code == 200
@@ -99,6 +110,7 @@ def test_generate_build_without_brain_env_uses_deterministic_engine(monkeypatch)
     build = response.json()
     assert build["logic_engine"] == "deterministic"
     assert build["brain_confirmed"] is False
+    assert build["brain_status"] == "not_requested"
 
 
 def test_generate_build_with_api_key_uses_brain(monkeypatch):
@@ -107,8 +119,14 @@ def test_generate_build_with_api_key_uses_brain(monkeypatch):
     response = client.post("/api/build/generate", json={})
     assert response.status_code == 200
     build = response.json()
-    assert build["logic_engine"].startswith("ollama:")
-    assert build["brain_confirmed"] is True
+    assert build["logic_engine"] == "deterministic"
+    assert build["brain_status"] == "pending"
+    assert build["brain_confirmed"] is False
+
+    fetched = client.get(f"/api/build/{build['id']}").json()
+    assert fetched["logic_engine"].startswith("ollama:")
+    assert fetched["brain_confirmed"] is True
+    assert fetched["brain_status"] == "complete"
 
 
 def test_compare_endpoint_accepts_build_ids_object():
@@ -178,17 +196,11 @@ def test_legendary_perks_pagination():
     assert page == full[:3]
 
 
-def test_generate_build_brain_error_returns_503(monkeypatch):
-    from app.services import brain as brain_module
-    from app import main as main_module
-
-    def boom(_user_input):
-        raise main_module.BrainError("simulated brain outage")
-
-    monkeypatch.setattr(main_module, "generate_and_refine_build", boom)
+def test_generate_build_with_brain_enabled_returns_fast_pending(monkeypatch):
+    monkeypatch.setenv("OLLAMA_API_KEY", "test-key")
     response = client.post("/api/build/generate", json={})
-    assert response.status_code == 503
-    assert "simulated brain outage" in response.text
+    assert response.status_code == 200
+    assert response.json()["brain_status"] == "pending"
 
 
 def test_admin_import_partial_success_returns_207():

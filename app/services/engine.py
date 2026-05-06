@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-import re
+import logging
 import os
+import re
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Callable, Dict, List
@@ -17,12 +18,16 @@ from app.models import (
 from app.services.brain import enhance_build_with_brain
 from app.services.repository import (
     latest_source_date_accessed,
+    get_build,
     list_sources,
     load_active_legendary_perks,
     load_active_perks,
     load_legendary_perks,
     load_perks,
+    save_build,
 )
+
+logger = logging.getLogger(__name__)
 
 SPECIALS: List[str] = [
     "Strength",
@@ -1002,6 +1007,72 @@ def generate_build(user: BuildInput) -> GeneratedBuild:
     return _build_from_blueprint(blueprint, user)
 
 
+def _env_bool(name: str, default: bool = False) -> bool:
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def should_use_brain() -> bool:
+    raw_use_brain = os.getenv("USE_OLLAMA_BRAIN")
+    if raw_use_brain is None:
+        return bool(os.getenv("OLLAMA_API_KEY"))
+    return raw_use_brain.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def prepare_build_for_response(user: BuildInput) -> GeneratedBuild:
+    """Return a fast deterministic build and mark brain work for background use."""
+    build = generate_build(user)
+    issues = validate_build(build)
+    build.validation_status = "passed" if not issues else "issues"
+    if should_use_brain():
+        build.brain_status = "pending"
+        build.brain_updated_at = _now_utc()
+        build.brain_notes.append("Brain refinement queued in the background.")
+    return build
+
+
+def refine_saved_build_with_brain(build_id: str) -> None:
+    """Refine a saved build with Ollama and persist the result.
+
+    Build generation must stay responsive, so background brain failures are
+    stored on the build instead of escaping as API request failures.
+    """
+    build = get_build(build_id)
+    if build is None:
+        logger.warning("brain refinement requested for missing build id=%s", build_id)
+        return
+
+    build.brain_status = "running"
+    build.brain_error = None
+    build.brain_updated_at = _now_utc()
+    save_build(build)
+
+    issues = validate_build(build)
+    try:
+        enhance_build_with_brain(
+            build.user_inputs,
+            build,
+            issues,
+            use_web_search=_env_bool("OLLAMA_BUILD_WEB_SEARCH", False),
+        )
+        new_issues = validate_build(build)
+        build.validation_status = "passed" if not new_issues else "issues"
+        build.brain_status = "complete"
+        build.brain_error = None
+    except Exception as exc:  # BrainError or unexpected provider failure
+        message = str(exc)
+        logger.warning("brain refinement failed for build id=%s: %s", build_id, message)
+        build.brain_status = "failed"
+        build.brain_error = message
+        build.validation_status = "passed" if not issues else "issues"
+        build.brain_notes.append(f"Brain refinement failed: {message}")
+    finally:
+        build.brain_updated_at = _now_utc()
+        save_build(build)
+
+
 def generate_and_refine_build(user: BuildInput, max_retries: int = 2) -> GeneratedBuild:
     """Generate a build, optionally refining it with the Ollama brain.
 
@@ -1013,17 +1084,12 @@ def generate_and_refine_build(user: BuildInput, max_retries: int = 2) -> Generat
     build = generate_build(user)
     issues = validate_build(build)
 
-    raw_use_brain = os.getenv("USE_OLLAMA_BRAIN")
-    if raw_use_brain is None:
-        use_brain = bool(os.getenv("OLLAMA_API_KEY"))
-    else:
-        use_brain = raw_use_brain.strip().lower() in {"1", "true", "yes", "on"}
-    if not use_brain:
+    if not should_use_brain():
         build.validation_status = "passed" if not issues else "issues"
         return build
 
     for _ in range(max(1, max_retries)):
-        enhance_build_with_brain(user, build, issues)
+        enhance_build_with_brain(user, build, issues, use_web_search=_env_bool("OLLAMA_BUILD_WEB_SEARCH", False))
         new_issues = validate_build(build)
         if not new_issues:
             build.validation_status = "passed"

@@ -110,6 +110,9 @@ class GeneratedBuild(BaseModel):
     brain_notes: List[str] = Field(default_factory=list)
     web_search_results: List[WebSearchResult] = Field(default_factory=list)
     brain_confirmed: bool = False
+    brain_status: str = "not_requested"
+    brain_error: Optional[str] = None
+    brain_updated_at: Optional[datetime] = None
     brain_suggested_swaps: List[Dict[str,str]] = Field(default_factory=list)
     brain_override_reasoning: List[str] = Field(default_factory=list)
     legendary_perk_rank_changes: List[Dict[str,str|int]] = Field(default_factory=list)

@@ -4,7 +4,7 @@ import json
 from contextlib import asynccontextmanager
 from typing import Any, List
 
-from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi import BackgroundTasks, FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import ValidationError
@@ -29,7 +29,8 @@ from app.services.brain import (
 from app.services.db import init_db
 from app.services.engine import (
     compare_builds,
-    generate_and_refine_build,
+    prepare_build_for_response,
+    refine_saved_build_with_brain,
     get_archetype_preview,
     list_archetypes,
     validate_build,
@@ -140,10 +141,12 @@ def api_get_archetype_preview(archetype_id: str):
 # ---- Builds ----
 
 @app.post("/api/build/generate", response_model=GeneratedBuild)
-def api_generate_build(user_input: BuildInput):
+def api_generate_build(user_input: BuildInput, background_tasks: BackgroundTasks):
     try:
-        build = generate_and_refine_build(user_input)
+        build = prepare_build_for_response(user_input)
         save_build(build)
+        if build.brain_status == "pending":
+            background_tasks.add_task(refine_saved_build_with_brain, build.id)
         return build
     except NotImplementedError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc

@@ -346,12 +346,15 @@ def enhance_build_with_brain(
     user: BuildInput,
     build: GeneratedBuild,
     validation_issues: list[str],
+    *,
+    use_web_search: bool | None = None,
 ) -> dict[str, Any]:
     cfg = get_brain_config()
 
     notes: list[str] = []
     search_results: list[WebSearchResult] = []
-    if cfg.web_search_enabled:
+    should_search = cfg.web_search_enabled if use_web_search is None else (use_web_search and cfg.web_search_enabled)
+    if should_search:
         try:
             search_results = web_search(_build_search_query(user), cfg.max_search_results, cfg)
             build.web_search_results = search_results

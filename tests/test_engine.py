@@ -1,5 +1,6 @@
 from app.models import BuildInput, PerkChoice
-from app.services.repository import load_legendary_perks, load_perks, load_sources_json
+from app.services import engine as engine_module
+from app.services.repository import get_build, load_legendary_perks, load_perks, load_sources_json, save_build
 from app.services.engine import (
     SPECIALS,
     SPECIAL_BUDGET,
@@ -216,6 +217,23 @@ def test_ghoul_restricted_perks_are_rejected():
     issues = validate_build(build)
     assert any("Rad Sponge" in issue and "restricted" in issue for issue in issues), issues
     assert any("What Rads?" in issue and "restricted" in issue for issue in issues), issues
+
+
+def test_background_brain_failure_is_persisted_without_breaking_build(monkeypatch):
+    build = generate_build(_input())
+    save_build(build)
+
+    def fail_enhancement(*_args, **_kwargs):
+        raise RuntimeError("simulated timeout")
+
+    monkeypatch.setattr(engine_module, "enhance_build_with_brain", fail_enhancement)
+    engine_module.refine_saved_build_with_brain(build.id)
+
+    persisted = get_build(build.id)
+    assert persisted is not None
+    assert persisted.brain_status == "failed"
+    assert persisted.brain_error == "simulated timeout"
+    assert persisted.validation_status == "passed"
 
 
 def test_source_registry_records_may6_and_no_impact_maintenance():
