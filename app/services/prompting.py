@@ -21,26 +21,18 @@ def summarize_effect(perk: PerkCard) -> str:
     return "Effect summary unavailable; use source data only."
 
 
-def _compact_perk(perk: PerkCard) -> dict[str, Any]:
-    return {
-        "id": perk.id,
-        "name": perk.name,
-        "special": perk.special,
-        "max_rank": perk.max_rank,
-        "rank_costs": perk.rank_costs,
-        "tags": perk.tags,
-        "character_restriction": perk.character_restriction,
-    }
+def _compact_perk(perk: PerkCard) -> str:
+    tags = ",".join(perk.tags) if perk.tags else "none"
+    restr = perk.character_restriction if perk.character_restriction != "Any" else "any"
+    costs = ",".join(str(c) for c in perk.rank_costs.values()) if perk.rank_costs else "none"
+    # Format: id|SPECIAL|max_rank|costs|tags|restriction
+    return f"{perk.id}|{perk.special[:3].upper()}|max{perk.max_rank}|costs:{costs}|{tags}|{restr}"
 
 
-def _compact_legendary_perk(perk: PerkCard) -> dict[str, Any]:
-    return {
-        "id": perk.id,
-        "name": perk.name,
-        "max_rank": perk.max_rank,
-        "character_restriction": perk.character_restriction,
-        "effect_summary": summarize_effect(perk),
-    }
+def _compact_legendary_perk(perk: PerkCard) -> str:
+    restr = perk.character_restriction if perk.character_restriction != "Any" else "any"
+    # Format: id|name|max_rank|restriction|effect_summary
+    return f"{perk.id}|{perk.name}|max{perk.max_rank}|{restr}|{summarize_effect(perk)}"
 
 
 def build_ollama_prompt(
@@ -69,6 +61,8 @@ def build_ollama_prompt(
         "6. Choose a playable, balanced build.\n"
         "7. Legendary perks must come from the allowed_legendary_perks list.\n"
         "8. Mutations must be from the known Fallout 76 mutation pool.\n"
+        "Format for allowed_perks is 'id|SPECIAL|max_rank|costs:cost1,cost2|tags|restriction'.\n"
+        "Format for allowed_legendary_perks is 'id|name|max_rank|restriction|effect'.\n"
     )
 
     return [
